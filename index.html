@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BeBrief - VFR Flight Briefing App</title>
   <meta name="description" content="Your complete preflight companion. Weather, NOTAMs, TFRs, and performance calculations in one streamlined app.">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BeBrief - VFR Flight Briefing App">
+  <meta property="og:description" content="Your complete preflight companion. Weather, NOTAMs, TFRs, and performance calculations in one streamlined app.">
+  <meta property="og:image" content="assets/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BeBrief - VFR Flight Briefing App">
+  <meta name="twitter:description" content="Your complete preflight companion for VFR pilots.">
+  <meta name="twitter:image" content="assets/twitter-card.png">
+
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,8 +87,18 @@
 
     /* Hero */
     .hero {
-      padding: 100px 0 80px;
-      text-align: center;
+      padding: 80px 0 60px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content {
+      text-align: left;
     }
 
     .badge {
@@ -91,7 +114,7 @@
     }
 
     .hero h1 {
-      font-size: clamp(40px, 8vw, 72px);
+      font-size: clamp(36px, 5vw, 56px);
       font-weight: 800;
       letter-spacing: -2px;
       line-height: 1.1;
@@ -106,16 +129,15 @@
     }
 
     .hero p {
-      font-size: 20px;
+      font-size: 18px;
       color: #a1a1aa;
-      max-width: 600px;
-      margin: 0 auto 40px;
+      margin-bottom: 32px;
+      max-width: 500px;
     }
 
     .cta-buttons {
       display: flex;
       gap: 16px;
-      justify-content: center;
       flex-wrap: wrap;
     }
 
@@ -150,6 +172,82 @@
     .btn-secondary:hover {
       background: #27272a;
       transform: translateY(-2px);
+    }
+
+    .hero-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 24px;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+    }
+
+    /* App Showcase */
+    .app-showcase {
+      padding: 80px 0;
+      background: linear-gradient(180deg, #0d0d0f 0%, #18181b 100%);
+    }
+
+    .app-showcase h2 {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .app-showcase-subtitle {
+      text-align: center;
+      color: #71717a;
+      margin-bottom: 60px;
+      font-size: 18px;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .showcase-card {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .showcase-card:hover {
+      border-color: #3f3f46;
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .showcase-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .showcase-card-content {
+      padding: 20px;
+    }
+
+    .showcase-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #fafafa;
+    }
+
+    .showcase-card p {
+      font-size: 13px;
+      color: #71717a;
     }
 
     /* Features */
@@ -323,12 +421,64 @@
       line-height: 1.6;
     }
 
+    @media (max-width: 1024px) {
+      .showcase-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+      }
+
+      .hero-content {
+        text-align: center;
+      }
+
+      .hero p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .cta-buttons {
+        justify-content: center;
+      }
+
+      .hero-image {
+        order: -1;
+      }
+
+      .hero-image img {
+        max-width: 280px;
+      }
+    }
+
     @media (max-width: 640px) {
       .hero {
         padding: 60px 0 40px;
       }
 
-      .features, .cta-section {
+      .showcase-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .showcase-card-content {
+        padding: 14px;
+      }
+
+      .showcase-card h3 {
+        font-size: 14px;
+      }
+
+      .showcase-card p {
+        font-size: 11px;
+      }
+
+      .features, .cta-section, .app-showcase {
         padding: 60px 0;
       }
 
@@ -352,15 +502,60 @@
   <main>
     <section class="hero">
       <div class="container">
-        <div class="badge">Coming Soon to iOS & Android</div>
-        <h1>Your Complete<br><span>Preflight Companion</span></h1>
-        <p>Weather, NOTAMs, TFRs, and performance calculations in one streamlined app. Make confident go/no-go decisions.</p>
-        <div class="cta-buttons">
-          <a href="#features" class="btn btn-primary">
-            <span>Explore Features</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-          <a href="mailto:FlyBeBrief@gmail.com" class="btn btn-secondary">Get Early Access</a>
+        <div class="hero-grid">
+          <div class="hero-content">
+            <div class="badge">Coming Soon to iOS & Android</div>
+            <h1>Your Complete<br><span>Preflight Companion</span></h1>
+            <p>Weather, NOTAMs, TFRs, and performance calculations in one streamlined app. Make confident go/no-go decisions.</p>
+            <div class="cta-buttons">
+              <a href="#features" class="btn btn-primary">
+                <span>Explore Features</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <a href="mailto:FlyBeBrief@gmail.com" class="btn btn-secondary">Get Early Access</a>
+            </div>
+          </div>
+          <div class="hero-image">
+            <img src="assets/app-mockup.png" alt="BeBrief App Screenshot">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="app-showcase">
+      <div class="container">
+        <h2>See It In Action</h2>
+        <p class="app-showcase-subtitle">Real screenshots from the app</p>
+
+        <div class="showcase-grid">
+          <div class="showcase-card">
+            <img src="assets/card-weather.png" alt="Weather Dashboard">
+            <div class="showcase-card-content">
+              <h3>Live Weather</h3>
+              <p>METARs, TAFs & flight categories</p>
+            </div>
+          </div>
+          <div class="showcase-card">
+            <img src="assets/card-notams.png" alt="NOTAMs View">
+            <div class="showcase-card-content">
+              <h3>Smart NOTAMs</h3>
+              <p>Filtered & prioritized notices</p>
+            </div>
+          </div>
+          <div class="showcase-card">
+            <img src="assets/card-performance.png" alt="Performance Calculator">
+            <div class="showcase-card-content">
+              <h3>TOLD Calculator</h3>
+              <p>Takeoff & landing performance</p>
+            </div>
+          </div>
+          <div class="showcase-card">
+            <img src="assets/card-aircraft.png" alt="Aircraft Profiles">
+            <div class="showcase-card-content">
+              <h3>Aircraft Profiles</h3>
+              <p>Weight & balance tracking</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
