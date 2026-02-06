@@ -24,11 +24,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -36,18 +32,17 @@
       color: #fafafa;
       line-height: 1.6;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
     /* Header */
     header {
       padding: 24px 0;
       border-bottom: 1px solid #27272a;
+      position: relative;
+      z-index: 100;
     }
 
     .header-content {
@@ -67,11 +62,7 @@
       letter-spacing: -0.5px;
     }
 
-    .logo img {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-    }
+    .logo img { width: 36px; height: 36px; border-radius: 8px; }
 
     .nav-link {
       color: #a1a1aa;
@@ -81,25 +72,23 @@
       transition: color 0.2s;
     }
 
-    .nav-link:hover {
-      color: #fafafa;
-    }
+    .nav-link:hover { color: #fafafa; }
 
     /* Hero */
     .hero {
-      padding: 80px 0 60px;
+      padding: 80px 0 40px;
+      position: relative;
+      overflow: visible;
     }
 
     .hero-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 60px;
+      gap: 40px;
       align-items: center;
     }
 
-    .hero-content {
-      text-align: left;
-    }
+    .hero-content { text-align: left; }
 
     .badge {
       display: inline-block;
@@ -135,11 +124,7 @@
       max-width: 500px;
     }
 
-    .cta-buttons {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+    .cta-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
 
     .btn {
       display: inline-flex;
@@ -153,171 +138,170 @@
       transition: all 0.2s;
     }
 
-    .btn-primary {
-      background: #22d3ee;
-      color: #0d0d0f;
-    }
+    .btn-primary { background: #22d3ee; color: #0d0d0f; }
+    .btn-primary:hover { background: #06b6d4; transform: translateY(-2px); }
 
-    .btn-primary:hover {
-      background: #06b6d4;
-      transform: translateY(-2px);
-    }
+    .btn-secondary { background: #18181b; color: #fafafa; border: 1px solid #27272a; }
+    .btn-secondary:hover { background: #27272a; transform: translateY(-2px); }
 
-    .btn-secondary {
-      background: #18181b;
-      color: #fafafa;
-      border: 1px solid #27272a;
-    }
-
-    .btn-secondary:hover {
-      background: #27272a;
-      transform: translateY(-2px);
-    }
-
-    .hero-image {
+    .hero-mockups {
+      position: relative;
+      height: 500px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    .hero-image img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 24px;
-      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+    .hero-mockup {
+      position: absolute;
+      height: 420px;
+      width: auto;
+      filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5));
+      transition: transform 0.3s ease;
     }
 
-    /* App Showcase */
-    .app-showcase {
-      padding: 80px 0;
-      background: linear-gradient(180deg, #0d0d0f 0%, #18181b 100%);
+    .hero-mockup:nth-child(1) { transform: translateX(-80px) rotate(-8deg); z-index: 1; }
+    .hero-mockup:nth-child(2) { transform: translateX(0) rotate(0deg); z-index: 3; }
+    .hero-mockup:nth-child(3) { transform: translateX(80px) rotate(8deg); z-index: 2; }
+
+    .hero-mockup:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+
+    /* Feature Showcase */
+    .feature-showcase {
+      padding: 100px 0;
+      background: linear-gradient(180deg, #0d0d0f 0%, #111113 100%);
     }
 
-    .app-showcase h2 {
+    .feature-showcase h2 {
       text-align: center;
-      font-size: 36px;
+      font-size: 40px;
       font-weight: 700;
       margin-bottom: 16px;
       letter-spacing: -1px;
     }
 
-    .app-showcase-subtitle {
+    .feature-showcase-subtitle {
       text-align: center;
       color: #71717a;
-      margin-bottom: 60px;
+      margin-bottom: 80px;
       font-size: 18px;
     }
 
-    .showcase-grid {
+    .feature-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      margin-bottom: 120px;
     }
 
-    .showcase-card {
-      background: #18181b;
-      border: 1px solid #27272a;
-      border-radius: 20px;
-      overflow: hidden;
-      transition: all 0.3s;
+    .feature-row:last-child { margin-bottom: 0; }
+
+    .feature-row.reverse { direction: rtl; }
+    .feature-row.reverse > * { direction: ltr; }
+
+    .feature-text h3 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #fafafa;
     }
 
-    .showcase-card:hover {
-      border-color: #3f3f46;
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    .showcase-card img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .showcase-card-content {
-      padding: 20px;
-    }
-
-    .showcase-card h3 {
+    .feature-text p {
       font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #fafafa;
+      color: #a1a1aa;
+      line-height: 1.7;
+      margin-bottom: 24px;
     }
 
-    .showcase-card p {
-      font-size: 13px;
-      color: #71717a;
+    .feature-list {
+      list-style: none;
     }
 
-    /* Features */
-    .features {
-      padding: 80px 0;
-    }
-
-    .features h2 {
-      text-align: center;
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      letter-spacing: -1px;
-    }
-
-    .features-subtitle {
-      text-align: center;
-      color: #71717a;
-      margin-bottom: 60px;
-      font-size: 18px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-    }
-
-    .feature-card {
-      background: #18181b;
-      border: 1px solid #27272a;
-      border-radius: 16px;
-      padding: 32px;
-      transition: all 0.2s;
-    }
-
-    .feature-card:hover {
-      border-color: #3f3f46;
-      transform: translateY(-4px);
-    }
-
-    .feature-icon {
-      width: 48px;
-      height: 48px;
-      background: rgba(34, 211, 238, 0.1);
-      border-radius: 12px;
+    .feature-list li {
       display: flex;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      font-size: 24px;
-    }
-
-    .feature-card h3 {
-      font-size: 20px;
-      font-weight: 600;
+      gap: 12px;
+      color: #71717a;
+      font-size: 14px;
       margin-bottom: 12px;
     }
 
-    .feature-card p {
-      color: #a1a1aa;
-      font-size: 15px;
+    .feature-list li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #22d3ee;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .feature-mockup {
+      display: flex;
+      justify-content: center;
+    }
+
+    .feature-mockup img {
+      height: 500px;
+      width: auto;
+      filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.4));
+    }
+
+    /* Mockup Gallery */
+    .mockup-gallery {
+      padding: 80px 0;
+      background: #18181b;
+      border-top: 1px solid #27272a;
+      border-bottom: 1px solid #27272a;
+      overflow: hidden;
+    }
+
+    .mockup-gallery h2 {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 60px;
+    }
+
+    .gallery-scroll {
+      display: flex;
+      gap: 32px;
+      animation: scroll 40s linear infinite;
+      width: max-content;
+    }
+
+    .gallery-scroll:hover { animation-play-state: paused; }
+
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .gallery-item {
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    .gallery-item img {
+      height: 380px;
+      width: auto;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+      transition: transform 0.3s;
+    }
+
+    .gallery-item:hover img { transform: scale(1.05); }
+
+    .gallery-item span {
+      display: block;
+      margin-top: 16px;
+      font-size: 14px;
+      color: #71717a;
+      font-weight: 500;
     }
 
     /* Data Sources */
     .data-sources {
       padding: 80px 0;
-      background: #18181b;
-      border-top: 1px solid #27272a;
-      border-bottom: 1px solid #27272a;
     }
 
     .data-sources h2 {
@@ -332,7 +316,6 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 32px;
-      opacity: 0.7;
     }
 
     .source-item {
@@ -354,6 +337,7 @@
     .cta-section {
       padding: 100px 0;
       text-align: center;
+      background: linear-gradient(180deg, #0d0d0f 0%, #18181b 100%);
     }
 
     .cta-section h2 {
@@ -367,41 +351,6 @@
       color: #71717a;
       font-size: 18px;
       margin-bottom: 32px;
-    }
-
-    /* Footer */
-    footer {
-      padding: 40px 0;
-      border-top: 1px solid #27272a;
-    }
-
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-
-    .footer-links a {
-      color: #71717a;
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover {
-      color: #fafafa;
-    }
-
-    .copyright {
-      color: #52525b;
-      font-size: 14px;
     }
 
     /* Disclaimer */
@@ -421,71 +370,66 @@
       line-height: 1.6;
     }
 
-    @media (max-width: 1024px) {
-      .showcase-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    /* Footer */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid #27272a;
+      background: #18181b;
     }
 
-    @media (max-width: 768px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        text-align: center;
-      }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
 
-      .hero-content {
-        text-align: center;
-      }
+    .footer-links { display: flex; gap: 24px; }
 
-      .hero p {
-        margin-left: auto;
-        margin-right: auto;
-      }
+    .footer-links a {
+      color: #71717a;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
 
-      .cta-buttons {
-        justify-content: center;
-      }
+    .footer-links a:hover { color: #fafafa; }
 
-      .hero-image {
-        order: -1;
-      }
+    .copyright { color: #52525b; font-size: 14px; }
 
-      .hero-image img {
-        max-width: 280px;
-      }
+    /* Responsive */
+    @media (max-width: 968px) {
+      .hero-grid { grid-template-columns: 1fr; text-align: center; }
+      .hero-content { text-align: center; }
+      .hero p { margin: 0 auto 32px; }
+      .cta-buttons { justify-content: center; }
+      .hero-mockups { height: 350px; margin-top: 40px; }
+      .hero-mockup { height: 300px; }
+      .hero-mockup:nth-child(1) { transform: translateX(-60px) rotate(-8deg); }
+      .hero-mockup:nth-child(3) { transform: translateX(60px) rotate(8deg); }
+
+      .feature-row { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+      .feature-row.reverse { direction: ltr; }
+      .feature-text { order: 2; }
+      .feature-mockup { order: 1; }
+      .feature-list { display: inline-block; text-align: left; }
     }
 
     @media (max-width: 640px) {
-      .hero {
-        padding: 60px 0 40px;
-      }
+      .hero { padding: 60px 0 20px; }
+      .hero-mockups { height: 280px; }
+      .hero-mockup { height: 240px; }
+      .hero-mockup:nth-child(1) { transform: translateX(-40px) rotate(-8deg); }
+      .hero-mockup:nth-child(3) { transform: translateX(40px) rotate(8deg); }
 
-      .showcase-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-      }
+      .feature-showcase { padding: 60px 0; }
+      .feature-row { margin-bottom: 80px; }
+      .feature-mockup img { height: 350px; }
 
-      .showcase-card-content {
-        padding: 14px;
-      }
+      .gallery-item img { height: 280px; }
 
-      .showcase-card h3 {
-        font-size: 14px;
-      }
-
-      .showcase-card p {
-        font-size: 11px;
-      }
-
-      .features, .cta-section, .app-showcase {
-        padding: 60px 0;
-      }
-
-      .footer-content {
-        flex-direction: column;
-        text-align: center;
-      }
+      .footer-content { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
@@ -515,93 +459,122 @@
               <a href="mailto:FlyBeBrief@gmail.com" class="btn btn-secondary">Get Early Access</a>
             </div>
           </div>
-          <div class="hero-image">
-            <img src="assets/app-mockup.png" alt="BeBrief App Screenshot">
+          <div class="hero-mockups">
+            <img src="assets/weather.png" alt="Weather" class="hero-mockup">
+            <img src="assets/plan.png" alt="Route Planner" class="hero-mockup">
+            <img src="assets/performance.png" alt="Performance" class="hero-mockup">
           </div>
         </div>
       </div>
     </section>
 
-    <section class="app-showcase">
-      <div class="container">
-        <h2>See It In Action</h2>
-        <p class="app-showcase-subtitle">Real screenshots from the app</p>
-
-        <div class="showcase-grid">
-          <div class="showcase-card">
-            <img src="assets/card-weather.png" alt="Weather Dashboard">
-            <div class="showcase-card-content">
-              <h3>Live Weather</h3>
-              <p>METARs, TAFs & flight categories</p>
-            </div>
-          </div>
-          <div class="showcase-card">
-            <img src="assets/card-notams.png" alt="NOTAMs View">
-            <div class="showcase-card-content">
-              <h3>Smart NOTAMs</h3>
-              <p>Filtered & prioritized notices</p>
-            </div>
-          </div>
-          <div class="showcase-card">
-            <img src="assets/card-performance.png" alt="Performance Calculator">
-            <div class="showcase-card-content">
-              <h3>TOLD Calculator</h3>
-              <p>Takeoff & landing performance</p>
-            </div>
-          </div>
-          <div class="showcase-card">
-            <img src="assets/card-aircraft.png" alt="Aircraft Profiles">
-            <div class="showcase-card-content">
-              <h3>Aircraft Profiles</h3>
-              <p>Weight & balance tracking</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="features" id="features">
+    <section class="feature-showcase" id="features">
       <div class="container">
         <h2>Everything You Need to Brief</h2>
-        <p class="features-subtitle">Professional-grade tools designed for VFR pilots</p>
+        <p class="feature-showcase-subtitle">Professional-grade tools designed for VFR pilots</p>
 
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">🌤️</div>
-            <h3>Live Weather</h3>
-            <p>Real-time METAR and TAF data with flight category indicators. See VFR, MVFR, IFR, and LIFR conditions at a glance.</p>
+        <div class="feature-row">
+          <div class="feature-text">
+            <h3>Route Planning & Go/No-Go</h3>
+            <p>Plan your route with real-time weather analysis. Get instant go/no-go recommendations based on current conditions, forecasts, and your aircraft performance.</p>
+            <ul class="feature-list">
+              <li>Multi-waypoint route planning</li>
+              <li>Automatic weather analysis</li>
+              <li>Flight category indicators</li>
+              <li>ETA-based forecasting</li>
+            </ul>
           </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">📋</div>
-            <h3>Smart NOTAMs</h3>
-            <p>Categorized and prioritized notices. Runway closures, TFRs, and critical alerts highlighted automatically.</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🚫</div>
-            <h3>TFR Awareness</h3>
-            <p>National Defense Airspace and temporary restrictions displayed on your route. Never fly into restricted airspace.</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">⚖️</div>
-            <h3>Weight & Balance</h3>
-            <p>Calculate takeoff and landing weights with CG envelope visualization. Know your limits before you fly.</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3>TOLD Calculator</h3>
-            <p>Takeoff and landing performance for 50+ aircraft types. Adjust for temperature, altitude, and wind.</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🌅</div>
-            <h3>Sunrise & Sunset</h3>
-            <p>Solar calculations with civil twilight times. Plan your departure and arrival with daylight in mind.</p>
+          <div class="feature-mockup">
+            <img src="assets/plan.png" alt="Route Planning">
           </div>
         </div>
+
+        <div class="feature-row reverse">
+          <div class="feature-text">
+            <h3>Live Weather & METARs</h3>
+            <p>Real-time METAR and TAF data from NOAA Aviation Weather Center. See VFR, MVFR, IFR, and LIFR conditions at a glance with decoded, human-readable summaries.</p>
+            <ul class="feature-list">
+              <li>Real-time METAR updates</li>
+              <li>TAF forecasts decoded</li>
+              <li>Winds aloft data</li>
+              <li>Flight category color coding</li>
+            </ul>
+          </div>
+          <div class="feature-mockup">
+            <img src="assets/weather.png" alt="Weather Dashboard">
+          </div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-text">
+            <h3>Performance Calculator</h3>
+            <p>Takeoff and landing performance calculations for 50+ aircraft types. Automatically adjusts for temperature, altitude, wind, and runway conditions.</p>
+            <ul class="feature-list">
+              <li>Takeoff & landing distances</li>
+              <li>Density altitude calculations</li>
+              <li>Weight & balance tracking</li>
+              <li>CG envelope visualization</li>
+            </ul>
+          </div>
+          <div class="feature-mockup">
+            <img src="assets/performance.png" alt="Performance Calculator">
+          </div>
+        </div>
+
+        <div class="feature-row reverse">
+          <div class="feature-text">
+            <h3>Smart NOTAMs</h3>
+            <p>No more parsing through walls of text. NOTAMs are automatically categorized, prioritized, and filtered. Critical alerts for runway closures and TFRs are highlighted.</p>
+            <ul class="feature-list">
+              <li>Categorized by type</li>
+              <li>Priority-based sorting</li>
+              <li>TFR alerts highlighted</li>
+              <li>Plain English summaries</li>
+            </ul>
+          </div>
+          <div class="feature-mockup">
+            <img src="assets/notams.png" alt="NOTAMs">
+          </div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-text">
+            <h3>Airspace Awareness</h3>
+            <p>See TFRs, restricted areas, and special use airspace along your route. Never fly into airspace you shouldn't be in.</p>
+            <ul class="feature-list">
+              <li>TFR visualization</li>
+              <li>Restricted & prohibited areas</li>
+              <li>MOAs and alert areas</li>
+              <li>Route conflict detection</li>
+            </ul>
+          </div>
+          <div class="feature-mockup">
+            <img src="assets/airspace.png" alt="Airspace">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mockup-gallery">
+      <div class="container">
+        <h2>See More Features</h2>
+      </div>
+      <div class="gallery-scroll">
+        <div class="gallery-item"><img src="assets/map.png" alt="Map View"><span>Interactive Map</span></div>
+        <div class="gallery-item"><img src="assets/told.png" alt="TOLD Calculator"><span>TOLD Calculator</span></div>
+        <div class="gallery-item"><img src="assets/aircraft.png" alt="Aircraft Profile"><span>Aircraft Profiles</span></div>
+        <div class="gallery-item"><img src="assets/runways.png" alt="Runway Info"><span>Runway Data</span></div>
+        <div class="gallery-item"><img src="assets/fuel.png" alt="Fuel Planning"><span>Fuel Planning</span></div>
+        <div class="gallery-item"><img src="assets/brief.png" alt="Brief Export"><span>Brief Export</span></div>
+        <div class="gallery-item"><img src="assets/aircraft-list.png" alt="Aircraft List"><span>Aircraft Library</span></div>
+        <!-- Duplicate for infinite scroll -->
+        <div class="gallery-item"><img src="assets/map.png" alt="Map View"><span>Interactive Map</span></div>
+        <div class="gallery-item"><img src="assets/told.png" alt="TOLD Calculator"><span>TOLD Calculator</span></div>
+        <div class="gallery-item"><img src="assets/aircraft.png" alt="Aircraft Profile"><span>Aircraft Profiles</span></div>
+        <div class="gallery-item"><img src="assets/runways.png" alt="Runway Info"><span>Runway Data</span></div>
+        <div class="gallery-item"><img src="assets/fuel.png" alt="Fuel Planning"><span>Fuel Planning</span></div>
+        <div class="gallery-item"><img src="assets/brief.png" alt="Brief Export"><span>Brief Export</span></div>
+        <div class="gallery-item"><img src="assets/aircraft-list.png" alt="Aircraft List"><span>Aircraft Library</span></div>
       </div>
     </section>
 
