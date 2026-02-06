@@ -1,0 +1,9 @@
+{
+  "name": "bebrief-website",
+  "version": "1.0.0",
+  "description": "BeBrief landing page",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  }
+}

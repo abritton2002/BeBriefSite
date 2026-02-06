@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeBrief - VFR Flight Briefing App</title>
+  <meta name="description" content="Your complete preflight companion. Weather, NOTAMs, TFRs, and performance calculations in one streamlined app.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0d0d0f;
+      color: #fafafa;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      padding: 24px 0;
+      border-bottom: 1px solid #27272a;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #22d3ee;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-link {
+      color: #a1a1aa;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: #fafafa;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 100px 0 80px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      color: #22d3ee;
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 8vw, 72px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #22d3ee, #4ade80);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: #a1a1aa;
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #22d3ee;
+      color: #0d0d0f;
+    }
+
+    .btn-primary:hover {
+      background: #06b6d4;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #18181b;
+      color: #fafafa;
+      border: 1px solid #27272a;
+    }
+
+    .btn-secondary:hover {
+      background: #27272a;
+      transform: translateY(-2px);
+    }
+
+    /* Features */
+    .features {
+      padding: 80px 0;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .features-subtitle {
+      text-align: center;
+      color: #71717a;
+      margin-bottom: 60px;
+      font-size: 18px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: #3f3f46;
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(34, 211, 238, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: #a1a1aa;
+      font-size: 15px;
+    }
+
+    /* Data Sources */
+    .data-sources {
+      padding: 80px 0;
+      background: #18181b;
+      border-top: 1px solid #27272a;
+      border-bottom: 1px solid #27272a;
+    }
+
+    .data-sources h2 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 40px;
+    }
+
+    .sources-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+      opacity: 0.7;
+    }
+
+    .source-item {
+      font-size: 14px;
+      color: #a1a1aa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .source-dot {
+      width: 6px;
+      height: 6px;
+      background: #4ade80;
+      border-radius: 50%;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      padding: 100px 0;
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-size: 40px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .cta-section p {
+      color: #71717a;
+      font-size: 18px;
+      margin-bottom: 32px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid #27272a;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      color: #71717a;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: #fafafa;
+    }
+
+    .copyright {
+      color: #52525b;
+      font-size: 14px;
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto 60px;
+      text-align: center;
+    }
+
+    .disclaimer p {
+      color: #fbbf24;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 60px 0 40px;
+      }
+
+      .features, .cta-section {
+        padding: 60px 0;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="/" class="logo">BeBrief</a>
+        <a href="mailto:support@bebrief.app" class="nav-link">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="badge">Coming Soon to iOS & Android</div>
+        <h1>Your Complete<br><span>Preflight Companion</span></h1>
+        <p>Weather, NOTAMs, TFRs, and performance calculations in one streamlined app. Make confident go/no-go decisions.</p>
+        <div class="cta-buttons">
+          <a href="#features" class="btn btn-primary">
+            <span>Explore Features</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="mailto:support@bebrief.app" class="btn btn-secondary">Get Early Access</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <h2>Everything You Need to Brief</h2>
+        <p class="features-subtitle">Professional-grade tools designed for VFR pilots</p>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🌤️</div>
+            <h3>Live Weather</h3>
+            <p>Real-time METAR and TAF data with flight category indicators. See VFR, MVFR, IFR, and LIFR conditions at a glance.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📋</div>
+            <h3>Smart NOTAMs</h3>
+            <p>Categorized and prioritized notices. Runway closures, TFRs, and critical alerts highlighted automatically.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🚫</div>
+            <h3>TFR Awareness</h3>
+            <p>National Defense Airspace and temporary restrictions displayed on your route. Never fly into restricted airspace.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">⚖️</div>
+            <h3>Weight & Balance</h3>
+            <p>Calculate takeoff and landing weights with CG envelope visualization. Know your limits before you fly.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>TOLD Calculator</h3>
+            <p>Takeoff and landing performance for 50+ aircraft types. Adjust for temperature, altitude, and wind.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🌅</div>
+            <h3>Sunrise & Sunset</h3>
+            <p>Solar calculations with civil twilight times. Plan your departure and arrival with daylight in mind.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="data-sources">
+      <div class="container">
+        <h2>Trusted Data Sources</h2>
+        <div class="sources-grid">
+          <div class="source-item"><span class="source-dot"></span>NOAA Aviation Weather Center</div>
+          <div class="source-item"><span class="source-dot"></span>FAA NOTAM System</div>
+          <div class="source-item"><span class="source-dot"></span>FAA ArcGIS</div>
+          <div class="source-item"><span class="source-dot"></span>FAA NASR</div>
+          <div class="source-item"><span class="source-dot"></span>USAF AHAS</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <div class="disclaimer">
+          <p><strong>Important:</strong> BeBrief is not an official FAA weather briefing source and does not satisfy 14 CFR 91.103 requirements. Always obtain an official briefing from 1800wxbrief.com before flight.</p>
+        </div>
+        <h2>Ready to Simplify Your Preflight?</h2>
+        <p>Join pilots who brief smarter, not harder.</p>
+        <a href="mailto:support@bebrief.app?subject=Early Access Request" class="btn btn-primary">Request Early Access</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="mailto:support@bebrief.app">Support</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+        <p class="copyright">&copy; 2026 BeBrief. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
