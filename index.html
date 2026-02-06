@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BeBrief - VFR Flight Briefing App</title>
   <meta name="description" content="Your complete preflight companion. Weather, NOTAMs, TFRs, and performance calculations in one streamlined app.">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -42,11 +44,20 @@
     }
 
     .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-size: 24px;
       font-weight: 800;
       color: #22d3ee;
       text-decoration: none;
       letter-spacing: -0.5px;
+    }
+
+    .logo img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
     }
 
     .nav-link {
@@ -332,7 +343,7 @@
   <header>
     <div class="container">
       <div class="header-content">
-        <a href="/" class="logo">BeBrief</a>
+        <a href="/" class="logo"><img src="assets/icon.png" alt="BeBrief">BeBrief</a>
         <a href="mailto:support@bebrief.app" class="nav-link">Contact</a>
       </div>
     </div>
