@@ -111,10 +111,10 @@
   <main>
     <div class="container">
       <h1>Privacy Policy</h1>
-      <p class="updated">Last Updated: February 2026</p>
+      <p class="updated">Last Updated: February 19, 2026</p>
 
       <h2>Overview</h2>
-      <p>BeBrief ("the App") is a pre-flight weather briefing application for VFR pilots. This privacy policy explains how we collect, use, and protect your information.</p>
+      <p>BeBrief ("the App") is a pre-flight planning application for VFR pilots. This privacy policy explains how we collect, use, and protect your information.</p>
 
       <h2>Information We Collect</h2>
 
@@ -129,6 +129,7 @@
         <li>Airports you search for and brief</li>
         <li>Aircraft profiles you create</li>
         <li>App preferences and settings</li>
+        <li>Diagnostic crash/error events (for app stability)</li>
       </ul>
 
       <h3>We Do NOT Collect</h3>
@@ -163,6 +164,9 @@
       <h3>RevenueCat</h3>
       <p>We use RevenueCat to manage subscriptions. They process subscription status only - no payment details. <a href="https://www.revenuecat.com/privacy">RevenueCat Privacy Policy</a></p>
 
+      <h3>Sentry</h3>
+      <p>We use Sentry for crash reporting and error diagnostics. By default, BeBrief configures Sentry with PII collection disabled and session replay disabled unless explicitly enabled in deployment configuration. <a href="https://sentry.io/privacy/">Sentry Privacy Policy</a></p>
+
       <h3>Apple</h3>
       <p>Sign in with Apple is processed by Apple. <a href="https://www.apple.com/privacy/">Apple Privacy Policy</a></p>
 
@@ -170,13 +174,13 @@
       <ul>
         <li>Account data is retained while your account is active</li>
         <li>You can delete your account and all associated data at any time from the app settings</li>
-        <li>Anonymous usage analytics are retained for 90 days</li>
+        <li>Diagnostic error events are retained according to third-party provider policies</li>
       </ul>
 
       <h2>Data Security</h2>
       <ul>
         <li>All data is transmitted over HTTPS/TLS encryption</li>
-        <li>Passwords are never stored (we use Apple Sign In)</li>
+        <li>Authentication is handled by trusted identity providers and Supabase Auth; plaintext passwords are never stored by BeBrief</li>
         <li>Database access is protected by Row Level Security</li>
       </ul>
 
@@ -189,7 +193,6 @@
         <li>Access your personal data</li>
         <li>Delete your account and data</li>
         <li>Export your data</li>
-        <li>Opt out of analytics</li>
       </ul>
       <p>To exercise these rights, contact us at <a href="mailto:FlyBeBrief@gmail.com">FlyBeBrief@gmail.com</a></p>
 
@@ -200,7 +203,11 @@
       <p>For privacy questions or concerns:</p>
       <ul>
         <li>Email: <a href="mailto:FlyBeBrief@gmail.com">FlyBeBrief@gmail.com</a></li>
+        <li>Website: <a href="https://bebrief.netlify.app/">https://bebrief.netlify.app/</a></li>
       </ul>
+
+      <h2>Disclaimer</h2>
+      <p>BeBrief provides weather and planning information for <strong>reference purposes only</strong>. Always obtain an official briefing from FAA-approved sources (1800wxbrief.com) before any flight. The developers assume no liability for decisions made based on information provided by this app.</p>
     </div>
   </main>
 
