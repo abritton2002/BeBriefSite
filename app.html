@@ -2927,6 +2927,33 @@
                 <div id="identityMessage" class="success"></div>
                 <div id="identityError" class="error"></div>
               </div>
+              <div class="card span-12">
+                <div class="section-head">
+                  <div>
+                    <h2>Flight Service Link</h2>
+                    <p class="muted">Connect your 1800WXBRIEF authorization only when you want credentialed official briefing or filing.</p>
+                  </div>
+                  <span id="leidosStatusBadge" class="badge">Checking</span>
+                </div>
+                <div class="list" id="leidosAuthorizationList"></div>
+                <div class="button-row" style="margin-top:14px">
+                  <a class="btn" href="https://ffspelabs.leidos.com/Website2/#!/" target="_blank" rel="noreferrer">Open Authorization Page</a>
+                </div>
+                <form id="leidosAuthorizationForm" class="form-grid">
+                  <label>
+                    1800WXBRIEF username
+                    <input id="leidosUsername" type="text" maxlength="120" autocomplete="username" placeholder="lfsdev@flybebrief.com">
+                  </label>
+                  <div class="button-row" style="align-self:end">
+                    <button id="verifyLeidosButton" class="btn primary" type="submit">Verify Link</button>
+                    <button id="refreshLeidosButton" class="btn" type="button">Refresh Status</button>
+                    <button id="disconnectLeidosButton" class="btn danger" type="button">Disconnect</button>
+                  </div>
+                </form>
+                <p class="muted" style="margin-top:12px">Open the Leidos lab, authorize BeBrief in Service Provider Authorization, enter the same 1800WXBRIEF username here, then verify.</p>
+                <div id="leidosAuthorizationMessage" class="success"></div>
+                <div id="leidosAuthorizationError" class="error"></div>
+              </div>
               <div class="card span-6">
                 <h2>App Settings</h2>
                 <form id="settingsForm" class="form-grid">
@@ -3042,10 +3069,20 @@
     const briefError = document.getElementById('briefError');
     const briefSuccess = document.getElementById('briefSuccess');
     const briefResult = document.getElementById('briefResult');
+    const leidosAuthorizationForm = document.getElementById('leidosAuthorizationForm');
+    const leidosUsernameInput = document.getElementById('leidosUsername');
+    const leidosStatusBadge = document.getElementById('leidosStatusBadge');
+    const leidosAuthorizationList = document.getElementById('leidosAuthorizationList');
+    const leidosAuthorizationMessage = document.getElementById('leidosAuthorizationMessage');
+    const leidosAuthorizationError = document.getElementById('leidosAuthorizationError');
+    const verifyLeidosButton = document.getElementById('verifyLeidosButton');
+    const refreshLeidosButton = document.getElementById('refreshLeidosButton');
+    const disconnectLeidosButton = document.getElementById('disconnectLeidosButton');
 
     let currentSession = null;
     let currentAircraft = [];
     let currentBriefs = [];
+    let currentLeidosAuthorization = null;
     let currentAircraftTemplates = [];
     let selectedCommandAircraftId = null;
     let dashboardLoadNonce = 0;
@@ -4654,6 +4691,84 @@
       }).join('');
     }
 
+    function normalizeLeidosAuthorization(payload) {
+      const record = payload?.authorization && typeof payload.authorization === 'object'
+        ? payload.authorization
+        : {};
+      const status = ['authorized', 'pending', 'revoked'].includes(record.status) ? record.status : 'not_connected';
+      return {
+        status,
+        lfsUsername: typeof record.lfsUsername === 'string' ? record.lfsUsername : null,
+        authorizedAt: typeof record.authorizedAt === 'string' ? record.authorizedAt : null,
+        revokedAt: typeof record.revokedAt === 'string' ? record.revokedAt : null,
+        canCredentialedFile: record.canCredentialedFile === true,
+      };
+    }
+
+    function renderLeidosAuthorization(authorization) {
+      currentLeidosAuthorization = authorization || { status: 'not_connected', lfsUsername: null, authorizedAt: null, revokedAt: null, canCredentialedFile: false };
+      const status = currentLeidosAuthorization.status || 'not_connected';
+      const label = status === 'authorized'
+        ? 'Connected'
+        : status === 'pending'
+          ? 'Pending'
+          : status === 'revoked'
+            ? 'Revoked'
+            : 'Not connected';
+      leidosStatusBadge.textContent = label;
+      leidosStatusBadge.className = `badge ${status === 'authorized' ? 'success-badge' : status === 'pending' ? 'warning-badge' : ''}`;
+      if (currentLeidosAuthorization.lfsUsername && !leidosUsernameInput.value.trim()) {
+        leidosUsernameInput.value = currentLeidosAuthorization.lfsUsername;
+      }
+      leidosAuthorizationList.innerHTML = [
+        row('Status', label, status),
+        row('Username', currentLeidosAuthorization.lfsUsername || 'Not linked'),
+        row('Credentialed filing', currentLeidosAuthorization.canCredentialedFile ? 'Available' : 'Unavailable'),
+        row('Verified', currentLeidosAuthorization.authorizedAt ? formatDate(currentLeidosAuthorization.authorizedAt) : '-'),
+      ].join('');
+      disconnectLeidosButton.disabled = status === 'not_connected';
+    }
+
+    async function callLeidosAuthorization(action, options = {}) {
+      if (!currentSession?.access_token) {
+        throw new Error('Sign in again before linking Flight Service.');
+      }
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/leidos-authorize`, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${currentSession.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action,
+          ...(options.lfsUsername ? { lfsUsername: options.lfsUsername } : {}),
+        }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload.error || `Flight Service link failed with HTTP ${response.status}.`);
+      }
+      return normalizeLeidosAuthorization(payload);
+    }
+
+    async function refreshLeidosAuthorization(options = {}) {
+      if (!currentSession?.access_token) return;
+      if (options.showLoading) {
+        refreshLeidosButton.disabled = true;
+      }
+      try {
+        setMessage(leidosAuthorizationError, '');
+        const authorization = await callLeidosAuthorization('status');
+        renderLeidosAuthorization(authorization);
+      } catch (err) {
+        setMessage(leidosAuthorizationError, err.message || 'Unable to load Flight Service link status.');
+        renderLeidosAuthorization(currentLeidosAuthorization);
+      } finally {
+        refreshLeidosButton.disabled = false;
+      }
+    }
+
     function renderAircraftTemplateOptions(templates) {
       const select = document.getElementById('aircraftTemplateSelect');
       currentAircraftTemplates = templates || [];
@@ -4941,6 +5056,7 @@
       fillDefaultAircraftOptions(settings, aircraft);
       hydrateOfficialDefaults(settings, aircraft);
       renderLinkedIdentities(identitiesResult.identities, identitiesResult.error);
+      await refreshLeidosAuthorization();
       setOfficialModeFields();
 
       const status = subscription?.status || 'free';
@@ -5058,6 +5174,8 @@
           currentSession = null;
           currentAircraft = [];
           currentBriefs = [];
+          currentLeidosAuthorization = null;
+          renderLeidosAuthorization(currentLeidosAuthorization);
         }
       document.body.classList.remove('auth-pending');
     }
@@ -5382,6 +5500,55 @@
         return;
       }
       setMessage(message, 'Email update requested. Confirm it from your inbox if Supabase requires confirmation.');
+    });
+
+    leidosAuthorizationForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      setMessage(leidosAuthorizationMessage, '');
+      setMessage(leidosAuthorizationError, '');
+      const lfsUsername = leidosUsernameInput.value.trim().toLowerCase();
+      if (!/^[a-z0-9._@-]{3,80}$/.test(lfsUsername)) {
+        setMessage(leidosAuthorizationError, 'Enter your 1800WXBRIEF username before verifying.');
+        return;
+      }
+      verifyLeidosButton.disabled = true;
+      try {
+        const authorization = await callLeidosAuthorization('verify', { lfsUsername });
+        renderLeidosAuthorization(authorization);
+        setMessage(
+          leidosAuthorizationMessage,
+          authorization.canCredentialedFile
+            ? 'Flight Service is connected. Credentialed official briefing and filing are available.'
+            : 'Verification is pending. Complete Service Provider Authorization on the Leidos lab site, then verify again.',
+        );
+      } catch (err) {
+        setMessage(leidosAuthorizationError, err.message || 'Unable to verify Flight Service link.');
+      } finally {
+        verifyLeidosButton.disabled = false;
+      }
+    });
+
+    refreshLeidosButton.addEventListener('click', async () => {
+      setMessage(leidosAuthorizationMessage, '');
+      await refreshLeidosAuthorization({ showLoading: true });
+    });
+
+    disconnectLeidosButton.addEventListener('click', async () => {
+      if (!currentLeidosAuthorization || currentLeidosAuthorization.status === 'not_connected') return;
+      const ok = window.confirm('Disconnect Flight Service credentialed access for this BeBrief account?');
+      if (!ok) return;
+      setMessage(leidosAuthorizationMessage, '');
+      setMessage(leidosAuthorizationError, '');
+      disconnectLeidosButton.disabled = true;
+      try {
+        const authorization = await callLeidosAuthorization('disconnect');
+        renderLeidosAuthorization(authorization);
+        setMessage(leidosAuthorizationMessage, 'Flight Service credentialed access disconnected.');
+      } catch (err) {
+        setMessage(leidosAuthorizationError, err.message || 'Unable to disconnect Flight Service link.');
+      } finally {
+        disconnectLeidosButton.disabled = false;
+      }
     });
 
     authForm.addEventListener('submit', async (event) => {
