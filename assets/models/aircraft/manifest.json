@@ -3,16 +3,6 @@
   "source": "Sketchfab download API",
   "models": [
     {
-      "id": "cessna-172sp-nlm",
-      "displayName": "Cessna 172SP",
-      "match": ["cessna 172", "cessna 172sp", "c172", "172sp", "skyhawk"],
-      "path": "assets/models/aircraft/sketchfab/cessna-172sp-nlm/model.glb",
-      "bytes": 15998704,
-      "author": "NLM",
-      "license": "CC Attribution",
-      "sourceUrl": "https://sketchfab.com/3d-models/cessna-172sp-c9cadc2f026946da8cf9715a683739e9"
-    },
-    {
       "id": "cessna-172-light",
       "displayName": "Cessna 172 Lightweight",
       "match": ["cessna 172", "c172", "skyhawk"],
@@ -73,16 +63,6 @@
       "sourceUrl": "https://sketchfab.com/3d-models/beechcraft-b200-super-king-air-56515684301540daae67b378a44267f3"
     },
     {
-      "id": "beechcraft-super-king-air-heavy",
-      "displayName": "Beechcraft Super King Air",
-      "match": ["super king air", "king air"],
-      "path": "assets/models/aircraft/sketchfab/beechcraft-super-king-air-heavy/model.glb",
-      "bytes": 17111812,
-      "author": "helijah",
-      "license": "Free Standard",
-      "sourceUrl": "https://sketchfab.com/3d-models/beechcraft-super-king-air-21fa704d821541c09c552ba6c33b0b0a"
-    },
-    {
       "id": "beechcraft-t6-texan-ii",
       "displayName": "Beechcraft T-6 Texan II",
       "match": ["t-6", "t6", "texan ii", "beechcraft t-6", "beechcraft t6"],
@@ -91,6 +71,156 @@
       "author": "helijah",
       "license": "Free Standard",
       "sourceUrl": "https://sketchfab.com/3d-models/beechcraft-t6-texan-ii-59b501961deb4fa4a3ab4916182786db"
+    },
+    {
+      "id": "diamond-da40",
+      "displayName": "Diamond DA40",
+      "match": ["diamond da40", "da40", "diamond star"],
+      "path": "assets/models/aircraft/sketchfab/diamond-da40/model.glb",
+      "bytes": 6101144,
+      "author": "helijah",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/diamond-da40-dfda5fad07c24c12be13a23562fe83e3"
+    },
+    {
+      "id": "diamond-da42",
+      "displayName": "Diamond DA42 Twin Star",
+      "match": ["diamond da42", "da42", "twin star"],
+      "path": "assets/models/aircraft/sketchfab/diamond-da42/model.glb",
+      "bytes": 3341852,
+      "author": "helijah",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/diamond-da42-twin-star-d83b6e776955401f87f7bc2ad5d5a252"
+    },
+    {
+      "id": "tecnam-p2010",
+      "displayName": "Tecnam P2010",
+      "match": ["tecnam p2010", "p2010"],
+      "path": "assets/models/aircraft/sketchfab/tecnam-p2010/model.glb",
+      "bytes": 2778720,
+      "author": "helijah",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/tecnam-p2010-1284afa5a5554e19a91b9d5545ca66a8"
+    },
+    {
+      "id": "tecnam-p2006t",
+      "displayName": "Tecnam P2006T",
+      "match": ["tecnam p2006t", "p2006t"],
+      "path": "assets/models/aircraft/sketchfab/tecnam-p2006t/model.glb",
+      "bytes": 4557788,
+      "author": "helijah",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/tecnam-p2006t-a0a4d717a8c94a17b958eb69c4efc352"
+    },
+    {
+      "id": "tecnam-p2002-sierra",
+      "displayName": "Tecnam P2002 Sierra",
+      "match": ["tecnam p2002", "p2002", "sierra"],
+      "path": "assets/models/aircraft/sketchfab/tecnam-p2002-sierra/model.glb",
+      "bytes": 4812128,
+      "author": "helijah",
+      "license": "Free Standard",
+      "sourceUrl": "https://sketchfab.com/3d-models/tecnam-p2002-sierra-5325a60e1c2f402a8b5b71656ffaea66"
+    },
+    {
+      "id": "cessna-152",
+      "displayName": "Cessna 152",
+      "match": ["cessna 152", "c152"],
+      "path": "assets/models/aircraft/sketchfab/cessna-152/model.glb",
+      "bytes": 474944,
+      "author": "morejpeg",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/cessna-152-airplane-3b96e08bc4be486dbdf3748c6d245731"
+    },
+    {
+      "id": "pilatus-pc12",
+      "displayName": "Pilatus PC-12",
+      "match": ["pilatus pc-12", "pilatus pc12", "pc-12", "pc12"],
+      "path": "assets/models/aircraft/sketchfab/pilatus-pc12/model.glb",
+      "bytes": 1309272,
+      "author": "manilov.ap",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/pc12-796b6de21be54e4995fc102ea0b09d05"
+    },
+    {
+      "id": "daher-tbm-930",
+      "displayName": "Daher TBM 930",
+      "match": ["daher tbm 930", "tbm 930", "tbm930", "tbm"],
+      "path": "assets/models/aircraft/sketchfab/daher-tbm-930/model.glb",
+      "bytes": 5180796,
+      "author": "helijah",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/daher-tbm-930-ba21567b779040038081f084fc528a44"
+    },
+    {
+      "id": "pilatus-pc24",
+      "displayName": "Pilatus PC-24",
+      "match": ["pilatus pc-24", "pilatus pc24", "pc-24", "pc24"],
+      "path": "assets/models/aircraft/sketchfab/pilatus-pc24/model.glb",
+      "bytes": 5084484,
+      "author": "helijah",
+      "license": "Free Standard",
+      "sourceUrl": "https://sketchfab.com/3d-models/pilatus-pc-24-super-versatile-jet-1cad9495515646d497eae0ef470dd729"
+    },
+    {
+      "id": "cessna-citation-x",
+      "displayName": "Cessna Citation X",
+      "match": ["cessna citation x", "citation x", "citation"],
+      "path": "assets/models/aircraft/sketchfab/cessna-citation-x/model.glb",
+      "bytes": 1488888,
+      "author": "SnowCrow",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/cessna-citation-x-1d7bb0b48301482f8145cb121268dd7f"
+    },
+    {
+      "id": "t45-goshawk",
+      "displayName": "McDonnell Douglas T-45 Goshawk",
+      "match": ["t-45", "t45", "goshawk"],
+      "path": "assets/models/aircraft/sketchfab/t45-goshawk/model.glb",
+      "bytes": 6712860,
+      "author": "helijah",
+      "license": "Free Standard",
+      "sourceUrl": "https://sketchfab.com/3d-models/mcdonnell-douglas-t-45-goshawk-9f149557a61d48f6b32d594d5b8c89f2"
+    },
+    {
+      "id": "fa-18f-super-hornet",
+      "displayName": "F/A-18F Super Hornet",
+      "match": ["f/a-18", "fa-18", "f18", "super hornet", "hornet"],
+      "path": "assets/models/aircraft/sketchfab/fa-18f-super-hornet/model.glb",
+      "bytes": 2635560,
+      "author": "Carlos.Maciel",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/fa-18f-a53e227721524b9a9907dc9c07939f8b"
+    },
+    {
+      "id": "e2-hawkeye",
+      "displayName": "Northrop Grumman E-2 Hawkeye",
+      "match": ["e-2", "e2", "hawkeye"],
+      "path": "assets/models/aircraft/sketchfab/e2-hawkeye/model.glb",
+      "bytes": 5080004,
+      "author": "helijah",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/northrop-grumman-e-2-hawkeye-a7466570f07949feb054425620a66bb3"
+    },
+    {
+      "id": "bell-206-jetranger",
+      "displayName": "Bell 206 JetRanger",
+      "match": ["bell 206", "jetranger", "jet ranger"],
+      "path": "assets/models/aircraft/sketchfab/bell-206-jetranger/model.glb",
+      "bytes": 6651412,
+      "author": "helijah",
+      "license": "Free Standard",
+      "sourceUrl": "https://sketchfab.com/3d-models/bell-206-jet-ranger-76b3a340e3d34517a26c2e8142b2867e"
+    },
+    {
+      "id": "robinson-r44",
+      "displayName": "Robinson R44",
+      "match": ["robinson r44", "r44"],
+      "path": "assets/models/aircraft/sketchfab/robinson-r44/model.glb",
+      "bytes": 7954680,
+      "author": "syarifudinirfan701",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/robinson-r44-36e3498a5dc54d16a6d964f9b525deb8"
     }
   ]
 }

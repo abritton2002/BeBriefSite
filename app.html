@@ -239,11 +239,58 @@
       display: none;
       min-height: min(680px, calc(100vh - 120px));
       place-items: center;
-      color: var(--muted);
+      padding: 34px 0;
+      color: var(--text);
+    }
+    .loading-panel {
+      width: min(520px, 100%);
+      border: 1px solid rgba(73, 215, 232, 0.18);
+      background: linear-gradient(180deg, rgba(13, 19, 23, 0.96), rgba(5, 7, 9, 0.96));
+      border-radius: 8px;
+      padding: 28px;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.46);
+    }
+    .loading-kicker {
+      color: var(--cyan);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      font-size: 12px;
+    }
+    .loading-title {
+      margin-top: 10px;
+      font-size: clamp(25px, 4vw, 38px);
+      line-height: 1.02;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+    .loading-subtitle {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .loading-bar {
+      position: relative;
+      overflow: hidden;
+      height: 3px;
+      margin-top: 24px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .loading-bar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      width: 42%;
+      border-radius: inherit;
+      background: var(--cyan);
+      animation: loadingSweep 1.25s ease-in-out infinite;
+    }
+    @keyframes loadingSweep {
+      from { transform: translateX(-115%); opacity: 0.55; }
+      50% { opacity: 1; }
+      to { transform: translateX(260%); opacity: 0.55; }
     }
     body.auth-pending .session-loader { display: grid; }
     body.auth-pending #signedOutView,
@@ -1457,6 +1504,48 @@
     .aircraft-table th {
       border-color: rgba(148, 163, 184, 0.13);
     }
+    .template-note {
+      grid-column: 1 / -1;
+      border: 1px solid rgba(73, 215, 232, 0.2);
+      background: rgba(73, 215, 232, 0.07);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: #aebfd3;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .cg-editor {
+      display: grid;
+      gap: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      background: rgba(8, 13, 20, 0.55);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .cg-editor-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .cg-editor-title {
+      color: #f8fafc;
+      font-weight: 850;
+      font-size: 14px;
+    }
+    .cg-point-list {
+      display: grid;
+      gap: 8px;
+    }
+    .cg-point-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: end;
+    }
+    .cg-point-row label {
+      margin: 0;
+    }
     .command-stage {
       min-height: min(850px, calc(100vh - 116px));
     }
@@ -1529,7 +1618,7 @@
         min-height: auto;
       }
       .side-nav {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+          grid-template-columns: repeat(5, minmax(0, 1fr));
       }
       .page-header {
         display: grid;
@@ -1604,7 +1693,14 @@
           <div id="authSuccess" class="success"></div>
         </aside>
       </section>
-      <section id="sessionLoader" class="session-loader" aria-live="polite">Loading BeBrief</section>
+      <section id="sessionLoader" class="session-loader" aria-live="polite" aria-busy="true">
+        <div class="loading-panel">
+          <div class="loading-kicker">BeBrief Web</div>
+          <div class="loading-title">Loading your flight dashboard</div>
+          <div class="loading-subtitle">Syncing your aircraft, profile, and recent briefing records.</div>
+          <div class="loading-bar"></div>
+        </div>
+      </section>
 
       <section id="dashboard" class="dashboard app-shell">
         <aside class="side-rail">
@@ -1613,7 +1709,6 @@
             <button class="side-tab" type="button" data-view="profile">Profile</button>
             <button class="side-tab" type="button" data-view="aircraft">Aircraft</button>
             <button class="side-tab" type="button" data-view="briefs">Briefs</button>
-            <button class="side-tab" type="button" data-view="logbook">Logbook</button>
             <button class="side-tab" type="button" data-view="account">Account</button>
           </nav>
         </aside>
@@ -1936,101 +2031,12 @@
             </div>
           </section>
 
-          <section id="view-logbook" class="view">
-            <div class="page-header">
-              <div>
-                <div class="eyebrow">Logbook</div>
-                <h2>Flight records</h2>
-                <p class="muted">Review and add completed flights.</p>
-              </div>
-            </div>
-            <div class="view-grid">
-              <div class="card span-4">
-                <div class="section-head">
-                  <div>
-                    <div class="eyebrow">Entry</div>
-                    <h2>New Logbook Entry</h2>
-                  </div>
-                </div>
-                <form id="logbookForm" class="form-grid">
-                  <label>
-                    Date
-                    <input id="logbookDate" type="date" required>
-                  </label>
-                  <label>
-                    Aircraft
-                    <input id="logbookAircraft" type="text" maxlength="12" autocomplete="off" placeholder="N12345">
-                  </label>
-                  <label>
-                    Departure
-                    <input id="logbookDeparture" type="text" maxlength="4" autocomplete="off" placeholder="KTPA" required>
-                  </label>
-                  <label>
-                    Destination
-                    <input id="logbookDestination" type="text" maxlength="4" autocomplete="off" placeholder="KJFK" required>
-                  </label>
-                  <label>
-                    Route
-                    <input id="logbookRoute" type="text" maxlength="240" autocomplete="off">
-                  </label>
-                  <label>
-                    Total hours
-                    <input id="logbookTotalHours" type="number" min="0" max="1000" step="0.1" value="1.0" required>
-                  </label>
-                  <label>
-                    PIC hours
-                    <input id="logbookPicHours" type="number" min="0" max="1000" step="0.1" value="1.0">
-                  </label>
-                  <label>
-                    Dual hours
-                    <input id="logbookDualHours" type="number" min="0" max="1000" step="0.1" value="0">
-                  </label>
-                  <label>
-                    Night hours
-                    <input id="logbookNightHours" type="number" min="0" max="1000" step="0.1" value="0">
-                  </label>
-                  <label>
-                    Day landings
-                    <input id="logbookDayLandings" type="number" min="0" max="999" step="1" value="1">
-                  </label>
-                  <label>
-                    Night landings
-                    <input id="logbookNightLandings" type="number" min="0" max="999" step="1" value="0">
-                  </label>
-                  <label>
-                    Approaches
-                    <input id="logbookApproaches" type="number" min="0" max="999" step="1" value="0">
-                  </label>
-                  <label class="span-12">
-                    Remarks
-                    <textarea id="logbookRemarks" maxlength="500"></textarea>
-                  </label>
-                  <div class="button-row" style="align-self:end">
-                    <button class="btn primary" type="submit">Save Entry</button>
-                  </div>
-                </form>
-                <div id="logbookMessage" class="success"></div>
-                <div id="logbookError" class="error"></div>
-              </div>
-              <div class="card span-8">
-                <div class="section-head">
-                  <div>
-                    <div class="eyebrow">History</div>
-                    <h2>Recent Entries</h2>
-                  </div>
-                  <span id="logbookCount" class="badge">0</span>
-                </div>
-                <div class="list" id="logbookList"></div>
-              </div>
-            </div>
-          </section>
-
           <section id="view-aircraft" class="view">
             <div class="page-header">
               <div>
                 <div class="eyebrow">Aircraft</div>
                 <h2>Hangar</h2>
-                <p class="muted">Manage aircraft, weights, fuel, speeds, and performance values.</p>
+                <p class="muted">Create aircraft from supported templates, then adjust weights, fuel, speeds, and performance values.</p>
               </div>
             </div>
             <div class="view-grid">
@@ -2043,6 +2049,14 @@
               </div>
               <form id="aircraftForm" class="form-grid">
                 <input id="aircraftId" type="hidden">
+                <input id="aircraftTemplateId" type="hidden">
+                <label class="span-12">
+                  Aircraft model
+                  <select id="aircraftTemplateSelect" required>
+                    <option value="">Loading templates...</option>
+                  </select>
+                </label>
+                <div id="aircraftTemplateNote" class="template-note">Choose a supported aircraft template first. BeBrief will prefill representative data, then you can adjust the aircraft-specific values before saving.</div>
                 <label>
                   Tail number
                   <input id="aircraftTail" type="text" maxlength="12" autocomplete="off" required placeholder="N12345">
@@ -2053,11 +2067,11 @@
                 </label>
                 <label>
                   Make
-                  <input id="aircraftMake" type="text" maxlength="80" required placeholder="Cessna">
+                  <input id="aircraftMake" type="text" maxlength="80" required placeholder="Cessna" readonly>
                 </label>
                 <label>
                   Model
-                  <input id="aircraftModel" type="text" maxlength="80" required placeholder="172N">
+                  <input id="aircraftModel" type="text" maxlength="80" required placeholder="172N" readonly>
                 </label>
                 <label>
                   Year
@@ -2220,14 +2234,26 @@
                   Service ceiling ft
                   <input id="serviceCeiling" type="number" min="0" max="100000" step="100">
                 </label>
-                <label class="span-12">
-                  Forward CG limit JSON
-                  <textarea id="cgForwardLimit" rows="3" spellcheck="false" placeholder='[{"weight":1500,"cg":35},{"weight":2400,"cg":39.5}]'></textarea>
-                </label>
-                <label class="span-12">
-                  Aft CG limit JSON
-                  <textarea id="cgAftLimit" rows="3" spellcheck="false" placeholder='[{"weight":1500,"cg":47},{"weight":2400,"cg":47.3}]'></textarea>
-                </label>
+                <div class="span-12 cg-editor">
+                  <div class="cg-editor-head">
+                    <div>
+                      <div class="cg-editor-title">Forward CG limit</div>
+                      <p class="muted">Enter at least two weight and CG points from the aircraft source data.</p>
+                    </div>
+                    <button class="btn small" type="button" data-cg-add="forward">Add Point</button>
+                  </div>
+                  <div id="cgForwardLimit" class="cg-point-list"></div>
+                </div>
+                <div class="span-12 cg-editor">
+                  <div class="cg-editor-head">
+                    <div>
+                      <div class="cg-editor-title">Aft CG limit</div>
+                      <p class="muted">Keep these values editable, but start from the selected template.</p>
+                    </div>
+                    <button class="btn small" type="button" data-cg-add="aft">Add Point</button>
+                  </div>
+                  <div id="cgAftLimit" class="cg-point-list"></div>
+                </div>
                 <div class="button-row" style="align-self:end">
                   <button id="saveAircraftButton" class="btn primary" type="submit">Save Aircraft</button>
                   <button id="newAircraftButton" class="btn" type="button">New</button>
@@ -2264,7 +2290,6 @@
                 </div>
                 <div class="list" id="subscriptionList"></div>
                 <div class="button-row" style="margin-top:14px">
-                  <button id="refreshSubscriptionButton" class="btn primary" type="button">Refresh Access</button>
                   <a class="btn" href="https://apps.apple.com/account/subscriptions" target="_blank" rel="noreferrer">Manage Apple Billing</a>
                 </div>
                 <div id="subscriptionMessage" class="success"></div>
@@ -2390,7 +2415,6 @@
     const briefForm = document.getElementById('briefForm');
     const briefButton = document.getElementById('briefButton');
     const refreshButton = document.getElementById('refreshButton');
-    const refreshSubscriptionButton = document.getElementById('refreshSubscriptionButton');
     const briefError = document.getElementById('briefError');
     const briefSuccess = document.getElementById('briefSuccess');
     const briefResult = document.getElementById('briefResult');
@@ -2398,7 +2422,7 @@
     let currentSession = null;
     let currentAircraft = [];
     let currentBriefs = [];
-    let currentLogbookEntries = [];
+    let currentAircraftTemplates = [];
     let selectedCommandAircraftId = null;
     let dashboardLoadNonce = 0;
     let commandSceneState = null;
@@ -2475,12 +2499,6 @@
       date.setSeconds(0, 0);
       const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
       input.value = local.toISOString().slice(0, 16);
-    }
-
-    function setDefaultLogbookDate() {
-      const input = document.getElementById('logbookDate');
-      if (!input || input.value) return;
-      input.value = new Date().toISOString().slice(0, 10);
     }
 
     function normalizeAirport(value, label) {
@@ -2697,12 +2715,20 @@
     }
 
     function parseCgLimitInput(inputId, existingLimit, fallbackLimit, label) {
-      const raw = document.getElementById(inputId).value.trim();
-      const source = raw ? JSON.parse(raw) : existingLimit || fallbackLimit;
+      const rows = [...document.getElementById(inputId).querySelectorAll('[data-cg-row]')];
+      const source = rows.length > 0
+        ? rows.map((row) => ({
+          weight: row.querySelector('[data-cg-weight]').value,
+          cg: row.querySelector('[data-cg-value]').value,
+        }))
+        : existingLimit || fallbackLimit;
       if (!Array.isArray(source) || source.length < 2) {
         throw new Error(`${label} must contain at least two CG points.`);
       }
       return source.map((point) => {
+        if (String(point.weight ?? '').trim() === '' || String(point.cg ?? '').trim() === '') {
+          throw new Error(`${label} points must include both weight and CG.`);
+        }
         const weight = Number(point.weight);
         const cg = Number(point.cg);
         if (!Number.isFinite(weight) || !Number.isFinite(cg)) {
@@ -2710,6 +2736,43 @@
         }
         return { weight, cg };
       });
+    }
+
+    function renderCgLimitInputs(containerId, points) {
+      const container = document.getElementById(containerId);
+      const safePoints = Array.isArray(points) && points.length > 0 ? points : defaultCgEnvelope()[containerId === 'cgForwardLimit' ? 'forwardLimit' : 'aftLimit'];
+      container.innerHTML = safePoints.map((point, index) => `
+        <div class="cg-point-row" data-cg-row>
+          <label>
+            Weight ${index + 1}
+            <input data-cg-weight type="number" min="0" max="1000000" step="0.1" value="${escapeHtml(point.weight ?? '')}">
+          </label>
+          <label>
+            CG ${index + 1}
+            <input data-cg-value type="number" min="-1000" max="1000" step="0.01" value="${escapeHtml(point.cg ?? '')}">
+          </label>
+          <button class="btn small danger" type="button" data-cg-remove>Remove</button>
+        </div>
+      `).join('');
+    }
+
+    function addCgPoint(kind) {
+      const containerId = kind === 'forward' ? 'cgForwardLimit' : 'cgAftLimit';
+      const container = document.getElementById(containerId);
+      const rowCount = container.querySelectorAll('[data-cg-row]').length;
+      container.insertAdjacentHTML('beforeend', `
+        <div class="cg-point-row" data-cg-row>
+          <label>
+            Weight ${rowCount + 1}
+            <input data-cg-weight type="number" min="0" max="1000000" step="0.1">
+          </label>
+          <label>
+            CG ${rowCount + 1}
+            <input data-cg-value type="number" min="-1000" max="1000" step="0.01">
+          </label>
+          <button class="btn small danger" type="button" data-cg-remove>Remove</button>
+        </div>
+      `);
     }
 
     function asArray(value) {
@@ -2785,17 +2848,56 @@
       return threeModulesPromise;
     }
 
+    const AIRCRAFT_MODEL_ASSETS = [
+      { path: 'assets/models/aircraft/sketchfab/cessna-152/model.glb', matchQuality: 'exact', patterns: [/cessna\s*152|c152/] },
+      { path: 'assets/models/aircraft/sketchfab/cessna-172-light/model.glb', matchQuality: 'family', patterns: [/cessna\s*172|c172|skyhawk/] },
+      { path: 'assets/models/aircraft/sketchfab/piper-pa28-cherokee/model.glb', matchQuality: 'family', patterns: [/pa-?28|cherokee|archer|warrior/] },
+      { path: 'assets/models/aircraft/sketchfab/cirrus-sr22/model.glb', matchQuality: 'family', patterns: [/sr20|sr22|cirrus/] },
+      { path: 'assets/models/aircraft/sketchfab/cessna-182/model.glb', matchQuality: 'exact', patterns: [/cessna\s*182|c182|skylane/] },
+      { path: 'assets/models/aircraft/sketchfab/diamond-da40/model.glb', matchQuality: 'exact', patterns: [/diamond\s*da40|da40|diamond\s*star/] },
+      { path: 'assets/models/aircraft/sketchfab/diamond-da42/model.glb', matchQuality: 'exact', patterns: [/diamond\s*da42|da42|twin\s*star/] },
+      { path: 'assets/models/aircraft/sketchfab/tecnam-p2010/model.glb', matchQuality: 'exact', patterns: [/tecnam\s*p2010|p2010/] },
+      { path: 'assets/models/aircraft/sketchfab/tecnam-p2006t/model.glb', matchQuality: 'exact', patterns: [/tecnam\s*p2006t|p2006t/] },
+      { path: 'assets/models/aircraft/sketchfab/tecnam-p2002-sierra/model.glb', matchQuality: 'exact', patterns: [/tecnam\s*p2002|p2002|sierra/] },
+      { path: 'assets/models/aircraft/sketchfab/beechcraft-bonanza-v35/model.glb', matchQuality: 'family', patterns: [/bonanza|v35|beech35/] },
+      { path: 'assets/models/aircraft/sketchfab/beechcraft-b200-king-air/model.glb', matchQuality: 'family', patterns: [/t-?44|pegasus|king\s*air|b200|baron\s*58|be58/] },
+      { path: 'assets/models/aircraft/sketchfab/beechcraft-t6-texan-ii/model.glb', matchQuality: 'family', patterns: [/t-?6|texan/] },
+      { path: 'assets/models/aircraft/sketchfab/pilatus-pc12/model.glb', matchQuality: 'exact', patterns: [/pilatus\s*pc-?12|pc-?12/] },
+      { path: 'assets/models/aircraft/sketchfab/daher-tbm-930/model.glb', matchQuality: 'exact', patterns: [/tbm\s*930|tbm930|daher\s*tbm|tbm/] },
+      { path: 'assets/models/aircraft/sketchfab/pilatus-pc24/model.glb', matchQuality: 'exact', patterns: [/pilatus\s*pc-?24|pc-?24/] },
+      { path: 'assets/models/aircraft/sketchfab/cessna-citation-x/model.glb', matchQuality: 'family', patterns: [/citation\s*x|citation/] },
+      { path: 'assets/models/aircraft/sketchfab/t45-goshawk/model.glb', matchQuality: 'family', patterns: [/t-?45|goshawk/] },
+      { path: 'assets/models/aircraft/sketchfab/fa-18f-super-hornet/model.glb', matchQuality: 'family', patterns: [/f\/a-?18|fa-?18|f18|super\s*hornet|hornet/] },
+      { path: 'assets/models/aircraft/sketchfab/e2-hawkeye/model.glb', matchQuality: 'family', patterns: [/e-?2|hawkeye/] },
+      { path: 'assets/models/aircraft/sketchfab/bell-206-jetranger/model.glb', matchQuality: 'stand-in', patterns: [/th-?73|thrasher|leonardo|bell\s*206|jet\s*ranger|jetranger/] },
+      { path: 'assets/models/aircraft/sketchfab/robinson-r44/model.glb', matchQuality: 'exact', patterns: [/robinson\s*r44|r44/] },
+    ];
+
+    function isSafeLocalModelPath(path) {
+      return /^assets\/models\/aircraft\/sketchfab\/[a-z0-9-]+\/model\.glb$/i.test(String(path || ''));
+    }
+
+    function resolveAircraftModelAsset(aircraft) {
+      const explicitPath = aircraft?.performance?.modelAssetPath || aircraft?.modelAssetPath;
+      if (isSafeLocalModelPath(explicitPath)) {
+        return {
+          path: explicitPath,
+          matchQuality: aircraft?.performance?.modelAssetMatchQuality || aircraft?.modelAssetMatchQuality || 'explicit',
+        };
+      }
+      const descriptor = [aircraft?.make, aircraft?.model, aircraft?.nickname, aircraft?.templateId]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+      const match = AIRCRAFT_MODEL_ASSETS.find((asset) => asset.patterns.some((pattern) => pattern.test(descriptor)));
+      return match || {
+        path: 'assets/models/aircraft/sketchfab/cessna-172-light/model.glb',
+        matchQuality: 'default',
+      };
+    }
+
     function getAircraftModelPath(aircraft) {
-      const explicitPath = aircraft?.performance?.modelAssetPath;
-      if (explicitPath) return explicitPath;
-      const descriptor = [aircraft?.make, aircraft?.model, aircraft?.nickname].filter(Boolean).join(' ').toLowerCase();
-      if (/pa-?28|cherokee|archer|warrior/.test(descriptor)) return 'assets/models/aircraft/sketchfab/piper-pa28-cherokee/model.glb';
-      if (/sr22|cirrus/.test(descriptor)) return 'assets/models/aircraft/sketchfab/cirrus-sr22/model.glb';
-      if (/182|skylane/.test(descriptor)) return 'assets/models/aircraft/sketchfab/cessna-182/model.glb';
-      if (/bonanza|v35|beech35/.test(descriptor)) return 'assets/models/aircraft/sketchfab/beechcraft-bonanza-v35/model.glb';
-      if (/king air|b200/.test(descriptor)) return 'assets/models/aircraft/sketchfab/beechcraft-b200-king-air/model.glb';
-      if (/t-?6|texan/.test(descriptor)) return 'assets/models/aircraft/sketchfab/beechcraft-t6-texan-ii/model.glb';
-      return 'assets/models/aircraft/sketchfab/cessna-172sp-nlm/model.glb';
+      return resolveAircraftModelAsset(aircraft).path;
     }
 
     function frameModel(THREE, model, targetSize = 4.35) {
@@ -3007,6 +3109,98 @@
       }).join('');
     }
 
+    function renderAircraftTemplateOptions(templates) {
+      const select = document.getElementById('aircraftTemplateSelect');
+      currentAircraftTemplates = templates || [];
+      if (currentAircraftTemplates.length === 0) {
+        select.innerHTML = '<option value="">Templates unavailable</option>';
+        select.disabled = true;
+        document.getElementById('aircraftTemplateNote').textContent = 'Aircraft templates are unavailable. Check your connection and reload before creating aircraft.';
+        return;
+      }
+      select.disabled = false;
+      select.innerHTML = [
+        '<option value="">Choose supported aircraft...</option>',
+        ...currentAircraftTemplates.map((template) => `
+          <option value="${escapeHtml(template.id)}">${escapeHtml(template.label)} - ${escapeHtml(formatPilotType(template.audience))}</option>
+        `),
+      ].join('');
+    }
+
+    function setFieldValue(id, value) {
+      const element = document.getElementById(id);
+      if (!element) return;
+      element.value = value == null ? '' : String(value);
+    }
+
+    function applyAircraftTemplate(templateId, options = {}) {
+      const template = currentAircraftTemplates.find((item) => item.id === templateId);
+      if (!template) return;
+      const data = parseJsonObject(template.template_data, {});
+      const preserveIdentity = options.preserveIdentity || {};
+      setFieldValue('aircraftTemplateId', template.id);
+      setFieldValue('aircraftTemplateSelect', template.id);
+      setFieldValue('aircraftNickname', preserveIdentity.nickname ?? data.nickname ?? template.label);
+      setFieldValue('aircraftMake', data.make);
+      setFieldValue('aircraftModel', data.model);
+      setFieldValue('aircraftYear', data.year);
+      setFieldValue('aircraftSeats', data.numberOfSeats ?? 4);
+      setFieldValue('aircraftBaggageAreas', data.numberOfBaggageAreas ?? 1);
+      document.getElementById('aircraftMultiEngine').checked = !!data.isMultiEngine;
+      document.getElementById('aircraftRetractable').checked = !!data.isRetractableGear;
+      document.getElementById('aircraftConstantSpeed').checked = !!data.hasConstantSpeedProp;
+      setFieldValue('basicEmptyWeight', data.basicEmptyWeight);
+      setFieldValue('basicEmptyMoment', data.basicEmptyMoment);
+      setFieldValue('maxRampWeight', data.maxRampWeight);
+      setFieldValue('maxTakeoffWeight', data.maxTakeoffWeight);
+      setFieldValue('maxLandingWeight', data.maxLandingWeight);
+      setFieldValue('maxBaggageWeight', data.maxBaggageWeight);
+      setFieldValue('pilotArm', data.pilotArm);
+      setFieldValue('frontPaxArm', data.frontPaxArm);
+      setFieldValue('rearArm', data.rearArm);
+      setFieldValue('baggageArm', data.baggageArm);
+      setFieldValue('baggage2Arm', data.baggage2Arm);
+      setFieldValue('fuelArm', data.fuelArm);
+      setFieldValue('totalFuel', data.totalCapacity);
+      setFieldValue('usableFuel', data.usableCapacity);
+      setFieldValue('cruiseBurn', data.cruiseBurnRate);
+      setFieldValue('climbBurn', data.climbBurnRate);
+      setFieldValue('startTaxiFuel', data.startTaxiRunupFuel);
+      setFieldValue('fuelType', data.fuelType || '100LL');
+      setFieldValue('vs0', data.vs0);
+      setFieldValue('vs1', data.vs1);
+      setFieldValue('vx', data.vx);
+      setFieldValue('vy', data.vy);
+      setFieldValue('vr', data.vr);
+      setFieldValue('vglide', data.vglide);
+      setFieldValue('vne', data.vne);
+      setFieldValue('vno', data.vno);
+      setFieldValue('va', data.va);
+      setFieldValue('vfe', data.vfe);
+      setFieldValue('takeoffGroundRoll', data.takeoffGroundRoll);
+      setFieldValue('takeoffOver50', data.takeoffOver50ft);
+      setFieldValue('landingGroundRoll', data.landingGroundRoll);
+      setFieldValue('landingOver50', data.landingOver50ft);
+      setFieldValue('climbRateSL', data.climbRateSL);
+      setFieldValue('serviceCeiling', data.serviceCeiling);
+      renderCgLimitInputs('cgForwardLimit', data.cgEnvelopeForward);
+      renderCgLimitInputs('cgAftLimit', data.cgEnvelopeAft);
+      document.getElementById('aircraftTemplateNote').textContent = `${template.label} loaded. Review and adjust the prefilled aircraft values before saving.`;
+    }
+
+    function findTemplateForAircraft(aircraft) {
+      const performance = parseJsonObject(aircraft?.performance, {});
+      if (performance.templateId) {
+        return currentAircraftTemplates.find((template) => template.id === performance.templateId) || null;
+      }
+      const descriptor = [aircraft?.make, aircraft?.model, aircraft?.nickname].filter(Boolean).join(' ').toLowerCase();
+      return currentAircraftTemplates.find((template) => {
+        const data = parseJsonObject(template.template_data, {});
+        const templateDescriptor = [template.id, template.label, data.make, data.model, data.nickname].filter(Boolean).join(' ').toLowerCase();
+        return descriptor && (templateDescriptor.includes(descriptor) || descriptor.includes(String(data.model || '').toLowerCase()));
+      }) || null;
+    }
+
     function fillProfileForm(profile) {
       document.getElementById('profileDisplayName').value = profile?.display_name || '';
       document.getElementById('profilePilotType').value = profile?.pilot_type || 'student';
@@ -3049,12 +3243,15 @@
     function resetAircraftForm() {
       document.getElementById('aircraftFormTitle').textContent = 'Add Aircraft';
       document.getElementById('aircraftId').value = '';
+      document.getElementById('aircraftTemplateId').value = '';
       document.getElementById('aircraftForm').reset();
+      document.getElementById('aircraftTemplateSelect').value = '';
+      document.getElementById('aircraftTemplateNote').textContent = 'Choose a supported aircraft template first. BeBrief will prefill representative data, then you can adjust the aircraft-specific values before saving.';
       document.getElementById('fuelType').value = '100LL';
       document.getElementById('aircraftSeats').value = '4';
       document.getElementById('aircraftBaggageAreas').value = '1';
-      document.getElementById('cgForwardLimit').value = JSON.stringify(defaultCgEnvelope().forwardLimit);
-      document.getElementById('cgAftLimit').value = JSON.stringify(defaultCgEnvelope().aftLimit);
+      renderCgLimitInputs('cgForwardLimit', defaultCgEnvelope().forwardLimit);
+      renderCgLimitInputs('cgAftLimit', defaultCgEnvelope().aftLimit);
     }
 
     function fillAircraftForm(aircraft) {
@@ -3064,8 +3261,14 @@
       const cgEnvelope = parseJsonObject(aircraft.cg_envelope, defaultCgEnvelope());
       const characteristics = parseJsonObject(aircraft.characteristics, defaultCharacteristics());
       const performance = parseJsonObject(aircraft.performance, {});
+      const template = findTemplateForAircraft(aircraft);
       document.getElementById('aircraftFormTitle').textContent = `Edit ${aircraft.tail_number}`;
       document.getElementById('aircraftId').value = aircraft.id || '';
+      document.getElementById('aircraftTemplateId').value = template?.id || performance.templateId || '';
+      document.getElementById('aircraftTemplateSelect').value = template?.id || performance.templateId || '';
+      document.getElementById('aircraftTemplateNote').textContent = template
+        ? `${template.label} template is linked. You can adjust aircraft-specific values before saving.`
+        : 'This aircraft was created before templates were required. Choose a supported template before saving changes.';
       document.getElementById('aircraftTail').value = aircraft.tail_number || '';
       document.getElementById('aircraftNickname').value = aircraft.nickname || '';
       document.getElementById('aircraftMake').value = aircraft.make || '';
@@ -3110,8 +3313,8 @@
       document.getElementById('landingOver50').value = performance.landingOver50ft ?? '';
       document.getElementById('climbRateSL').value = performance.climbRateSL ?? '';
       document.getElementById('serviceCeiling').value = performance.serviceCeiling ?? '';
-      document.getElementById('cgForwardLimit').value = JSON.stringify(cgEnvelope.forwardLimit || defaultCgEnvelope().forwardLimit);
-      document.getElementById('cgAftLimit').value = JSON.stringify(cgEnvelope.aftLimit || defaultCgEnvelope().aftLimit);
+      renderCgLimitInputs('cgForwardLimit', cgEnvelope.forwardLimit || defaultCgEnvelope().forwardLimit);
+      renderCgLimitInputs('cgAftLimit', cgEnvelope.aftLimit || defaultCgEnvelope().aftLimit);
       setActiveView('aircraft');
     }
 
@@ -3146,27 +3349,26 @@
       const user = session.user;
       currentSession = session;
       signedOutView.style.display = 'none';
-      sessionLoader.style.display = 'none';
-      dashboard.style.display = 'grid';
+      sessionLoader.style.display = 'grid';
+      dashboard.style.display = 'none';
       signOutButton.style.display = 'inline';
       setDefaultDepartureTime();
-      setDefaultLogbookDate();
       setMessage(dashboardError, '');
 
       document.getElementById('accountEmail').value = user.email || '';
 
-      const [profileResult, subscriptionResult, aircraftResult, briefsResult, logbookResult, settingsResult] = await Promise.all([
+      const [profileResult, subscriptionResult, aircraftResult, briefsResult, settingsResult, templatesResult] = await Promise.all([
         safeQuery('profile', client.from('profiles').select('display_name,email,phone_number,emergency_contact_name,emergency_contact_phone,pilot_type,total_hours,home_airport_icao,instrument_rated,multi_engine_rated').eq('id', user.id).maybeSingle()),
         safeQuery('subscription', client.from('subscriptions').select('status,tier,trial_ends_at,subscription_expires_at,platform,product_id').eq('user_id', user.id).maybeSingle()),
         safeQuery('aircraft', client.from('user_aircraft').select('id,user_id,tail_number,nickname,make,model,year,basic_empty_weight,basic_empty_moment,max_ramp_weight,max_takeoff_weight,max_landing_weight,max_baggage_weight,stations,fuel,v_speeds,cg_envelope,performance,characteristics,created_at,updated_at').eq('user_id', user.id).order('updated_at', { ascending: false })),
         safeQuery('briefs', client.from('official_briefings').select('id,mode,status,external_briefing_id,request_payload,response_payload,requested_at,completed_at,error_message').eq('user_id', user.id).order('requested_at', { ascending: false }).limit(25)),
-        safeQuery('logbook', client.from('user_logbook_entries').select('id,date_iso,departure_icao,destination_icao,route_text,aircraft_identifier,total_time_hours,pic_hours,dual_hours,night_hours,day_landings,night_landings,approaches,remarks,source,updated_at').eq('user_id', user.id).order('date_iso', { ascending: false }).limit(50)),
         safeQuery('settings', client.from('user_settings').select('*').eq('user_id', user.id).maybeSingle()),
+        safeQuery('templates', client.from('aircraft_templates').select('id,audience,label,subtitle,caution,template_data,sort_order').eq('is_active', true).order('sort_order', { ascending: true }).order('label', { ascending: true })),
       ]);
       const identitiesResult = await loadLinkedIdentities();
       if (loadNonce !== dashboardLoadNonce || currentSession?.access_token !== session.access_token) return;
 
-      const errors = [profileResult, subscriptionResult, aircraftResult, briefsResult, logbookResult, settingsResult]
+      const errors = [profileResult, subscriptionResult, aircraftResult, briefsResult, settingsResult, templatesResult]
         .map((result) => result.error?.message)
         .filter(Boolean);
       if (errors.length > 0) {
@@ -3177,11 +3379,12 @@
       const subscription = subscriptionResult.data;
       const aircraft = aircraftResult.data || [];
       const briefs = briefsResult.data || [];
-      const logbookEntries = logbookResult.data || [];
       const settings = settingsResult.data;
+      const templates = templatesResult.data || [];
       currentAircraft = aircraft;
       currentBriefs = briefs;
-      currentLogbookEntries = logbookEntries;
+      renderAircraftTemplateOptions(templates);
+      if (!document.getElementById('aircraftId').value) resetAircraftForm();
       renderCommandHome(aircraft, briefs, profile);
 
       document.getElementById('pilotType').textContent = formatPilotType(profile?.pilot_type);
@@ -3279,24 +3482,8 @@
         }).join('');
       }
 
-      document.getElementById('logbookCount').textContent = String(logbookEntries.length);
-      const logbookList = document.getElementById('logbookList');
-      if (logbookEntries.length === 0) {
-        renderEmpty(logbookList, 'No logbook entries yet.');
-      } else {
-        logbookList.innerHTML = logbookEntries.map((entry) => {
-          const route = [entry.departure_icao, entry.route_text, entry.destination_icao].filter(Boolean).join(' ');
-          const subtitle = [
-            route || 'Route not set',
-            entry.aircraft_identifier ? `Aircraft: ${entry.aircraft_identifier}` : null,
-            `${Number(entry.total_time_hours || 0).toFixed(1)} hr`,
-            `${Number(entry.day_landings || 0) + Number(entry.night_landings || 0)} landings`,
-          ].filter(Boolean).join(' | ');
-          return actionRow(formatDate(entry.date_iso), subtitle, entry.source || 'manual', `
-            <button class="btn small danger" type="button" data-logbook-delete="${escapeHtml(entry.id)}">Delete</button>
-          `);
-        }).join('');
-      }
+      sessionLoader.style.display = 'none';
+      dashboard.style.display = 'grid';
     }
 
     async function refreshSession() {
@@ -3315,6 +3502,10 @@
         try {
           await loadDashboard(data.session);
         } catch (err) {
+          signedOutView.style.display = 'none';
+          sessionLoader.style.display = 'none';
+          dashboard.style.display = 'grid';
+          signOutButton.style.display = 'inline';
           setMessage(dashboardError, err.message || 'Unable to load your BeBrief data.');
         }
       } else {
@@ -3323,11 +3514,10 @@
         sessionLoader.style.display = 'none';
         dashboard.style.display = 'none';
         signOutButton.style.display = 'none';
-        currentSession = null;
-        currentAircraft = [];
-        currentBriefs = [];
-        currentLogbookEntries = [];
-      }
+          currentSession = null;
+          currentAircraft = [];
+          currentBriefs = [];
+        }
       document.body.classList.remove('auth-pending');
     }
 
@@ -3387,26 +3577,30 @@
       }
     });
 
-    document.getElementById('logbookList').addEventListener('click', async (event) => {
-      const deleteButton = event.target.closest('[data-logbook-delete]');
-      if (!deleteButton) return;
-      const entry = currentLogbookEntries.find((item) => item.id === deleteButton.dataset.logbookDelete);
-      if (!entry) return;
-      const ok = window.confirm(`Delete the ${entry.departure_icao || ''}-${entry.destination_icao || ''} logbook entry?`);
-      if (!ok) return;
-      const errorBox = document.getElementById('logbookError');
-      setMessage(errorBox, '');
-      const { error } = await client
-        .from('user_logbook_entries')
-        .delete()
-        .eq('id', entry.id)
-        .eq('user_id', currentSession.user.id);
-      if (error) {
-        setMessage(errorBox, error.message);
+    document.getElementById('aircraftTemplateSelect').addEventListener('change', (event) => {
+      const templateId = event.target.value;
+      if (!templateId) {
+        document.getElementById('aircraftTemplateId').value = '';
         return;
       }
-      setMessage(document.getElementById('logbookMessage'), 'Logbook entry deleted.');
-      await refreshSession();
+      applyAircraftTemplate(templateId);
+    });
+
+    document.getElementById('aircraftForm').addEventListener('click', (event) => {
+      const addButton = event.target.closest('[data-cg-add]');
+      if (addButton) {
+        addCgPoint(addButton.dataset.cgAdd);
+        return;
+      }
+      const removeButton = event.target.closest('[data-cg-remove]');
+      if (removeButton) {
+        const list = removeButton.closest('.cg-point-list');
+        if (list && list.querySelectorAll('[data-cg-row]').length <= 2) {
+          setMessage(document.getElementById('aircraftError'), 'CG limits must keep at least two points.');
+          return;
+        }
+        removeButton.closest('[data-cg-row]')?.remove();
+      }
     });
 
     document.getElementById('newAircraftButton').addEventListener('click', resetAircraftForm);
@@ -3499,51 +3693,6 @@
       }
     });
 
-    document.getElementById('logbookForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const message = document.getElementById('logbookMessage');
-      const errorBox = document.getElementById('logbookError');
-      setMessage(message, '');
-      setMessage(errorBox, '');
-      try {
-        const dateValue = document.getElementById('logbookDate').value;
-        if (!dateValue) throw new Error('Logbook date is required.');
-        const payload = {
-          id: crypto.randomUUID(),
-          user_id: currentSession.user.id,
-          source: 'manual',
-          date_iso: new Date(`${dateValue}T12:00:00`).toISOString(),
-          departure_icao: normalizeAirport(document.getElementById('logbookDeparture').value, 'Logbook departure'),
-          destination_icao: normalizeAirport(document.getElementById('logbookDestination').value, 'Logbook destination'),
-          route_text: optionalText(document.getElementById('logbookRoute').value) || '',
-          aircraft_identifier: document.getElementById('logbookAircraft').value.trim()
-            ? normalizeAircraftIdentifier(document.getElementById('logbookAircraft').value)
-            : null,
-          total_time_hours: requiredNumber(document.getElementById('logbookTotalHours').value, 'Total hours', 0, 1000),
-          pic_hours: optionalNumber(document.getElementById('logbookPicHours').value, 'PIC hours', 0, 1000) ?? 0,
-          dual_hours: optionalNumber(document.getElementById('logbookDualHours').value, 'Dual hours', 0, 1000) ?? 0,
-          night_hours: optionalNumber(document.getElementById('logbookNightHours').value, 'Night hours', 0, 1000) ?? 0,
-          actual_instrument_hours: 0,
-          simulated_instrument_hours: 0,
-          day_landings: normalizePositiveInteger(document.getElementById('logbookDayLandings').value || '0', 'Day landings', 0, 999),
-          night_landings: normalizePositiveInteger(document.getElementById('logbookNightLandings').value || '0', 'Night landings', 0, 999),
-          approaches: normalizePositiveInteger(document.getElementById('logbookApproaches').value || '0', 'Approaches', 0, 999),
-          remarks: optionalText(document.getElementById('logbookRemarks').value) || '',
-          mission_history_id: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-        const { error } = await client.from('user_logbook_entries').insert(payload);
-        if (error) throw error;
-        document.getElementById('logbookForm').reset();
-        setDefaultLogbookDate();
-        setMessage(message, 'Logbook entry saved.');
-        await refreshSession();
-      } catch (err) {
-        setMessage(errorBox, err.message || 'Unable to save logbook entry.');
-      }
-    });
-
     document.getElementById('aircraftForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const message = document.getElementById('aircraftMessage');
@@ -3560,8 +3709,19 @@
         const existingCharacteristics = parseJsonObject(existing.characteristics, defaultCharacteristics());
         const existingPerformance = parseJsonObject(existing.performance, {});
         const fuelType = document.getElementById('fuelType').value || existingFuel.fuelType || '100LL';
+        const templateId = document.getElementById('aircraftTemplateSelect').value || document.getElementById('aircraftTemplateId').value;
+        const selectedTemplate = currentAircraftTemplates.find((template) => template.id === templateId);
+        if (!selectedTemplate) throw new Error('Choose a supported aircraft model before saving.');
+        const make = optionalText(document.getElementById('aircraftMake').value) || '';
+        const model = optionalText(document.getElementById('aircraftModel').value) || '';
+        const nickname = optionalText(document.getElementById('aircraftNickname').value);
+        const modelAsset = resolveAircraftModelAsset({ ...existing, make, model, nickname });
         const performance = {
           ...existingPerformance,
+          templateId,
+          templateLabel: selectedTemplate.label,
+          modelAssetPath: modelAsset.path,
+          modelAssetMatchQuality: modelAsset.matchQuality,
           takeoffGroundRoll: numberOrExisting('takeoffGroundRoll', existingPerformance.takeoffGroundRoll, 'Takeoff ground roll', 0),
           takeoffOver50ft: numberOrExisting('takeoffOver50', existingPerformance.takeoffOver50ft, 'Takeoff over 50 ft', 0),
           landingGroundRoll: numberOrExisting('landingGroundRoll', existingPerformance.landingGroundRoll, 'Landing ground roll', 0),
@@ -3582,9 +3742,9 @@
           id,
           user_id: currentSession.user.id,
           tail_number: normalizeTailNumber(document.getElementById('aircraftTail').value),
-          nickname: optionalText(document.getElementById('aircraftNickname').value),
-          make: optionalText(document.getElementById('aircraftMake').value) || '',
-          model: optionalText(document.getElementById('aircraftModel').value) || '',
+          nickname,
+          make,
+          model,
           year: optionalNumber(document.getElementById('aircraftYear').value, 'Year', 1903, 2100),
           basic_empty_weight: requiredNumber(document.getElementById('basicEmptyWeight').value, 'Basic empty weight', 1),
           basic_empty_moment: requiredNumber(document.getElementById('basicEmptyMoment').value, 'Basic empty moment', -10000000, 10000000),
@@ -3636,7 +3796,7 @@
             numberOfSeats: positiveIntOrExisting('aircraftSeats', existingCharacteristics.numberOfSeats, 'Seats', 1, 99),
             numberOfBaggageAreas: positiveIntOrExisting('aircraftBaggageAreas', existingCharacteristics.numberOfBaggageAreas, 'Baggage areas', 0, 4),
           },
-          performance: hasPerformanceNumbers || existingPerformance.modelAssetPath ? performance : null,
+          performance,
           created_at: existing.created_at || new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
@@ -3747,37 +3907,6 @@
 
     refreshButton.addEventListener('click', async () => {
       await refreshSession();
-    });
-
-    refreshSubscriptionButton.addEventListener('click', async () => {
-      const message = document.getElementById('subscriptionMessage');
-      const errorBox = document.getElementById('subscriptionError');
-      setMessage(message, '');
-      setMessage(errorBox, '');
-      if (!currentSession?.access_token) {
-        setMessage(errorBox, 'Sign in again before refreshing access.');
-        return;
-      }
-      refreshSubscriptionButton.disabled = true;
-      try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/reconcile-subscription`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${currentSession.access_token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        const payload = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          throw new Error(payload.error || 'Unable to refresh subscription access.');
-        }
-        setMessage(message, `Access refreshed: ${(payload.tier || 'free').toUpperCase()} / ${payload.status || 'free'}.`);
-        await refreshSession();
-      } catch (err) {
-        setMessage(errorBox, err.message || 'Unable to refresh subscription access.');
-      } finally {
-        refreshSubscriptionButton.disabled = false;
-      }
     });
 
     document.getElementById('briefMode').addEventListener('change', setOfficialModeFields);
