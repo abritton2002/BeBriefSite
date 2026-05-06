@@ -3623,9 +3623,9 @@
 
     function extractBriefSummary(data) {
       const comprehensive = buildBriefPresentationData(data, {});
-      const tfrRows = comprehensive.sections.tfr.rows;
-      const notamRows = comprehensive.sections.notams.rows;
-      const metarRows = comprehensive.sections.weather.rows.filter((row) => row.pillLabel === 'METAR');
+      const tfrRows = comprehensive.cleanCards.find((card) => card.key === 'tfr')?.rows || [];
+      const notamRows = comprehensive.cleanCards.find((card) => card.key === 'notams')?.rows || [];
+      const metarRows = extractMetarRows(getWeatherPacket(data));
       const tfrPreview = tfrRows.slice(0, 5).map((row) => row.subtitle || row.title);
       return {
         tfrCount: tfrRows.length,
@@ -3959,7 +3959,20 @@
     function buildDataset(title, key, rows, emptyText) {
       const red = rows.filter((row) => row.severity === 'red').length;
       const amber = rows.filter((row) => row.severity === 'amber').length;
-      return { title, key, rows, emptyText, red, amber };
+      return {
+        title,
+        key,
+        rows,
+        emptyText,
+        red,
+        amber,
+        summary: rows.length > 0 ? `${rows.length} item(s) returned from ${title} data.` : emptyText,
+        metrics: [
+          { label: 'Total', value: String(rows.length) },
+          { label: 'Critical', value: String(red) },
+          { label: 'Warning', value: String(amber) },
+        ],
+      };
     }
 
     function severityRank(severity) {
@@ -3968,35 +3981,185 @@
       return 2;
     }
 
+    const DATASET_ORDER = ['weather', 'notams', 'tfr', 'sigmets', 'pireps', 'winds'];
+    const DATASET_TITLE = {
+      weather: 'Weather / TAF',
+      notams: 'NOTAM',
+      tfr: 'TFR / Alerts',
+      sigmets: 'SIGMET / AIRMET',
+      pireps: 'PIREP',
+      winds: 'Winds Aloft',
+    };
+    const DATASET_EMPTY = {
+      weather: 'No weather/TAF returned for this flight.',
+      notams: 'No NOTAM returned for this flight.',
+      tfr: 'No TFR/alert returned for this flight.',
+      sigmets: 'No SIGMET/AIRMET returned for this flight.',
+      pireps: 'No PIREP returned for this flight.',
+      winds: 'No winds aloft returned for this flight.',
+    };
+
+    function countRawProducts(weather, cleanCards, counts) {
+      const card = (key) => cleanCards.find((item) => item.key === key)?.rows || [];
+      return {
+        metars: extractMetarRows(weather).length,
+        tafs: extractTafRows(weather).length,
+        notams: Number.isFinite(Number(counts?.notams)) ? Number(counts.notams) : extractNotamItems(weather).length,
+        tfrs: Number.isFinite(Number(counts?.tfrs)) ? Number(counts.tfrs) : card('tfr').length,
+        sigmets: Number.isFinite(Number(counts?.sigmets)) ? Number(counts.sigmets) : card('sigmets').filter((row) => row.pillLabel === 'SIGMET').length,
+        convectiveSigmets: Number.isFinite(Number(counts?.convectiveSigmets))
+          ? Number(counts.convectiveSigmets)
+          : card('sigmets').filter((row) => /CONV/i.test(row.pillLabel) || /CONVECTIVE/i.test(`${row.title} ${row.subtitle}`)).length,
+        pireps: Number.isFinite(Number(counts?.pireps)) ? Number(counts.pireps) : card('pireps').length,
+        winds: card('winds').length,
+      };
+    }
+
+    function getReturnedCounts(data) {
+      return asRecord(data?.summary?.counts)
+        || asRecord(data?.counts)
+        || asRecord(data?.data?.summary?.counts)
+        || asRecord(data?.data?.counts)
+        || null;
+    }
+
     function buildBriefPresentationData(data, requestBody) {
       const fields = requestBody?.nasRouteBriefingFields || {};
       const weather = getWeatherPacket(data);
-      const weatherRows = [...extractMetarRows(weather), ...extractTafRows(weather)];
+      const weatherRows = extractTafRows(weather).filter((row) => /\b\d{4}Z\b|\b\d{2}:\d{2}Z\b/i.test(row.subtitle || ''));
       const notamItems = extractNotamItems(weather).filter((item) => notamAppliesToFlightWindow(item, estimateFlightWindow(fields)));
-      const sections = {
-        weather: buildDataset('Weather / TAF', 'weather', weatherRows, 'No METAR/TAF returned for this route.'),
-        notams: buildDataset('NOTAM', 'notams', buildNotamSummaryRows(notamItems), 'No NOTAM returned for this route.'),
-        tfr: buildDataset('TFR / Alerts', 'tfr', extractTfrRows(weather), 'No TFR/route alert returned for this route.'),
-        sigmets: buildDataset('SIGMET / AIRMET', 'sigmets', extractSigmetRows(weather), 'No SIGMET/AIRMET returned for this route.'),
-        pireps: buildDataset('PIREP', 'pireps', extractPirepRows(weather), 'No PIREP returned for this route.'),
-        winds: buildDataset('Winds Aloft', 'winds', extractWindRows(weather), 'No winds aloft returned for this route.'),
+      const cardRowsByDataset = {
+        weather: weatherRows,
+        notams: buildNotamSummaryRows(notamItems),
+        tfr: extractTfrRows(weather),
+        sigmets: extractSigmetRows(weather).sort((a, b) => severityRank(a.severity) - severityRank(b.severity)),
+        pireps: extractPirepRows(weather),
+        winds: extractWindRows(weather),
       };
+      const cleanCards = DATASET_ORDER.map((key) => buildDataset(DATASET_TITLE[key], key, cardRowsByDataset[key], DATASET_EMPTY[key]));
+      const returnedCounts = countRawProducts(weather, cleanCards, getReturnedCounts(data));
+      const returnedProductCount =
+        returnedCounts.metars +
+        returnedCounts.tafs +
+        returnedCounts.notams +
+        returnedCounts.sigmets +
+        returnedCounts.convectiveSigmets +
+        returnedCounts.pireps +
+        returnedCounts.winds +
+        returnedCounts.tfrs;
+      const sourceDataMissing = !weather || returnedProductCount === 0;
+      const getCard = (key) => cleanCards.find((card) => card.key === key);
+      const notamRows = getCard('notams')?.rows || [];
+      const tfrRows = getCard('tfr')?.rows || [];
+      const sigRows = getCard('sigmets')?.rows || [];
+      const pirepRows = getCard('pireps')?.rows || [];
       const riskChips = [
-        { label: 'NOTAM', count: sections.notams.rows.length, severity: sections.notams.red ? 'red' : sections.notams.amber ? 'amber' : 'green' },
-        { label: 'TFR', count: sections.tfr.rows.length, severity: sections.tfr.amber ? 'amber' : 'green' },
-        { label: 'SIGMET', count: sections.sigmets.rows.length, severity: sections.sigmets.red ? 'red' : sections.sigmets.amber ? 'amber' : 'green' },
-        { label: 'PIREP', count: sections.pireps.rows.length, severity: sections.pireps.red ? 'red' : sections.pireps.amber ? 'amber' : 'green' },
-        { label: 'Winds', count: sections.winds.rows.length, severity: sections.winds.amber ? 'amber' : 'green' },
+        {
+          key: 'notams',
+          label: 'NOTAM',
+          count: returnedCounts.notams,
+          severity: sourceDataMissing ? 'amber' : notamRows.some((row) => row.severity === 'red') ? 'red' : returnedCounts.notams > 0 ? 'amber' : 'green',
+          detail: sourceDataMissing ? 'No source' : undefined,
+        },
+        {
+          key: 'tfr',
+          label: 'TFR',
+          count: returnedCounts.tfrs,
+          severity: sourceDataMissing ? 'amber' : tfrRows.some((row) => row.severity === 'amber') ? 'amber' : 'green',
+          detail: sourceDataMissing ? 'No source' : undefined,
+        },
+        {
+          key: 'sigmet',
+          label: 'SIGMET',
+          count: returnedCounts.sigmets,
+          severity: sourceDataMissing ? 'amber' : sigRows.some((row) => row.severity === 'red') ? 'red' : returnedCounts.sigmets > 0 ? 'amber' : 'green',
+          detail: sourceDataMissing ? 'No source' : undefined,
+        },
+        {
+          key: 'convective',
+          label: 'Convective',
+          count: returnedCounts.convectiveSigmets,
+          severity: sourceDataMissing ? 'amber' : returnedCounts.convectiveSigmets > 0 ? 'red' : 'green',
+          detail: sourceDataMissing ? 'No source' : undefined,
+        },
+        {
+          key: 'pirep',
+          label: 'PIREP',
+          count: returnedCounts.pireps,
+          severity: sourceDataMissing ? 'amber' : pirepRows.some((row) => row.pillLabel === 'UUA') ? 'red' : returnedCounts.pireps > 0 ? 'amber' : 'green',
+          detail: sourceDataMissing ? 'No source' : undefined,
+        },
       ];
-      const hasCritical = riskChips.some((chip) => chip.severity === 'red');
-      const hasCaution = riskChips.some((chip) => chip.severity === 'amber');
-      return {
+      const presentation = {
         fields,
-        sections,
+        hero: {
+          mode: document.getElementById('briefMode')?.value === 'official' ? 'official' : 'advisory',
+          modeLabel: document.getElementById('briefMode')?.value === 'official' ? 'Official' : 'Advisory',
+          route: `${fields.departure || '-'} -> ${fields.destination || '-'}`,
+          departureLocal: fields.departureInstant ? formatDate(fields.departureInstant) : 'Not set',
+          briefingId: briefIdentifier(data),
+          status: data?.returnStatus === false ? 'Warn' : 'OK',
+        },
+        counts: returnedCounts,
+        sourceDataMissing,
+        cleanCards,
         timeline: extractFixRows(weather, fields),
         riskChips,
-        advisoryStatus: hasCritical ? 'NO-GO' : hasCaution ? 'CAUTION' : 'GO',
       };
+      presentation.advisoryStatus = computeGoNoGoStatus(presentation);
+      return presentation;
+    }
+
+    function computeGoNoGoStatus(presentation) {
+      if (presentation.riskChips.some((chip) => chip.detail === 'No source')) return 'CAUTION';
+
+      const routeParts = String(presentation.hero.route || '').split(/\s*->\s*/);
+      const departureIcao = routeParts[0]?.trim().toUpperCase() || '';
+      const destinationIcao = routeParts[routeParts.length - 1]?.trim().toUpperCase() || '';
+      const weatherCard = presentation.cleanCards.find((card) => card.key === 'weather');
+      const tfrCard = presentation.cleanCards.find((card) => card.key === 'tfr');
+      const convectiveChip = presentation.riskChips.find((chip) => chip.key === 'convective');
+      const pirepCard = presentation.cleanCards.find((card) => card.key === 'pireps');
+
+      if (weatherCard) {
+        const criticalWeatherRows = weatherCard.rows.filter((row) => {
+          if (row.severity !== 'red' || row.pillLabel !== 'METAR') return false;
+          const rowIcao = row.title.match(/^([A-Z]{3,4})\s/i)?.[1]?.toUpperCase() || '';
+          return rowIcao === departureIcao || rowIcao === destinationIcao;
+        });
+        if (criticalWeatherRows.length > 0) return 'NO-GO';
+      }
+
+      if (convectiveChip && convectiveChip.count > 0) return 'NO-GO';
+
+      if (pirepCard) {
+        const urgentPireps = pirepCard.rows.filter((row) => row.pillLabel === 'UUA' || row.severity === 'red');
+        if (urgentPireps.length > 0) return 'NO-GO';
+      }
+
+      if (weatherCard) {
+        const mvfrAtDepDest = weatherCard.rows.some((row) => {
+          if (row.severity !== 'amber' || row.pillLabel !== 'METAR') return false;
+          const rowIcao = row.title.match(/^([A-Z]{3,4})\s/i)?.[1]?.toUpperCase() || '';
+          return rowIcao === departureIcao || rowIcao === destinationIcao;
+        });
+        if (mvfrAtDepDest) return 'CAUTION';
+
+        const enrouteIfrCount = weatherCard.rows.filter((row) => row.severity === 'red' && row.pillLabel === 'METAR').length;
+        if (enrouteIfrCount >= 3) return 'CAUTION';
+      }
+
+      const sigmetChip = presentation.riskChips.find((chip) => chip.key === 'sigmet');
+      if (sigmetChip && sigmetChip.count > 0) return 'CAUTION';
+      if (tfrCard && tfrCard.rows.some((row) => row.severity !== 'green')) return 'CAUTION';
+
+      const notamCard = presentation.cleanCards.find((card) => card.key === 'notams');
+      if (notamCard && notamCard.rows.some((row) => row.severity === 'red')) return 'CAUTION';
+      if (pirepCard && pirepCard.rows.length > 0) return 'CAUTION';
+
+      const windsCard = presentation.cleanCards.find((card) => card.key === 'winds');
+      if (windsCard && windsCard.rows.some((row) => row.severity === 'amber')) return 'CAUTION';
+      return 'GO';
     }
 
     function renderRows(rows, emptyText, limit = 8) {
@@ -4043,10 +4206,10 @@
       const summary = extractBriefSummary(data);
       const fields = requestBody?.nasRouteBriefingFields || {};
       const route = fields.route || [fields.departure, fields.destination].filter(Boolean).join(' ');
-      const mode = document.getElementById('briefMode').value === 'official' ? 'Official' : 'Advisory';
+      const mode = presentation.hero.modeLabel;
       const generatedAt = formatDate(new Date());
       const departureTime = fields.departureInstant ? formatDate(fields.departureInstant) : 'Not set';
-      const sectionList = Object.values(presentation.sections);
+      const sectionList = presentation.cleanCards;
       const timeline = presentation.timeline.length
         ? `<div class="brief-timeline">${presentation.timeline.map((row) => `
           <div class="brief-timeline-row">
@@ -4060,6 +4223,7 @@
         <div class="brief-risk-chip severity-${escapeHtml(chip.severity)}">
           <span>${escapeHtml(chip.label)}</span>
           <strong>${escapeHtml(chip.count)}</strong>
+          ${chip.detail ? `<small>${escapeHtml(chip.detail)}</small>` : ''}
         </div>
       `).join('');
       briefResult.innerHTML = `
