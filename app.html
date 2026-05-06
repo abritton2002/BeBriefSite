@@ -5,13 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BeBrief Web</title>
   <meta name="description" content="Sign in to your BeBrief profile from the web.">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://jjtokkczweowkdgnnowx.supabase.co wss://jjtokkczweowkdgnnowx.supabase.co; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -61,7 +69,7 @@
       font-weight: 800;
       text-decoration: none;
     }
-    .logo img { width: 34px; height: 34px; border-radius: 8px; }
+    .logo img { display: block; height: 40px; width: auto; }
     .nav {
       display: flex;
       align-items: center;
@@ -106,15 +114,6 @@
       max-width: 680px;
       color: var(--muted);
       font-size: 17px;
-    }
-    .notice {
-      margin-top: 18px;
-      border: 1px solid rgba(242, 201, 76, 0.34);
-      background: rgba(250, 204, 21, 0.08);
-      border-radius: 10px;
-      padding: 12px 14px;
-      color: #f8dfa0;
-      font-size: 13px;
     }
     .card {
       border: 1px solid var(--line);
@@ -236,6 +235,19 @@
       margin-top: 12px;
     }
     .dashboard { display: none; }
+    .session-loader {
+      display: none;
+      min-height: min(680px, calc(100vh - 120px));
+      place-items: center;
+      color: var(--muted);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    body.auth-pending .session-loader { display: grid; }
+    body.auth-pending #signedOutView,
+    body.auth-pending #dashboard { display: none !important; }
     .app-shell {
       grid-template-columns: 236px minmax(0, 1fr);
       gap: 16px;
@@ -245,6 +257,7 @@
     .side-rail {
       position: sticky;
       top: 18px;
+      min-height: calc(100vh - 116px);
       border: 1px solid var(--line);
       background: rgba(11, 18, 24, 0.86);
       border-radius: 6px;
@@ -312,6 +325,11 @@
     }
     .view.active {
       display: grid;
+      animation: viewEnter 180ms ease-out both;
+    }
+    @keyframes viewEnter {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .view-grid {
       display: grid;
@@ -462,30 +480,6 @@
       display: grid;
       gap: 12px;
     }
-    .platform-brief {
-      display: grid;
-      gap: 12px;
-      margin-top: 22px;
-      max-width: 760px;
-    }
-    .platform-row {
-      display: grid;
-      grid-template-columns: 132px minmax(0, 1fr);
-      gap: 14px;
-      align-items: start;
-      border-top: 1px solid rgba(82, 96, 100, 0.42);
-      padding-top: 12px;
-    }
-    .platform-row strong {
-      color: #dff7f8;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .platform-row span {
-      color: var(--muted);
-      font-size: 14px;
-    }
     .auth-actions {
       display: grid;
       gap: 10px;
@@ -533,33 +527,6 @@
       grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
       gap: 14px;
       align-items: stretch;
-    }
-    .sync-rail {
-      display: grid;
-      gap: 10px;
-      border: 1px solid rgba(73, 215, 232, 0.22);
-      background: rgba(73, 215, 232, 0.055);
-      border-radius: 8px;
-      padding: 14px;
-    }
-    .sync-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      border-bottom: 1px solid rgba(82, 96, 100, 0.36);
-      padding-bottom: 9px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .sync-item:last-child {
-      border-bottom: 0;
-      padding-bottom: 0;
-    }
-    .sync-item strong {
-      color: var(--text);
-      font-size: 12px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
     }
     .section-head h2 {
       line-height: 1.1;
@@ -611,8 +578,6 @@
         font-size: 16px;
         max-width: 300px;
       }
-      .platform-brief,
-      .notice,
       .auth-card {
         max-width: 330px;
       }
@@ -769,22 +734,27 @@
     .auth-divider::after {
       background: #e5e7eb;
     }
-    .notice {
-      display: none !important;
-    }
     .dashboard.app-shell {
       grid-template-columns: 260px minmax(0, 1fr);
       gap: 22px;
-      align-items: start;
+      align-items: stretch;
       padding-top: 24px;
+      min-height: calc(100vh - 106px);
     }
     .side-rail {
       top: 22px;
+      min-height: calc(100vh - 126px);
       padding: 18px;
       box-shadow: none;
     }
     .side-kicker {
       color: #0891b2;
+    }
+    .side-wordmark {
+      display: block;
+      width: 142px;
+      height: auto;
+      margin-bottom: 16px;
     }
     .side-title {
       color: #0f172a;
@@ -896,16 +866,14 @@
     }
     .command-home {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 300px;
-      gap: 18px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
       align-items: stretch;
     }
     .command-stage {
-      grid-row: span 2;
-      min-height: 680px;
+      min-height: min(820px, calc(100vh - 128px));
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
-      padding: 24px;
       overflow: hidden;
     }
     .command-stage-head {
@@ -913,29 +881,28 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 18px;
-      margin-bottom: 18px;
+      margin-bottom: 0;
     }
     .command-stage h2 {
-      font-size: clamp(30px, 4vw, 52px);
+      font-size: clamp(34px, 4.8vw, 64px);
       letter-spacing: -0.06em;
       line-height: 0.95;
       margin: 0 0 8px;
     }
     .scene-shell {
       position: relative;
-      min-height: 520px;
-      overflow: hidden;
-      border: 1px solid #dbe3ef;
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at 50% 38%, rgba(8, 145, 178, 0.1), transparent 38%),
-        linear-gradient(180deg, #f8fafc, #eef3f8);
+      min-height: 690px;
+      overflow: visible;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      margin-top: -42px;
     }
     #commandScene {
       display: block;
       width: 100%;
       height: 100%;
-      min-height: 520px;
+      min-height: 690px;
     }
     .scene-fallback {
       display: none;
@@ -948,98 +915,24 @@
     .scene-fallback.visible {
       display: grid;
     }
-    .scene-overlay {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 18px;
+    .aircraft-picker {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      pointer-events: none;
+      gap: 7px;
+      min-width: min(320px, 36vw);
     }
-    .scene-overlay div {
-      border: 1px solid rgba(203, 213, 225, 0.82);
-      background: rgba(255, 255, 255, 0.78);
-      backdrop-filter: blur(16px);
-      border-radius: 14px;
-      padding: 12px;
-    }
-    .scene-overlay span {
-      display: block;
-      color: #64748b;
+    .aircraft-picker label {
+      color: #94a3b8;
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-    .scene-overlay strong {
-      display: block;
-      margin-top: 4px;
-      color: #0f172a;
-      font-size: 18px;
-      letter-spacing: -0.03em;
-    }
-    .command-panel {
-      min-height: 0;
-    }
-    .control-grid {
-      display: grid;
-      gap: 10px;
-    }
-    .control-tile {
-      display: grid;
-      gap: 5px;
-      min-height: 76px;
-      width: 100%;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      background: #ffffff;
-      padding: 14px;
-      text-align: left;
-      cursor: pointer;
-      transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
-    }
-    .control-tile:hover {
-      border-color: #0891b2;
-      background: #f8fafc;
-      transform: translateY(-1px);
-    }
-    .control-tile span {
-      color: #64748b;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .control-tile strong {
-      color: #0f172a;
-      font-size: 20px;
-      letter-spacing: -0.04em;
+    .aircraft-picker select {
+      min-height: 42px;
     }
     .command-list {
       display: grid;
       gap: 10px;
-    }
-    .command-flight {
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 13px;
-      background: #ffffff;
-    }
-    .command-flight strong {
-      display: block;
-      color: #0f172a;
-      font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .command-flight span {
-      display: block;
-      margin-top: 4px;
-      color: #64748b;
-      font-size: 12px;
     }
     .aircraft-table-card {
       overflow: hidden;
@@ -1136,6 +1029,7 @@
       }
       .side-rail {
         position: static;
+        min-height: auto;
       }
       .side-nav {
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1144,7 +1038,7 @@
         grid-template-columns: 1fr;
       }
       .command-stage {
-        min-height: 560px;
+        min-height: 620px;
       }
       #view-aircraft .span-4,
       #view-aircraft .span-8 {
@@ -1178,26 +1072,520 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
       .command-stage {
-        min-height: 500px;
-        padding: 18px;
+        min-height: 520px;
       }
       .scene-shell,
       #commandScene {
-        min-height: 380px;
+        min-height: 430px;
       }
-      .scene-overlay {
-        grid-template-columns: 1fr;
+      .command-stage-head {
+        display: grid;
+      }
+      .aircraft-picker {
+        min-width: 0;
       }
       .card {
         padding: 18px;
       }
     }
+
+    /* Dark flight-suite theme */
+    :root {
+      --bg: #07090d;
+      --panel: #111827;
+      --panel-2: #0d131d;
+      --line: #253044;
+      --line-strong: #334155;
+      --text: #e5edf6;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      --cyan: #22d3ee;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+    body {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.1), transparent 34%),
+        linear-gradient(180deg, #0b1018 0%, #07090d 52%, #05070a 100%);
+      color: var(--text);
+    }
+    .shell { max-width: 1500px; }
+    header { border-color: rgba(148, 163, 184, 0.18); }
+    .logo,
+    h1,
+    .card h2,
+    .section-head h2,
+    .command-stage h2,
+    .side-title,
+    .metric .value,
+    .aircraft-title { color: #f8fafc; }
+    .nav a,
+    .nav button,
+    .side-tab { color: #cbd5e1; }
+    .nav a:hover,
+    .nav button:hover { color: #ffffff; }
+    .side-wordmark {
+      width: 154px;
+    }
+    .lead,
+    .muted,
+    .side-email,
+    .metric .label,
+    .aircraft-subtitle,
+    .aircraft-cell-muted,
+    .command-list { color: #94a3b8; }
+    .card,
+    .auth-card,
+    .side-rail {
+      background: rgba(15, 23, 42, 0.92);
+      border-color: rgba(148, 163, 184, 0.2);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
+    }
+    input,
+    select,
+    textarea {
+      background: #080d14;
+      border-color: #334155;
+      color: #f8fafc;
+    }
+    input::placeholder,
+    textarea::placeholder { color: #64748b; }
+    label { color: #cbd5e1; }
+    .btn {
+      background: #111827;
+      border-color: #334155;
+      color: #e5edf6;
+    }
+    .btn.primary,
+    .side-tab.active {
+      background: #22d3ee;
+      border-color: #22d3ee;
+      color: #061018;
+    }
+    .btn.google {
+      background: #e5edf6;
+      border-color: #e5edf6;
+      color: #061018;
+    }
+    .badge,
+    .aircraft-tail {
+      background: rgba(34, 211, 238, 0.12);
+      border-color: rgba(34, 211, 238, 0.28);
+      color: #67e8f9;
+    }
+    .side-tab:hover {
+      border-color: rgba(34, 211, 238, 0.5);
+      background: rgba(15, 23, 42, 0.98);
+    }
+    .metric,
+    .mode-panel,
+    .detail-box,
+    .brief-result,
+    .aircraft-table-wrap,
+    .list-item {
+      background: #0b111b;
+      border-color: rgba(148, 163, 184, 0.18);
+      color: #e5edf6;
+    }
+    .aircraft-table th {
+      background: #111827;
+      color: #94a3b8;
+    }
+    .aircraft-table td,
+    .aircraft-table th { border-color: rgba(148, 163, 184, 0.16); }
+    .scene-shell {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    #commandScene { background: transparent; }
+    .success {
+      border-color: rgba(34, 197, 94, 0.28);
+      background: rgba(34, 197, 94, 0.12);
+      color: #bbf7d0;
+    }
+    .error {
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.12);
+      color: #fecaca;
+    }
+    .btn.danger {
+      border-color: rgba(239, 68, 68, 0.34);
+      background: rgba(239, 68, 68, 0.12);
+      color: #fecaca;
+    }
+
+    /* Pitch-ready dashboard polish */
+    html {
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+    body {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.1), transparent 30%),
+        radial-gradient(circle at 14% 18%, rgba(59, 130, 246, 0.08), transparent 26%),
+        linear-gradient(180deg, #0b1018 0%, #07090d 58%, #05070a 100%);
+    }
+    .shell {
+      max-width: 1560px;
+      padding: 18px 32px 28px;
+    }
+    header {
+      min-height: 62px;
+      border-color: rgba(148, 163, 184, 0.14);
+    }
+    .nav a,
+    .nav button,
+    .btn,
+    .side-tab,
+    input,
+    select,
+    textarea {
+      transition-property: background-color, border-color, color, box-shadow, opacity, transform;
+      transition-duration: 160ms;
+      transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+    }
+    .btn:active,
+    .side-tab:active {
+      transform: scale(0.96);
+    }
+    .dashboard.app-shell {
+      grid-template-columns: 268px minmax(0, 1fr);
+      gap: 28px;
+      padding-top: 18px;
+    }
+    .side-rail {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 108px);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(8, 13, 20, 0.96));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 28px 80px rgba(0, 0, 0, 0.28);
+      padding: 20px;
+    }
+    .side-wordmark {
+      width: 162px;
+      margin-bottom: 22px;
+    }
+    .side-kicker {
+      color: #67e8f9;
+      margin-top: 0;
+      padding-top: 0;
+    }
+    .side-title {
+      color: #f8fafc;
+      font-size: 22px;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
+    }
+    .side-email {
+      color: #8ea3b8;
+      font-size: 12px;
+    }
+    .side-nav {
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .side-tab {
+      position: relative;
+      min-height: 46px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      color: #9fb0c4;
+      padding: 12px 13px 12px 16px;
+      font-weight: 800;
+    }
+    .side-tab::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      width: 3px;
+      height: 18px;
+      border-radius: 999px;
+      background: transparent;
+      transform: translateY(-50%);
+    }
+    .side-tab:hover {
+      border-color: rgba(148, 163, 184, 0.2);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5edf6;
+    }
+    .side-tab.active {
+      border-color: rgba(34, 211, 238, 0.28);
+      background: rgba(34, 211, 238, 0.12);
+      color: #f8fafc;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+    .side-tab.active::before {
+      background: #22d3ee;
+    }
+    .workspace {
+      gap: 22px;
+      min-width: 0;
+    }
+    .view {
+      gap: 20px;
+    }
+    .view.active {
+      animation: viewEnter 220ms cubic-bezier(0.2, 0, 0, 1) both;
+    }
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 2px 2px 0;
+    }
+    .page-header h2 {
+      max-width: 760px;
+      color: #f8fafc;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+      text-wrap: balance;
+    }
+    .page-header .muted {
+      max-width: 780px;
+      margin-top: 10px;
+      color: #91a4b8;
+      font-size: 15px;
+      text-wrap: pretty;
+    }
+    .view-grid {
+      gap: 20px;
+    }
+    .card,
+    .auth-card {
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(9, 14, 22, 0.93));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045), 0 24px 70px rgba(0, 0, 0, 0.24);
+      padding: 24px;
+    }
+    .card h2,
+    .section-head h2 {
+      color: #f8fafc;
+      font-size: 22px;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
+    }
+    .muted {
+      color: #91a4b8;
+      text-wrap: pretty;
+    }
+    .eyebrow {
+      color: #67e8f9;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .badge {
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      border-color: rgba(34, 211, 238, 0.28);
+      background: rgba(34, 211, 238, 0.1);
+      color: #a5f3fc;
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
+    }
+    label {
+      color: #cbd5e1;
+      gap: 8px;
+    }
+    input,
+    select,
+    textarea {
+      min-height: 46px;
+      border-color: rgba(148, 163, 184, 0.24);
+      background: rgba(5, 10, 16, 0.76);
+      color: #f8fafc;
+      border-radius: 12px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    }
+    input::placeholder,
+    textarea::placeholder {
+      color: #52667d;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(34, 211, 238, 0.72);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.12);
+    }
+    .btn {
+      min-height: 44px;
+      border-radius: 12px;
+      border-color: rgba(148, 163, 184, 0.24);
+      background: rgba(15, 23, 42, 0.86);
+      color: #e5edf6;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+    .btn:hover {
+      border-color: rgba(34, 211, 238, 0.44);
+      background: rgba(20, 31, 46, 0.96);
+    }
+    .btn.primary {
+      border-color: #22d3ee;
+      background: #22d3ee;
+      color: #041018;
+    }
+    .btn.primary:hover {
+      background: #67e8f9;
+    }
+    .btn.compact {
+      min-height: 40px;
+      padding: 9px 13px;
+      white-space: nowrap;
+    }
+    .metric {
+      border-color: rgba(148, 163, 184, 0.14);
+      border-radius: 16px;
+      background: rgba(8, 13, 20, 0.72);
+      padding: 17px;
+    }
+    .metric .label {
+      color: #8ea3b8;
+    }
+    .metric .value {
+      color: #f8fafc;
+      font-size: 24px;
+      font-variant-numeric: tabular-nums;
+    }
+    .form-grid {
+      gap: 16px;
+    }
+    .mode-panel {
+      border-color: rgba(245, 158, 11, 0.2);
+      background: rgba(245, 158, 11, 0.065);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .row,
+    .list-item,
+    .aircraft-table-wrap {
+      border-color: rgba(148, 163, 184, 0.14);
+      border-radius: 16px;
+      background: rgba(8, 13, 20, 0.68);
+      color: #e5edf6;
+    }
+    .row {
+      padding: 14px 15px;
+    }
+    .row-main {
+      color: #f8fafc;
+    }
+    .row-sub {
+      color: #91a4b8;
+    }
+    .empty {
+      border-color: rgba(148, 163, 184, 0.22);
+      border-radius: 16px;
+      background: rgba(8, 13, 20, 0.42);
+      color: #91a4b8;
+      padding: 18px;
+    }
+    .brief-result,
+    .detail-box {
+      border-color: rgba(148, 163, 184, 0.16);
+      background: rgba(5, 10, 16, 0.78);
+      color: #d8e3ef;
+      border-radius: 16px;
+    }
+    .hazard {
+      border-left-color: #22d3ee;
+      background: rgba(34, 211, 238, 0.09);
+      color: #d8fbff;
+      border-radius: 12px;
+    }
+    .aircraft-table {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .aircraft-table th {
+      background: rgba(15, 23, 42, 0.96);
+      color: #9fb0c4;
+    }
+    .aircraft-table td {
+      color: #e5edf6;
+    }
+    .aircraft-table td,
+    .aircraft-table th {
+      border-color: rgba(148, 163, 184, 0.13);
+    }
+    .command-stage {
+      min-height: min(850px, calc(100vh - 116px));
+    }
+    .command-stage-head {
+      padding: 2px 2px 0;
+    }
+    .command-stage h2 {
+      color: #f8fafc;
+      font-size: clamp(42px, 6.2vw, 88px);
+      text-wrap: balance;
+    }
+    .command-stage .muted {
+      font-size: 15px;
+    }
+    .scene-shell,
+    #commandScene {
+      min-height: min(760px, calc(100vh - 230px));
+    }
+    .aircraft-picker {
+      min-width: min(340px, 34vw);
+    }
+    .success,
+    .error {
+      border-radius: 14px;
+    }
+    @media (max-width: 840px) {
+      .shell {
+        padding: 16px;
+      }
+      .dashboard.app-shell {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+      .side-rail {
+        min-height: auto;
+      }
+      .side-nav {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+      .page-header {
+        display: grid;
+      }
+      .page-header .btn {
+        justify-self: start;
+      }
+    }
+    @media (max-width: 560px) {
+      .side-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .page-header h2,
+      .command-stage h2 {
+        font-size: 34px;
+      }
+      .command-stage-head {
+        display: grid;
+      }
+      .aircraft-picker {
+        min-width: 0;
+      }
+    }
   </style>
 </head>
-<body>
+<body class="auth-pending">
   <div class="shell">
     <header>
-      <a href="index.html" class="logo"><img src="assets/icon.png" alt="BeBrief">BeBrief</a>
+      <a href="index.html" class="logo"><img src="assets/bebrief-logo-full-white.png" alt="BeBrief"></a>
       <nav class="nav">
         <a href="index.html">Home</a>
         <a href="privacy.html">Privacy</a>
@@ -1240,9 +1628,11 @@
           <div id="authSuccess" class="success"></div>
         </aside>
       </section>
+      <section id="sessionLoader" class="session-loader" aria-live="polite">Loading BeBrief</section>
 
       <section id="dashboard" class="dashboard app-shell">
         <aside class="side-rail">
+          <img class="side-wordmark" src="assets/bebrief-logo-text-white.png" alt="BeBrief">
           <div class="side-kicker">BeBrief Web</div>
           <div id="profileName" class="side-title">Loading profile...</div>
           <div id="profileEmail" class="side-email"></div>
@@ -1252,6 +1642,7 @@
             <button class="side-tab" type="button" data-view="profile">Profile</button>
             <button class="side-tab" type="button" data-view="aircraft">Aircraft</button>
             <button class="side-tab" type="button" data-view="briefs">Briefs</button>
+            <button class="side-tab" type="button" data-view="logbook">Logbook</button>
             <button class="side-tab" type="button" data-view="account">Account</button>
           </nav>
         </aside>
@@ -1261,72 +1652,35 @@
 
           <section id="view-home" class="view active">
             <div class="command-home">
-              <div class="command-stage card">
+              <div class="command-stage">
                 <div class="command-stage-head">
                   <div>
-                    <div class="eyebrow">Flight Deck</div>
+                    <div id="commandWelcome" class="eyebrow">Welcome</div>
                     <h2 id="commandAircraftName">Primary Aircraft</h2>
                     <p id="commandAircraftMeta" class="muted">Add an aircraft to personalize the web platform.</p>
                   </div>
-                  <span id="commandTailBadge" class="badge">Aircraft</span>
+                  <div class="aircraft-picker">
+                    <label for="commandAircraftSelect">Aircraft</label>
+                    <select id="commandAircraftSelect" aria-label="Select dashboard aircraft"></select>
+                  </div>
                 </div>
                 <div class="scene-shell">
-                  <canvas id="commandScene" aria-label="3D aircraft and topographic route scene"></canvas>
+                  <canvas id="commandScene" aria-label="3D aircraft scene"></canvas>
                   <div id="sceneFallback" class="scene-fallback">3D flight deck unavailable</div>
-                  <div class="scene-overlay">
-                    <div>
-                      <span>Altitude</span>
-                      <strong id="commandAltitude">VFR</strong>
-                    </div>
-                    <div>
-                      <span>Route</span>
-                      <strong id="commandRoute">Ready</strong>
-                    </div>
-                  </div>
                 </div>
               </div>
-
-              <aside class="command-panel card">
-                <div class="section-head">
-                  <div>
-                    <h2>Controls</h2>
-                    <p class="muted">Fast access to the workflows pilots use before flight.</p>
-                  </div>
-                </div>
-                <div class="control-grid">
-                  <button class="control-tile" type="button" data-home-view="briefs">
-                    <span>New brief</span>
-                    <strong>Plan</strong>
-                  </button>
-                  <button class="control-tile" type="button" data-home-view="aircraft">
-                    <span>Aircraft</span>
-                    <strong>Manage</strong>
-                  </button>
-                  <button class="control-tile" type="button" data-home-view="profile">
-                    <span>Pilot</span>
-                    <strong>Profile</strong>
-                  </button>
-                  <button class="control-tile" type="button" data-home-view="account">
-                    <span>Account</span>
-                    <strong>Settings</strong>
-                  </button>
-                </div>
-              </aside>
-
-              <aside class="command-panel card">
-                <div class="section-head">
-                  <div>
-                    <h2>Recent Flights</h2>
-                    <p class="muted">Latest briefing records from your account.</p>
-                  </div>
-                  <span id="commandBriefCount" class="badge">0</span>
-                </div>
-                <div id="commandRecentList" class="command-list"></div>
-              </aside>
             </div>
           </section>
 
           <section id="view-briefs" class="view">
+            <div class="page-header">
+              <div>
+                <div class="eyebrow">Briefing Desk</div>
+                <h2>Plan, request, and review flight briefs</h2>
+                <p class="muted">Create advisory or official requests, then inspect recent server-recorded briefings only when you are in this workspace.</p>
+              </div>
+              <button class="btn compact" type="button" data-view-jump="account">Flight Service link</button>
+            </div>
             <div class="view-grid">
               <div class="card span-8">
                 <div class="section-head">
@@ -1449,10 +1803,62 @@
                 <div class="list" id="briefList"></div>
                 <pre id="briefDetail" class="detail-box"></pre>
               </div>
+              <div class="card span-12">
+                <div class="section-head">
+                  <div>
+                    <div class="eyebrow">Flight Plan Lifecycle</div>
+                    <h2>Retrieve, activate, close, or cancel an official flight plan</h2>
+                    <p class="muted">Lifecycle actions call the same authenticated `leidos-flight-plan` Edge Function used by the iOS app.</p>
+                  </div>
+                </div>
+                <form id="flightPlanActionForm" class="form-grid">
+                  <label>
+                    Action
+                    <select id="flightPlanAction">
+                      <option value="retrieve">Retrieve</option>
+                      <option value="activate">Activate</option>
+                      <option value="close">Close</option>
+                      <option value="cancel">Cancel</option>
+                    </select>
+                  </label>
+                  <label>
+                    Flight identifier
+                    <input id="flightPlanIdentifier" type="text" maxlength="32" autocomplete="off" placeholder="Proposal or flight plan ID">
+                  </label>
+                  <label>
+                    Version stamp
+                    <input id="flightPlanVersionStamp" type="text" maxlength="80" autocomplete="off" placeholder="Required for activate">
+                  </label>
+                  <label>
+                    Actual departure
+                    <input id="flightPlanActualDeparture" type="datetime-local">
+                  </label>
+                  <label>
+                    Authorization
+                    <select id="flightPlanCredentialed">
+                      <option value="false">Uncredentialed</option>
+                      <option value="true">Credentialed 1800WXBRIEF</option>
+                    </select>
+                  </label>
+                  <div class="button-row" style="align-self:end">
+                    <button id="flightPlanActionButton" class="btn primary" type="submit">Run Action</button>
+                  </div>
+                </form>
+                <div id="flightPlanActionMessage" class="success"></div>
+                <div id="flightPlanActionError" class="error"></div>
+                <pre id="flightPlanActionResult" class="detail-box"></pre>
+              </div>
             </div>
           </section>
 
           <section id="view-profile" class="view">
+            <div class="page-header">
+              <div>
+                <div class="eyebrow">Pilot Record</div>
+                <h2>Keep pilot identity and filing data clean</h2>
+                <p class="muted">Profile fields sync across the web dashboard and mobile app so briefing defaults are ready before planning.</p>
+              </div>
+            </div>
             <div class="view-grid">
               <div class="card span-12">
                 <div class="workspace-intro">
@@ -1559,7 +1965,103 @@
             </div>
           </section>
 
+          <section id="view-logbook" class="view">
+            <div class="page-header">
+              <div>
+                <div class="eyebrow">Logbook</div>
+                <h2>Review and add completed flight records</h2>
+                <p class="muted">Logbook rows save to the same `user_logbook_entries` table used by the iOS app.</p>
+              </div>
+            </div>
+            <div class="view-grid">
+              <div class="card span-4">
+                <div class="section-head">
+                  <div>
+                    <div class="eyebrow">Entry</div>
+                    <h2>New Logbook Entry</h2>
+                  </div>
+                </div>
+                <form id="logbookForm" class="form-grid">
+                  <label>
+                    Date
+                    <input id="logbookDate" type="date" required>
+                  </label>
+                  <label>
+                    Aircraft
+                    <input id="logbookAircraft" type="text" maxlength="12" autocomplete="off" placeholder="N12345">
+                  </label>
+                  <label>
+                    Departure
+                    <input id="logbookDeparture" type="text" maxlength="4" autocomplete="off" placeholder="KTPA" required>
+                  </label>
+                  <label>
+                    Destination
+                    <input id="logbookDestination" type="text" maxlength="4" autocomplete="off" placeholder="KJFK" required>
+                  </label>
+                  <label>
+                    Route
+                    <input id="logbookRoute" type="text" maxlength="240" autocomplete="off">
+                  </label>
+                  <label>
+                    Total hours
+                    <input id="logbookTotalHours" type="number" min="0" max="1000" step="0.1" value="1.0" required>
+                  </label>
+                  <label>
+                    PIC hours
+                    <input id="logbookPicHours" type="number" min="0" max="1000" step="0.1" value="1.0">
+                  </label>
+                  <label>
+                    Dual hours
+                    <input id="logbookDualHours" type="number" min="0" max="1000" step="0.1" value="0">
+                  </label>
+                  <label>
+                    Night hours
+                    <input id="logbookNightHours" type="number" min="0" max="1000" step="0.1" value="0">
+                  </label>
+                  <label>
+                    Day landings
+                    <input id="logbookDayLandings" type="number" min="0" max="999" step="1" value="1">
+                  </label>
+                  <label>
+                    Night landings
+                    <input id="logbookNightLandings" type="number" min="0" max="999" step="1" value="0">
+                  </label>
+                  <label>
+                    Approaches
+                    <input id="logbookApproaches" type="number" min="0" max="999" step="1" value="0">
+                  </label>
+                  <label class="span-12">
+                    Remarks
+                    <textarea id="logbookRemarks" maxlength="500"></textarea>
+                  </label>
+                  <div class="button-row" style="align-self:end">
+                    <button class="btn primary" type="submit">Save Entry</button>
+                  </div>
+                </form>
+                <div id="logbookMessage" class="success"></div>
+                <div id="logbookError" class="error"></div>
+              </div>
+              <div class="card span-8">
+                <div class="section-head">
+                  <div>
+                    <div class="eyebrow">History</div>
+                    <h2>Recent Entries</h2>
+                  </div>
+                  <span id="logbookCount" class="badge">0</span>
+                </div>
+                <div class="list" id="logbookList"></div>
+              </div>
+            </div>
+          </section>
+
           <section id="view-aircraft" class="view">
+            <div class="page-header">
+              <div>
+                <div class="eyebrow">Hangar</div>
+                <h2>Manage aircraft records and performance defaults</h2>
+                <p class="muted">Keep tail numbers, equipment, weights, and fuel assumptions structured for fast briefing and planning setup.</p>
+              </div>
+            </div>
             <div class="view-grid">
             <div class="card span-4 aircraft-editor-card">
               <div class="section-head">
@@ -1591,12 +2093,33 @@
                   <input id="aircraftYear" type="number" min="1903" max="2100" step="1">
                 </label>
                 <label>
+                  Seats
+                  <input id="aircraftSeats" type="number" min="1" max="99" step="1" value="4">
+                </label>
+                <label>
+                  Baggage areas
+                  <input id="aircraftBaggageAreas" type="number" min="0" max="4" step="1" value="1">
+                </label>
+                <label class="check-row">
+                  <input id="aircraftMultiEngine" type="checkbox"> Multi-engine
+                </label>
+                <label class="check-row">
+                  <input id="aircraftRetractable" type="checkbox"> Retractable gear
+                </label>
+                <label class="check-row">
+                  <input id="aircraftConstantSpeed" type="checkbox"> Constant-speed prop
+                </label>
+                <label>
                   Basic empty weight
                   <input id="basicEmptyWeight" type="number" min="1" max="1000000" step="0.1" required>
                 </label>
                 <label>
                   Basic empty moment
                   <input id="basicEmptyMoment" type="number" min="-10000000" max="10000000" step="0.1" required>
+                </label>
+                <label>
+                  Max ramp weight
+                  <input id="maxRampWeight" type="number" min="1" max="1000000" step="0.1">
                 </label>
                 <label>
                   Max takeoff weight
@@ -1607,6 +2130,38 @@
                   <input id="maxLandingWeight" type="number" min="1" max="1000000" step="0.1">
                 </label>
                 <label>
+                  Max baggage weight
+                  <input id="maxBaggageWeight" type="number" min="0" max="1000000" step="0.1">
+                </label>
+                <label>
+                  Pilot arm
+                  <input id="pilotArm" type="number" min="-1000" max="1000" step="0.01">
+                </label>
+                <label>
+                  Front pax arm
+                  <input id="frontPaxArm" type="number" min="-1000" max="1000" step="0.01">
+                </label>
+                <label>
+                  Rear arm
+                  <input id="rearArm" type="number" min="-1000" max="1000" step="0.01">
+                </label>
+                <label>
+                  Baggage arm
+                  <input id="baggageArm" type="number" min="-1000" max="1000" step="0.01">
+                </label>
+                <label>
+                  Baggage 2 arm
+                  <input id="baggage2Arm" type="number" min="-1000" max="1000" step="0.01">
+                </label>
+                <label>
+                  Fuel arm
+                  <input id="fuelArm" type="number" min="-1000" max="1000" step="0.01">
+                </label>
+                <label>
+                  Total fuel gal
+                  <input id="totalFuel" type="number" min="0" max="100000" step="0.1">
+                </label>
+                <label>
                   Usable fuel gal
                   <input id="usableFuel" type="number" min="0" max="100000" step="0.1">
                 </label>
@@ -1615,8 +2170,92 @@
                   <input id="cruiseBurn" type="number" min="0" max="100000" step="0.1">
                 </label>
                 <label>
+                  Climb burn GPH
+                  <input id="climbBurn" type="number" min="0" max="100000" step="0.1">
+                </label>
+                <label>
+                  Start/taxi/runup fuel
+                  <input id="startTaxiFuel" type="number" min="0" max="100000" step="0.1">
+                </label>
+                <label>
                   Fuel type
-                  <input id="fuelType" type="text" maxlength="24" placeholder="100LL">
+                  <select id="fuelType">
+                    <option value="100LL">100LL</option>
+                    <option value="MOGAS">MOGAS</option>
+                    <option value="JET-A">JET-A</option>
+                  </select>
+                </label>
+                <label>
+                  Vs0
+                  <input id="vs0" type="number" min="0" max="400" step="1">
+                </label>
+                <label>
+                  Vs1
+                  <input id="vs1" type="number" min="0" max="400" step="1">
+                </label>
+                <label>
+                  Vx
+                  <input id="vx" type="number" min="0" max="400" step="1">
+                </label>
+                <label>
+                  Vy
+                  <input id="vy" type="number" min="0" max="400" step="1">
+                </label>
+                <label>
+                  Vr
+                  <input id="vr" type="number" min="0" max="400" step="1">
+                </label>
+                <label>
+                  Best glide
+                  <input id="vglide" type="number" min="0" max="400" step="1">
+                </label>
+                <label>
+                  Vne
+                  <input id="vne" type="number" min="0" max="600" step="1">
+                </label>
+                <label>
+                  Vno
+                  <input id="vno" type="number" min="0" max="600" step="1">
+                </label>
+                <label>
+                  Va
+                  <input id="va" type="number" min="0" max="600" step="1">
+                </label>
+                <label>
+                  Vfe
+                  <input id="vfe" type="number" min="0" max="600" step="1">
+                </label>
+                <label>
+                  Takeoff ground roll ft
+                  <input id="takeoffGroundRoll" type="number" min="0" max="100000" step="1">
+                </label>
+                <label>
+                  Takeoff over 50 ft
+                  <input id="takeoffOver50" type="number" min="0" max="100000" step="1">
+                </label>
+                <label>
+                  Landing ground roll ft
+                  <input id="landingGroundRoll" type="number" min="0" max="100000" step="1">
+                </label>
+                <label>
+                  Landing over 50 ft
+                  <input id="landingOver50" type="number" min="0" max="100000" step="1">
+                </label>
+                <label>
+                  Climb rate SL FPM
+                  <input id="climbRateSL" type="number" min="0" max="10000" step="1">
+                </label>
+                <label>
+                  Service ceiling ft
+                  <input id="serviceCeiling" type="number" min="0" max="100000" step="100">
+                </label>
+                <label class="span-12">
+                  Forward CG limit JSON
+                  <textarea id="cgForwardLimit" rows="3" spellcheck="false" placeholder='[{"weight":1500,"cg":35},{"weight":2400,"cg":39.5}]'></textarea>
+                </label>
+                <label class="span-12">
+                  Aft CG limit JSON
+                  <textarea id="cgAftLimit" rows="3" spellcheck="false" placeholder='[{"weight":1500,"cg":47},{"weight":2400,"cg":47.3}]'></textarea>
                 </label>
                 <div class="button-row" style="align-self:end">
                   <button id="saveAircraftButton" class="btn primary" type="submit">Save Aircraft</button>
@@ -1640,12 +2279,33 @@
           </section>
 
           <section id="view-account" class="view">
+            <div class="page-header">
+              <div>
+                <div class="eyebrow">Account Control</div>
+                <h2>Subscription, defaults, and sign-in security</h2>
+                <p class="muted">Manage access, defaults, and account credentials from the same Supabase identity used by the app.</p>
+              </div>
+            </div>
             <div class="view-grid">
               <div class="card span-6">
                 <div class="section-head">
                   <h2>Subscription</h2>
                 </div>
                 <div class="list" id="subscriptionList"></div>
+                <div class="button-row" style="margin-top:14px">
+                  <button id="refreshSubscriptionButton" class="btn primary" type="button">Refresh Access</button>
+                  <a class="btn" href="https://apps.apple.com/account/subscriptions" target="_blank" rel="noreferrer">Manage Apple Billing</a>
+                </div>
+                <div id="subscriptionMessage" class="success"></div>
+                <div id="subscriptionError" class="error"></div>
+              </div>
+              <div class="card span-6">
+                <div class="section-head">
+                  <h2>Linked Sign-ins</h2>
+                </div>
+                <div class="list" id="identityList"></div>
+                <div id="identityMessage" class="success"></div>
+                <div id="identityError" class="error"></div>
               </div>
               <div class="card span-6">
                 <h2>App Settings</h2>
@@ -1747,6 +2407,7 @@
 
     const signedOutView = document.getElementById('signedOutView');
     const dashboard = document.getElementById('dashboard');
+    const sessionLoader = document.getElementById('sessionLoader');
     const signOutButton = document.getElementById('signOutButton');
     const authForm = document.getElementById('authForm');
     const signUpButton = document.getElementById('signUpButton');
@@ -1758,6 +2419,7 @@
     const briefForm = document.getElementById('briefForm');
     const briefButton = document.getElementById('briefButton');
     const refreshButton = document.getElementById('refreshButton');
+    const refreshSubscriptionButton = document.getElementById('refreshSubscriptionButton');
     const briefError = document.getElementById('briefError');
     const briefSuccess = document.getElementById('briefSuccess');
     const briefResult = document.getElementById('briefResult');
@@ -1765,7 +2427,11 @@
     let currentSession = null;
     let currentAircraft = [];
     let currentBriefs = [];
+    let currentLogbookEntries = [];
+    let selectedCommandAircraftId = null;
+    let dashboardLoadNonce = 0;
     let commandSceneState = null;
+    let threeModulesPromise = null;
 
     function setMessage(element, message) {
       element.textContent = message || '';
@@ -1773,6 +2439,7 @@
     }
 
     function setActiveView(view) {
+      if (!currentSession) return;
       document.querySelectorAll('[data-view]').forEach((button) => {
         button.classList.toggle('active', button.dataset.view === view);
       });
@@ -1789,6 +2456,32 @@
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) return 'Not set';
       return date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+    }
+
+    function parseDateOrNull(value) {
+      if (!value) return null;
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    function hasWebAccess(subscription) {
+      if (!subscription) return false;
+      if (subscription.tier === 'lifetime') return true;
+
+      const now = new Date();
+      const entitlementEndsAt =
+        parseDateOrNull(subscription.subscription_expires_at) ||
+        parseDateOrNull(subscription.trial_ends_at);
+
+      if (subscription.status === 'active' || subscription.status === 'trial') {
+        return entitlementEndsAt ? entitlementEndsAt > now : true;
+      }
+
+      if (subscription.status === 'cancelled' && entitlementEndsAt) {
+        return entitlementEndsAt > now;
+      }
+
+      return false;
     }
 
     function formatPilotType(value) {
@@ -1837,6 +2530,12 @@
       date.setSeconds(0, 0);
       const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
       input.value = local.toISOString().slice(0, 16);
+    }
+
+    function setDefaultLogbookDate() {
+      const input = document.getElementById('logbookDate');
+      if (!input || input.value) return;
+      input.value = new Date().toISOString().slice(0, 10);
     }
 
     function normalizeAirport(value, label) {
@@ -1964,6 +2663,22 @@
       throw new Error('Fuel on board must be H:MM, HHMM, or PT#H#M.');
     }
 
+    function normalizeFlightIdentifier(value) {
+      const normalized = String(value || '').trim().toUpperCase();
+      if (!/^[A-Z0-9._-]{2,32}$/.test(normalized)) {
+        throw new Error('Flight identifier must be 2-32 letters, numbers, dots, dashes, or underscores.');
+      }
+      return normalized;
+    }
+
+    function localDateTimeToIso(value, label) {
+      const raw = String(value || '').trim();
+      if (!raw) throw new Error(`${label} is required.`);
+      const date = new Date(raw);
+      if (Number.isNaN(date.getTime())) throw new Error(`${label} must be a valid date and time.`);
+      return date.toISOString();
+    }
+
     function parseJsonObject(value, fallback) {
       if (!value) return fallback;
       if (typeof value === 'string') {
@@ -1978,7 +2693,8 @@
 
     function defaultStations() {
       return {
-        frontArm: 37,
+        pilotArm: 37,
+        frontPaxArm: 37,
         rearArm: 73,
         baggageArm: 95,
         fuelArm: 48,
@@ -1986,10 +2702,24 @@
     }
 
     function defaultCgEnvelope() {
-      return [
-        { weight: 1500, forward: 35, aft: 47 },
-        { weight: 2400, forward: 39.5, aft: 47.3 },
-      ];
+      return {
+        forwardLimit: [
+          { weight: 1500, cg: 35 },
+          { weight: 2400, cg: 39.5 },
+        ],
+        aftLimit: [
+          { weight: 1500, cg: 47 },
+          { weight: 2400, cg: 47.3 },
+        ],
+      };
+    }
+
+    function defaultVSpeeds() {
+      return {
+        vs0: 0,
+        vx: 0,
+        vy: 0,
+      };
     }
 
     function defaultCharacteristics() {
@@ -2000,6 +2730,41 @@
         numberOfSeats: 4,
         numberOfBaggageAreas: 1,
       };
+    }
+
+    function getFuelWeight(fuelType) {
+      return fuelType === 'JET-A' ? 6.7 : 6;
+    }
+
+    function numberOrExisting(inputId, existingValue, label, min = 0, max = 1_000_000) {
+      const value = optionalNumber(document.getElementById(inputId).value, label, min, max);
+      return value ?? existingValue ?? null;
+    }
+
+    function positiveIntOrExisting(inputId, existingValue, label, min = 0, max = 99) {
+      const raw = String(document.getElementById(inputId).value ?? '').trim();
+      if (!raw) return existingValue ?? min;
+      const parsed = Number(raw);
+      if (!Number.isInteger(parsed) || parsed < min || parsed > max) {
+        throw new Error(`${label} must be a whole number between ${min} and ${max}.`);
+      }
+      return parsed;
+    }
+
+    function parseCgLimitInput(inputId, existingLimit, fallbackLimit, label) {
+      const raw = document.getElementById(inputId).value.trim();
+      const source = raw ? JSON.parse(raw) : existingLimit || fallbackLimit;
+      if (!Array.isArray(source) || source.length < 2) {
+        throw new Error(`${label} must contain at least two CG points.`);
+      }
+      return source.map((point) => {
+        const weight = Number(point.weight);
+        const cg = Number(point.cg);
+        if (!Number.isFinite(weight) || !Number.isFinite(cg)) {
+          throw new Error(`${label} points must use numeric weight and cg values.`);
+        }
+        return { weight, cg };
+      });
     }
 
     function asArray(value) {
@@ -2065,93 +2830,45 @@
       briefResult.style.display = 'block';
     }
 
-    function createAircraftMesh(THREE) {
-      const aircraft = new THREE.Group();
-      const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.42, metalness: 0.18 });
-      const accentMaterial = new THREE.MeshStandardMaterial({ color: 0x0891b2, roughness: 0.34, metalness: 0.08 });
-      const glassMaterial = new THREE.MeshStandardMaterial({ color: 0x67e8f9, roughness: 0.18, metalness: 0.2, transparent: true, opacity: 0.72 });
-
-      const fuselage = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 1.55, 10, 24), bodyMaterial);
-      fuselage.rotation.z = Math.PI / 2;
-      aircraft.add(fuselage);
-
-      const wing = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.08, 0.08), accentMaterial);
-      wing.position.y = 0.02;
-      aircraft.add(wing);
-
-      const tail = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.06, 0.06), accentMaterial);
-      tail.position.x = -0.8;
-      tail.position.z = 0.18;
-      aircraft.add(tail);
-
-      const fin = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.42, 3), accentMaterial);
-      fin.position.x = -0.75;
-      fin.position.z = 0.36;
-      fin.rotation.y = Math.PI / 2;
-      aircraft.add(fin);
-
-      const nose = new THREE.Mesh(new THREE.ConeGeometry(0.23, 0.44, 24), bodyMaterial);
-      nose.position.x = 0.98;
-      nose.rotation.z = -Math.PI / 2;
-      aircraft.add(nose);
-
-      const canopy = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 12), glassMaterial);
-      canopy.scale.set(1.2, 0.72, 0.44);
-      canopy.position.set(0.3, 0, 0.2);
-      aircraft.add(canopy);
-
-      aircraft.rotation.set(-0.45, 0.1, -0.18);
-      aircraft.position.set(0, 0.16, 0.72);
-      return aircraft;
+    async function loadThreeModules() {
+      if (!threeModulesPromise) {
+        threeModulesPromise = Promise.all([
+          import('three'),
+          import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js'),
+        ]).then(([THREE, loaderModule]) => ({ THREE, GLTFLoader: loaderModule.GLTFLoader }));
+      }
+      return threeModulesPromise;
     }
 
-    function createTerrainMesh(THREE) {
-      const group = new THREE.Group();
-      const surfaceMaterial = new THREE.MeshStandardMaterial({
-        color: 0xdbeafe,
-        roughness: 0.88,
-        metalness: 0,
-        transparent: true,
-        opacity: 0.94,
-        side: THREE.DoubleSide,
-      });
-      const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0891b2, transparent: true, opacity: 0.34 });
-      const geometry = new THREE.PlaneGeometry(7.2, 5.2, 80, 56);
+    function getAircraftModelPath(aircraft) {
+      const explicitPath = aircraft?.performance?.modelAssetPath;
+      if (explicitPath) return explicitPath;
+      const descriptor = [aircraft?.make, aircraft?.model, aircraft?.nickname].filter(Boolean).join(' ').toLowerCase();
+      if (/pa-?28|cherokee|archer|warrior/.test(descriptor)) return 'assets/models/aircraft/sketchfab/piper-pa28-cherokee/model.glb';
+      if (/sr22|cirrus/.test(descriptor)) return 'assets/models/aircraft/sketchfab/cirrus-sr22/model.glb';
+      if (/182|skylane/.test(descriptor)) return 'assets/models/aircraft/sketchfab/cessna-182/model.glb';
+      if (/bonanza|v35|beech35/.test(descriptor)) return 'assets/models/aircraft/sketchfab/beechcraft-bonanza-v35/model.glb';
+      if (/king air|b200/.test(descriptor)) return 'assets/models/aircraft/sketchfab/beechcraft-b200-king-air/model.glb';
+      if (/t-?6|texan/.test(descriptor)) return 'assets/models/aircraft/sketchfab/beechcraft-t6-texan-ii/model.glb';
+      return 'assets/models/aircraft/sketchfab/cessna-172sp-nlm/model.glb';
+    }
 
-      const position = geometry.attributes.position;
-      for (let i = 0; i < position.count; i += 1) {
-        const x = position.getX(i);
-        const y = position.getY(i);
-        const ridge = Math.sin(x * 1.55) * 0.18 + Math.cos(y * 1.9) * 0.13 + Math.sin((x + y) * 2.1) * 0.08;
-        position.setZ(i, ridge);
-      }
-      geometry.computeVertexNormals();
-
-      const terrain = new THREE.Mesh(geometry, surfaceMaterial);
-      terrain.rotation.x = -Math.PI / 2;
-      terrain.position.y = -0.55;
-      group.add(terrain);
-
-      for (let i = -5; i <= 5; i += 1) {
-        const points = [];
-        for (let x = -3.4; x <= 3.4; x += 0.18) {
-          const z = i * 0.42;
-          const y = -0.38 + Math.sin(x * 1.55) * 0.08 + Math.cos(z * 1.9) * 0.05;
-          points.push(new THREE.Vector3(x, y, z));
+    function frameModel(THREE, model, targetSize = 4.35) {
+      const box = new THREE.Box3().setFromObject(model);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const maxAxis = Math.max(size.x, size.y, size.z) || 1;
+      model.position.sub(center);
+      model.scale.setScalar(targetSize / maxAxis);
+      model.rotation.set(-0.08, -0.34, -0.08);
+      model.position.set(0, 0.42, 0);
+      model.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
         }
-        group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), lineMaterial));
-      }
-
-      const routeMaterial = new THREE.LineBasicMaterial({ color: 0x0f172a, transparent: true, opacity: 0.58 });
-      const route = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2.9, -0.18, 1.8),
-        new THREE.Vector3(-1.3, -0.08, 0.6),
-        new THREE.Vector3(0.3, 0.02, -0.3),
-        new THREE.Vector3(2.8, -0.12, -1.65),
-      ]);
-      group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(route.getPoints(80)), routeMaterial));
-
-      return group;
+      });
+      return model;
     }
 
     function resizeCommandScene() {
@@ -2164,43 +2881,102 @@
       camera.updateProjectionMatrix();
     }
 
-    function initCommandScene() {
+    function loadCommandAircraftModel(modelPath) {
+      const fallback = document.getElementById('sceneFallback');
+      if (!commandSceneState?.loader || !modelPath) return;
+      const { THREE, scene, loader } = commandSceneState;
+      if (commandSceneState.loadedModelPath === modelPath && commandSceneState.aircraft) return;
+      if (commandSceneState.aircraft) {
+        scene.remove(commandSceneState.aircraft);
+        commandSceneState.aircraft.traverse((child) => {
+          if (child.geometry) child.geometry.dispose?.();
+          if (child.material) {
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
+            materials.forEach((material) => material.dispose?.());
+          }
+        });
+        commandSceneState.aircraft = null;
+      }
+      if (fallback) {
+        fallback.textContent = 'Loading aircraft model...';
+        fallback.classList.add('visible');
+      }
+      commandSceneState.aircraftModelPath = modelPath;
+      loader.load(
+        modelPath,
+        (gltf) => {
+          if (!commandSceneState) return;
+          const realAircraft = frameModel(THREE, gltf.scene);
+          scene.add(realAircraft);
+          commandSceneState.aircraft = realAircraft;
+          commandSceneState.loadedModelPath = modelPath;
+          fallback?.classList.remove('visible');
+        },
+        undefined,
+        (err) => {
+          console.warn('[command scene] aircraft model failed to load', modelPath, err);
+          if (fallback) {
+            fallback.textContent = '3D aircraft model unavailable';
+            fallback.classList.add('visible');
+          }
+        }
+      );
+    }
+
+    async function initCommandScene(modelPath) {
       const canvas = document.getElementById('commandScene');
       const fallback = document.getElementById('sceneFallback');
-      if (!canvas || commandSceneState) return;
-      if (!window.THREE) {
+      if (!canvas) return;
+      if (commandSceneState) {
+        loadCommandAircraftModel(modelPath);
+        requestAnimationFrame(() => resizeCommandScene());
+        return;
+      }
+      let modules;
+      try {
+        modules = await loadThreeModules();
+      } catch (err) {
+        console.warn('[command scene] Three.js modules failed to load', err);
         fallback?.classList.add('visible');
         return;
       }
-      fallback?.classList.remove('visible');
-      const THREE = window.THREE;
+      const { THREE, GLTFLoader } = modules;
+      if (fallback) {
+        fallback.textContent = 'Loading aircraft model...';
+        fallback.classList.add('visible');
+      }
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xf8fafc);
 
       const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-      camera.position.set(4.2, 4.4, 5.2);
-      camera.lookAt(0, 0, 0);
+      camera.position.set(3.8, 2.05, 4.6);
+      camera.lookAt(0, 0.2, 0);
 
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-      scene.add(new THREE.HemisphereLight(0xffffff, 0xdbeafe, 2.2));
-      const keyLight = new THREE.DirectionalLight(0xffffff, 2.6);
-      keyLight.position.set(3, 5, 4);
+      scene.add(new THREE.HemisphereLight(0x7dd3fc, 0x020617, 0.72));
+      const keyLight = new THREE.DirectionalLight(0xffffff, 3.1);
+      keyLight.position.set(3.2, 4.8, 3.4);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(2048, 2048);
       scene.add(keyLight);
+      const rimLight = new THREE.DirectionalLight(0x22d3ee, 1.45);
+      rimLight.position.set(-4, 2.4, -2.6);
+      scene.add(rimLight);
 
-      const terrain = createTerrainMesh(THREE);
-      const aircraft = createAircraftMesh(THREE);
-      scene.add(terrain);
-      scene.add(aircraft);
-
-      commandSceneState = { canvas, camera, renderer, scene, terrain, aircraft };
+      const loader = new GLTFLoader();
+      commandSceneState = { canvas, camera, renderer, scene, loader, THREE, aircraft: null, aircraftModelPath: modelPath };
       resizeCommandScene();
+      loadCommandAircraftModel(modelPath);
 
       const animate = () => {
         if (!commandSceneState) return;
-        commandSceneState.aircraft.rotation.z = -0.18 + Math.sin(Date.now() * 0.0012) * 0.035;
-        commandSceneState.terrain.rotation.y = Math.sin(Date.now() * 0.00018) * 0.035;
+        if (commandSceneState.aircraft) {
+          commandSceneState.aircraft.rotation.z = -0.08 + Math.sin(Date.now() * 0.0012) * 0.018;
+          commandSceneState.aircraft.rotation.y = -0.34 + Math.sin(Date.now() * 0.0005) * 0.035;
+        }
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
       };
@@ -2208,43 +2984,45 @@
       window.addEventListener('resize', resizeCommandScene);
     }
 
+    function getAircraftDisplayName(aircraft) {
+      if (!aircraft) return 'Primary Aircraft';
+      return aircraft.nickname || [aircraft.make, aircraft.model].filter(Boolean).join(' ') || aircraft.tail_number || 'Aircraft';
+    }
+
+    function getPilotFirstName(profile, user) {
+      const raw = profile?.display_name || user?.user_metadata?.full_name || user?.email || 'pilot';
+      const first = String(raw).split('@')[0].trim().split(/\s+/)[0];
+      return first || 'pilot';
+    }
+
     function renderCommandHome(aircraft, briefs, profile) {
-      const primary = aircraft?.[0];
-      const aircraftName = primary
-        ? (primary.nickname || [primary.make, primary.model].filter(Boolean).join(' ') || primary.tail_number)
-        : 'Primary Aircraft';
+      const aircraftList = aircraft || [];
+      if (!selectedCommandAircraftId || !aircraftList.some((item) => item.id === selectedCommandAircraftId)) {
+        selectedCommandAircraftId = aircraftList[0]?.id || null;
+      }
+      const primary = aircraftList.find((item) => item.id === selectedCommandAircraftId) || aircraftList[0];
+      const modelPath = getAircraftModelPath(primary);
+      const aircraftName = getAircraftDisplayName(primary);
       const aircraftMeta = primary
         ? [primary.year, primary.make, primary.model].filter(Boolean).join(' ') || 'Aircraft profile ready'
         : 'Add an aircraft to personalize the web platform.';
+      document.getElementById('commandWelcome').textContent = `Welcome ${getPilotFirstName(profile, currentSession?.user)}`;
       document.getElementById('commandAircraftName').textContent = aircraftName;
       document.getElementById('commandAircraftMeta').textContent = aircraftMeta;
-      document.getElementById('commandTailBadge').textContent = primary?.tail_number || 'Aircraft';
-      document.getElementById('commandAltitude').textContent = profile?.home_airport_icao || 'VFR';
-
-      const latestPayload = parseJsonObject(briefs?.[0]?.request_payload, {});
-      const latestRoute = latestPayload?.nasRouteBriefingFields?.route;
-      document.getElementById('commandRoute').textContent = latestRoute || 'Ready';
-      document.getElementById('commandBriefCount').textContent = String(briefs?.length || 0);
-
-      const list = document.getElementById('commandRecentList');
-      const recent = (briefs || []).slice(0, 5);
-      if (recent.length === 0) {
-        renderEmpty(list, 'No recent briefing records yet.');
+      const select = document.getElementById('commandAircraftSelect');
+      if (aircraftList.length === 0) {
+        select.innerHTML = '<option value="">Add an aircraft</option>';
+        select.disabled = true;
       } else {
-        list.innerHTML = recent.map((brief) => {
-          const payload = parseJsonObject(brief.request_payload, {});
-          const route = payload?.nasRouteBriefingFields?.route || 'Route not saved';
-          const status = [brief.status, formatDate(brief.requested_at)].filter(Boolean).join(' - ');
-          return `
-            <div class="command-flight">
-              <strong>${escapeHtml(route)}</strong>
-              <span>${escapeHtml(status || 'Briefing record')}</span>
-            </div>
-          `;
-        }).join('');
+        select.disabled = aircraftList.length < 2;
+        select.innerHTML = aircraftList.map((item) => `
+          <option value="${escapeHtml(item.id)}"${item.id === primary?.id ? ' selected' : ''}>
+            ${escapeHtml([item.tail_number, getAircraftDisplayName(item)].filter(Boolean).join(' - '))}
+          </option>
+        `).join('');
       }
 
-      initCommandScene();
+      initCommandScene(modelPath);
       requestAnimationFrame(() => resizeCommandScene());
     }
 
@@ -2255,6 +3033,33 @@
         return { data: null, error: result.error };
       }
       return { data: result.data, error: null };
+    }
+
+    async function loadLinkedIdentities() {
+      if (typeof client.auth.getUserIdentities !== 'function') {
+        return { identities: currentSession?.user?.identities || [], error: null };
+      }
+      const { data, error } = await client.auth.getUserIdentities();
+      return { identities: data?.identities || [], error };
+    }
+
+    function renderLinkedIdentities(identities, error) {
+      const list = document.getElementById('identityList');
+      if (error) {
+        renderEmpty(list, `Unable to load linked sign-ins: ${error.message}`);
+        return;
+      }
+      const safeIdentities = identities || [];
+      if (safeIdentities.length === 0) {
+        renderEmpty(list, 'No linked sign-ins found for this session.');
+        return;
+      }
+      list.innerHTML = safeIdentities.map((identity) => {
+        const provider = formatPilotType(identity.provider || 'provider');
+        const email = identity.email || identity.identity_data?.email || 'No email shown';
+        const lastSignIn = formatDate(identity.last_sign_in_at);
+        return row(provider, `${email} | Last sign-in: ${lastSignIn}`, identity.provider || null);
+      }).join('');
     }
 
     function fillProfileForm(profile) {
@@ -2301,10 +3106,19 @@
       document.getElementById('aircraftId').value = '';
       document.getElementById('aircraftForm').reset();
       document.getElementById('fuelType').value = '100LL';
+      document.getElementById('aircraftSeats').value = '4';
+      document.getElementById('aircraftBaggageAreas').value = '1';
+      document.getElementById('cgForwardLimit').value = JSON.stringify(defaultCgEnvelope().forwardLimit);
+      document.getElementById('cgAftLimit').value = JSON.stringify(defaultCgEnvelope().aftLimit);
     }
 
     function fillAircraftForm(aircraft) {
       const fuel = parseJsonObject(aircraft.fuel, {});
+      const stations = parseJsonObject(aircraft.stations, defaultStations());
+      const vSpeeds = parseJsonObject(aircraft.v_speeds, defaultVSpeeds());
+      const cgEnvelope = parseJsonObject(aircraft.cg_envelope, defaultCgEnvelope());
+      const characteristics = parseJsonObject(aircraft.characteristics, defaultCharacteristics());
+      const performance = parseJsonObject(aircraft.performance, {});
       document.getElementById('aircraftFormTitle').textContent = `Edit ${aircraft.tail_number}`;
       document.getElementById('aircraftId').value = aircraft.id || '';
       document.getElementById('aircraftTail').value = aircraft.tail_number || '';
@@ -2312,13 +3126,47 @@
       document.getElementById('aircraftMake').value = aircraft.make || '';
       document.getElementById('aircraftModel').value = aircraft.model || '';
       document.getElementById('aircraftYear').value = aircraft.year || '';
+      document.getElementById('aircraftSeats').value = characteristics.numberOfSeats ?? 4;
+      document.getElementById('aircraftBaggageAreas').value = characteristics.numberOfBaggageAreas ?? 1;
+      document.getElementById('aircraftMultiEngine').checked = !!characteristics.isMultiEngine;
+      document.getElementById('aircraftRetractable').checked = !!characteristics.isRetractableGear;
+      document.getElementById('aircraftConstantSpeed').checked = !!characteristics.hasConstantSpeedProp;
       document.getElementById('basicEmptyWeight').value = aircraft.basic_empty_weight || '';
       document.getElementById('basicEmptyMoment').value = aircraft.basic_empty_moment || '';
+      document.getElementById('maxRampWeight').value = aircraft.max_ramp_weight || '';
       document.getElementById('maxTakeoffWeight').value = aircraft.max_takeoff_weight || '';
       document.getElementById('maxLandingWeight').value = aircraft.max_landing_weight || '';
+      document.getElementById('maxBaggageWeight').value = aircraft.max_baggage_weight || '';
+      document.getElementById('pilotArm').value = stations.pilotArm ?? '';
+      document.getElementById('frontPaxArm').value = stations.frontPaxArm ?? '';
+      document.getElementById('rearArm').value = stations.rearArm ?? '';
+      document.getElementById('baggageArm').value = stations.baggageArm ?? '';
+      document.getElementById('baggage2Arm').value = stations.baggage2Arm ?? '';
+      document.getElementById('fuelArm').value = stations.fuelArm ?? '';
+      document.getElementById('totalFuel').value = fuel.totalCapacity ?? '';
       document.getElementById('usableFuel').value = fuel.usableCapacity ?? '';
       document.getElementById('cruiseBurn').value = fuel.cruiseBurnRate ?? '';
+      document.getElementById('climbBurn').value = fuel.climbBurnRate ?? '';
+      document.getElementById('startTaxiFuel').value = fuel.startTaxiRunupFuel ?? '';
       document.getElementById('fuelType').value = fuel.fuelType || '100LL';
+      document.getElementById('vs0').value = vSpeeds.vs0 ?? '';
+      document.getElementById('vs1').value = vSpeeds.vs1 ?? '';
+      document.getElementById('vx').value = vSpeeds.vx ?? '';
+      document.getElementById('vy').value = vSpeeds.vy ?? '';
+      document.getElementById('vr').value = vSpeeds.vr ?? '';
+      document.getElementById('vglide').value = vSpeeds.vglide ?? '';
+      document.getElementById('vne').value = vSpeeds.vne ?? '';
+      document.getElementById('vno').value = vSpeeds.vno ?? '';
+      document.getElementById('va').value = vSpeeds.va ?? '';
+      document.getElementById('vfe').value = vSpeeds.vfe ?? '';
+      document.getElementById('takeoffGroundRoll').value = performance.takeoffGroundRoll ?? '';
+      document.getElementById('takeoffOver50').value = performance.takeoffOver50ft ?? '';
+      document.getElementById('landingGroundRoll').value = performance.landingGroundRoll ?? '';
+      document.getElementById('landingOver50').value = performance.landingOver50ft ?? '';
+      document.getElementById('climbRateSL').value = performance.climbRateSL ?? '';
+      document.getElementById('serviceCeiling').value = performance.serviceCeiling ?? '';
+      document.getElementById('cgForwardLimit').value = JSON.stringify(cgEnvelope.forwardLimit || defaultCgEnvelope().forwardLimit);
+      document.getElementById('cgAftLimit').value = JSON.stringify(cgEnvelope.aftLimit || defaultCgEnvelope().aftLimit);
       setActiveView('aircraft');
     }
 
@@ -2349,27 +3197,33 @@
     }
 
     async function loadDashboard(session) {
+      const loadNonce = ++dashboardLoadNonce;
       const user = session.user;
       currentSession = session;
       signedOutView.style.display = 'none';
+      sessionLoader.style.display = 'none';
       dashboard.style.display = 'grid';
       signOutButton.style.display = 'inline';
       setDefaultDepartureTime();
+      setDefaultLogbookDate();
       setMessage(dashboardError, '');
 
       document.getElementById('profileEmail').textContent = user.email || '';
       document.getElementById('profileName').textContent = user.email || 'BeBrief pilot';
       document.getElementById('accountEmail').value = user.email || '';
 
-      const [profileResult, subscriptionResult, aircraftResult, briefsResult, settingsResult] = await Promise.all([
+      const [profileResult, subscriptionResult, aircraftResult, briefsResult, logbookResult, settingsResult] = await Promise.all([
         safeQuery('profile', client.from('profiles').select('display_name,email,phone_number,emergency_contact_name,emergency_contact_phone,pilot_type,total_hours,home_airport_icao,instrument_rated,multi_engine_rated').eq('id', user.id).maybeSingle()),
         safeQuery('subscription', client.from('subscriptions').select('status,tier,trial_ends_at,subscription_expires_at,platform,product_id').eq('user_id', user.id).maybeSingle()),
-        safeQuery('aircraft', client.from('user_aircraft').select('id,tail_number,nickname,make,model,year,basic_empty_weight,basic_empty_moment,max_takeoff_weight,max_landing_weight,fuel,v_speeds,performance,updated_at').eq('user_id', user.id).order('updated_at', { ascending: false })),
+        safeQuery('aircraft', client.from('user_aircraft').select('id,user_id,tail_number,nickname,make,model,year,basic_empty_weight,basic_empty_moment,max_ramp_weight,max_takeoff_weight,max_landing_weight,max_baggage_weight,stations,fuel,v_speeds,cg_envelope,performance,characteristics,created_at,updated_at').eq('user_id', user.id).order('updated_at', { ascending: false })),
         safeQuery('briefs', client.from('official_briefings').select('id,mode,status,external_briefing_id,request_payload,response_payload,requested_at,completed_at,error_message').eq('user_id', user.id).order('requested_at', { ascending: false }).limit(25)),
+        safeQuery('logbook', client.from('user_logbook_entries').select('id,date_iso,departure_icao,destination_icao,route_text,aircraft_identifier,total_time_hours,pic_hours,dual_hours,night_hours,day_landings,night_landings,approaches,remarks,source,updated_at').eq('user_id', user.id).order('date_iso', { ascending: false }).limit(50)),
         safeQuery('settings', client.from('user_settings').select('*').eq('user_id', user.id).maybeSingle()),
       ]);
+      const identitiesResult = await loadLinkedIdentities();
+      if (loadNonce !== dashboardLoadNonce || currentSession?.access_token !== session.access_token) return;
 
-      const errors = [profileResult, subscriptionResult, aircraftResult, briefsResult, settingsResult]
+      const errors = [profileResult, subscriptionResult, aircraftResult, briefsResult, logbookResult, settingsResult]
         .map((result) => result.error?.message)
         .filter(Boolean);
       if (errors.length > 0) {
@@ -2380,9 +3234,11 @@
       const subscription = subscriptionResult.data;
       const aircraft = aircraftResult.data || [];
       const briefs = briefsResult.data || [];
+      const logbookEntries = logbookResult.data || [];
       const settings = settingsResult.data;
       currentAircraft = aircraft;
       currentBriefs = briefs;
+      currentLogbookEntries = logbookEntries;
       renderCommandHome(aircraft, briefs, profile);
 
       document.getElementById('profileName').textContent = profile?.display_name || user.email || 'BeBrief pilot';
@@ -2393,13 +3249,14 @@
       fillSettingsForm(settings);
       fillDefaultAircraftOptions(settings, aircraft);
       hydrateOfficialDefaults(settings, aircraft);
+      renderLinkedIdentities(identitiesResult.identities, identitiesResult.error);
       setOfficialModeFields();
 
       const accessBadge = document.getElementById('accessBadge');
       const status = subscription?.status || 'free';
       const tier = subscription?.tier || 'free';
       accessBadge.textContent = `${tier} / ${status}`;
-      accessBadge.className = status === 'active' || status === 'trial' || tier === 'lifetime' ? 'badge' : 'badge warn';
+      accessBadge.className = hasWebAccess(subscription) ? 'badge' : 'badge warn';
 
       const subscriptionList = document.getElementById('subscriptionList');
       if (!subscription) {
@@ -2482,13 +3339,36 @@
           `);
         }).join('');
       }
+
+      document.getElementById('logbookCount').textContent = String(logbookEntries.length);
+      const logbookList = document.getElementById('logbookList');
+      if (logbookEntries.length === 0) {
+        renderEmpty(logbookList, 'No logbook entries yet.');
+      } else {
+        logbookList.innerHTML = logbookEntries.map((entry) => {
+          const route = [entry.departure_icao, entry.route_text, entry.destination_icao].filter(Boolean).join(' ');
+          const subtitle = [
+            route || 'Route not set',
+            entry.aircraft_identifier ? `Aircraft: ${entry.aircraft_identifier}` : null,
+            `${Number(entry.total_time_hours || 0).toFixed(1)} hr`,
+            `${Number(entry.day_landings || 0) + Number(entry.night_landings || 0)} landings`,
+          ].filter(Boolean).join(' | ');
+          return actionRow(formatDate(entry.date_iso), subtitle, entry.source || 'manual', `
+            <button class="btn small danger" type="button" data-logbook-delete="${escapeHtml(entry.id)}">Delete</button>
+          `);
+        }).join('');
+      }
     }
 
     async function refreshSession() {
       setMessage(authError, '');
       setMessage(dashboardError, '');
+      document.body.classList.add('auth-pending');
+      sessionLoader.style.display = 'grid';
       const { data, error } = await client.auth.getSession();
       if (error) {
+        document.body.classList.remove('auth-pending');
+        sessionLoader.style.display = 'none';
         setMessage(authError, error.message);
         return;
       }
@@ -2499,19 +3379,30 @@
           setMessage(dashboardError, err.message || 'Unable to load your BeBrief data.');
         }
       } else {
+        dashboardLoadNonce++;
         signedOutView.style.display = 'grid';
+        sessionLoader.style.display = 'none';
         dashboard.style.display = 'none';
         signOutButton.style.display = 'none';
         currentSession = null;
+        currentAircraft = [];
+        currentBriefs = [];
+        currentLogbookEntries = [];
       }
+      document.body.classList.remove('auth-pending');
     }
 
     document.querySelectorAll('[data-view]').forEach((button) => {
       button.addEventListener('click', () => setActiveView(button.dataset.view));
     });
 
-    document.querySelectorAll('[data-home-view]').forEach((button) => {
-      button.addEventListener('click', () => setActiveView(button.dataset.homeView));
+    document.querySelectorAll('[data-view-jump]').forEach((button) => {
+      button.addEventListener('click', () => setActiveView(button.dataset.viewJump));
+    });
+
+    document.getElementById('commandAircraftSelect').addEventListener('change', (event) => {
+      selectedCommandAircraftId = event.target.value || null;
+      renderCommandHome(currentAircraft, currentBriefs);
     });
 
     document.getElementById('briefList').addEventListener('click', (event) => {
@@ -2555,6 +3446,28 @@
         resetAircraftForm();
         await refreshSession();
       }
+    });
+
+    document.getElementById('logbookList').addEventListener('click', async (event) => {
+      const deleteButton = event.target.closest('[data-logbook-delete]');
+      if (!deleteButton) return;
+      const entry = currentLogbookEntries.find((item) => item.id === deleteButton.dataset.logbookDelete);
+      if (!entry) return;
+      const ok = window.confirm(`Delete the ${entry.departure_icao || ''}-${entry.destination_icao || ''} logbook entry?`);
+      if (!ok) return;
+      const errorBox = document.getElementById('logbookError');
+      setMessage(errorBox, '');
+      const { error } = await client
+        .from('user_logbook_entries')
+        .delete()
+        .eq('id', entry.id)
+        .eq('user_id', currentSession.user.id);
+      if (error) {
+        setMessage(errorBox, error.message);
+        return;
+      }
+      setMessage(document.getElementById('logbookMessage'), 'Logbook entry deleted.');
+      await refreshSession();
     });
 
     document.getElementById('newAircraftButton').addEventListener('click', resetAircraftForm);
@@ -2647,6 +3560,51 @@
       }
     });
 
+    document.getElementById('logbookForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('logbookMessage');
+      const errorBox = document.getElementById('logbookError');
+      setMessage(message, '');
+      setMessage(errorBox, '');
+      try {
+        const dateValue = document.getElementById('logbookDate').value;
+        if (!dateValue) throw new Error('Logbook date is required.');
+        const payload = {
+          id: crypto.randomUUID(),
+          user_id: currentSession.user.id,
+          source: 'manual',
+          date_iso: new Date(`${dateValue}T12:00:00`).toISOString(),
+          departure_icao: normalizeAirport(document.getElementById('logbookDeparture').value, 'Logbook departure'),
+          destination_icao: normalizeAirport(document.getElementById('logbookDestination').value, 'Logbook destination'),
+          route_text: optionalText(document.getElementById('logbookRoute').value) || '',
+          aircraft_identifier: document.getElementById('logbookAircraft').value.trim()
+            ? normalizeAircraftIdentifier(document.getElementById('logbookAircraft').value)
+            : null,
+          total_time_hours: requiredNumber(document.getElementById('logbookTotalHours').value, 'Total hours', 0, 1000),
+          pic_hours: optionalNumber(document.getElementById('logbookPicHours').value, 'PIC hours', 0, 1000) ?? 0,
+          dual_hours: optionalNumber(document.getElementById('logbookDualHours').value, 'Dual hours', 0, 1000) ?? 0,
+          night_hours: optionalNumber(document.getElementById('logbookNightHours').value, 'Night hours', 0, 1000) ?? 0,
+          actual_instrument_hours: 0,
+          simulated_instrument_hours: 0,
+          day_landings: normalizePositiveInteger(document.getElementById('logbookDayLandings').value || '0', 'Day landings', 0, 999),
+          night_landings: normalizePositiveInteger(document.getElementById('logbookNightLandings').value || '0', 'Night landings', 0, 999),
+          approaches: normalizePositiveInteger(document.getElementById('logbookApproaches').value || '0', 'Approaches', 0, 999),
+          remarks: optionalText(document.getElementById('logbookRemarks').value) || '',
+          mission_history_id: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        const { error } = await client.from('user_logbook_entries').insert(payload);
+        if (error) throw error;
+        document.getElementById('logbookForm').reset();
+        setDefaultLogbookDate();
+        setMessage(message, 'Logbook entry saved.');
+        await refreshSession();
+      } catch (err) {
+        setMessage(errorBox, err.message || 'Unable to save logbook entry.');
+      }
+    });
+
     document.getElementById('aircraftForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const message = document.getElementById('aircraftMessage');
@@ -2656,7 +3614,31 @@
       try {
         const id = document.getElementById('aircraftId').value || crypto.randomUUID();
         const existing = currentAircraft.find((item) => item.id === id) || {};
-        const fuel = parseJsonObject(existing.fuel, {});
+        const existingStations = parseJsonObject(existing.stations, defaultStations());
+        const existingFuel = parseJsonObject(existing.fuel, {});
+        const existingVSpeeds = parseJsonObject(existing.v_speeds, defaultVSpeeds());
+        const existingCgEnvelope = parseJsonObject(existing.cg_envelope, defaultCgEnvelope());
+        const existingCharacteristics = parseJsonObject(existing.characteristics, defaultCharacteristics());
+        const existingPerformance = parseJsonObject(existing.performance, {});
+        const fuelType = document.getElementById('fuelType').value || existingFuel.fuelType || '100LL';
+        const performance = {
+          ...existingPerformance,
+          takeoffGroundRoll: numberOrExisting('takeoffGroundRoll', existingPerformance.takeoffGroundRoll, 'Takeoff ground roll', 0),
+          takeoffOver50ft: numberOrExisting('takeoffOver50', existingPerformance.takeoffOver50ft, 'Takeoff over 50 ft', 0),
+          landingGroundRoll: numberOrExisting('landingGroundRoll', existingPerformance.landingGroundRoll, 'Landing ground roll', 0),
+          landingOver50ft: numberOrExisting('landingOver50', existingPerformance.landingOver50ft, 'Landing over 50 ft', 0),
+          climbRateSL: numberOrExisting('climbRateSL', existingPerformance.climbRateSL, 'Climb rate SL', 0, 10000),
+          serviceCeiling: numberOrExisting('serviceCeiling', existingPerformance.serviceCeiling, 'Service ceiling', 0, 100000),
+        };
+        const hasPerformanceNumbers = [
+          performance.takeoffGroundRoll,
+          performance.takeoffOver50ft,
+          performance.landingGroundRoll,
+          performance.landingOver50ft,
+        ].every((value) => Number.isFinite(Number(value)) && Number(value) > 0);
+        for (const key of Object.keys(performance)) {
+          if (performance[key] == null) delete performance[key];
+        }
         const payload = {
           id,
           user_id: currentSession.user.id,
@@ -2667,21 +3649,55 @@
           year: optionalNumber(document.getElementById('aircraftYear').value, 'Year', 1903, 2100),
           basic_empty_weight: requiredNumber(document.getElementById('basicEmptyWeight').value, 'Basic empty weight', 1),
           basic_empty_moment: requiredNumber(document.getElementById('basicEmptyMoment').value, 'Basic empty moment', -10000000, 10000000),
+          max_ramp_weight: numberOrExisting('maxRampWeight', existing.max_ramp_weight, 'Max ramp weight', 1),
           max_takeoff_weight: requiredNumber(document.getElementById('maxTakeoffWeight').value, 'Max takeoff weight', 1),
           max_landing_weight: optionalNumber(document.getElementById('maxLandingWeight').value, 'Max landing weight', 1),
-          stations: parseJsonObject(existing.stations, defaultStations()),
-          fuel: {
-            ...fuel,
-            totalCapacity: optionalNumber(document.getElementById('usableFuel').value, 'Usable fuel', 0) ?? fuel.totalCapacity ?? 0,
-            usableCapacity: optionalNumber(document.getElementById('usableFuel').value, 'Usable fuel', 0) ?? fuel.usableCapacity ?? 0,
-            cruiseBurnRate: optionalNumber(document.getElementById('cruiseBurn').value, 'Cruise burn', 0) ?? fuel.cruiseBurnRate ?? 0,
-            fuelType: optionalText(document.getElementById('fuelType').value) || fuel.fuelType || '100LL',
-            fuelWeight: fuel.fuelWeight || 6,
+          max_baggage_weight: numberOrExisting('maxBaggageWeight', existing.max_baggage_weight, 'Max baggage weight', 0),
+          stations: {
+            pilotArm: numberOrExisting('pilotArm', existingStations.pilotArm, 'Pilot arm', -1000, 1000) ?? 0,
+            frontPaxArm: numberOrExisting('frontPaxArm', existingStations.frontPaxArm, 'Front pax arm', -1000, 1000) ?? undefined,
+            rearArm: numberOrExisting('rearArm', existingStations.rearArm, 'Rear arm', -1000, 1000) ?? undefined,
+            baggageArm: numberOrExisting('baggageArm', existingStations.baggageArm, 'Baggage arm', -1000, 1000) ?? undefined,
+            baggage2Arm: numberOrExisting('baggage2Arm', existingStations.baggage2Arm, 'Baggage 2 arm', -1000, 1000) ?? undefined,
+            fuelArm: numberOrExisting('fuelArm', existingStations.fuelArm, 'Fuel arm', -1000, 1000) ?? 0,
           },
-          v_speeds: parseJsonObject(existing.v_speeds, {}),
-          cg_envelope: parseJsonObject(existing.cg_envelope, defaultCgEnvelope()),
-          characteristics: parseJsonObject(existing.characteristics, defaultCharacteristics()),
-          performance: parseJsonObject(existing.performance, null),
+          fuel: {
+            ...existingFuel,
+            totalCapacity: numberOrExisting('totalFuel', existingFuel.totalCapacity, 'Total fuel', 0) ?? 0,
+            usableCapacity: numberOrExisting('usableFuel', existingFuel.usableCapacity, 'Usable fuel', 0) ?? 0,
+            cruiseBurnRate: numberOrExisting('cruiseBurn', existingFuel.cruiseBurnRate, 'Cruise burn', 0) ?? 0,
+            climbBurnRate: numberOrExisting('climbBurn', existingFuel.climbBurnRate, 'Climb burn', 0) ?? undefined,
+            startTaxiRunupFuel: numberOrExisting('startTaxiFuel', existingFuel.startTaxiRunupFuel, 'Start/taxi/runup fuel', 0) ?? 0,
+            fuelType,
+            fuelWeight: getFuelWeight(fuelType),
+          },
+          v_speeds: {
+            ...existingVSpeeds,
+            vs0: numberOrExisting('vs0', existingVSpeeds.vs0, 'Vs0', 0, 400) ?? 0,
+            vs1: numberOrExisting('vs1', existingVSpeeds.vs1, 'Vs1', 0, 400) ?? undefined,
+            vx: numberOrExisting('vx', existingVSpeeds.vx, 'Vx', 0, 400) ?? 0,
+            vy: numberOrExisting('vy', existingVSpeeds.vy, 'Vy', 0, 400) ?? 0,
+            vr: numberOrExisting('vr', existingVSpeeds.vr, 'Vr', 0, 400) ?? undefined,
+            vglide: numberOrExisting('vglide', existingVSpeeds.vglide, 'Best glide', 0, 400) ?? undefined,
+            vne: numberOrExisting('vne', existingVSpeeds.vne, 'Vne', 0, 600) ?? undefined,
+            vno: numberOrExisting('vno', existingVSpeeds.vno, 'Vno', 0, 600) ?? undefined,
+            va: numberOrExisting('va', existingVSpeeds.va, 'Va', 0, 600) ?? undefined,
+            vfe: numberOrExisting('vfe', existingVSpeeds.vfe, 'Vfe', 0, 600) ?? undefined,
+          },
+          cg_envelope: {
+            ...existingCgEnvelope,
+            forwardLimit: parseCgLimitInput('cgForwardLimit', existingCgEnvelope.forwardLimit, defaultCgEnvelope().forwardLimit, 'Forward CG limit'),
+            aftLimit: parseCgLimitInput('cgAftLimit', existingCgEnvelope.aftLimit, defaultCgEnvelope().aftLimit, 'Aft CG limit'),
+          },
+          characteristics: {
+            ...existingCharacteristics,
+            isMultiEngine: document.getElementById('aircraftMultiEngine').checked,
+            isRetractableGear: document.getElementById('aircraftRetractable').checked,
+            hasConstantSpeedProp: document.getElementById('aircraftConstantSpeed').checked,
+            numberOfSeats: positiveIntOrExisting('aircraftSeats', existingCharacteristics.numberOfSeats, 'Seats', 1, 99),
+            numberOfBaggageAreas: positiveIntOrExisting('aircraftBaggageAreas', existingCharacteristics.numberOfBaggageAreas, 'Baggage areas', 0, 4),
+          },
+          performance: hasPerformanceNumbers || existingPerformance.modelAssetPath ? performance : null,
           created_at: existing.created_at || new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
@@ -2794,7 +3810,90 @@
       await refreshSession();
     });
 
+    refreshSubscriptionButton.addEventListener('click', async () => {
+      const message = document.getElementById('subscriptionMessage');
+      const errorBox = document.getElementById('subscriptionError');
+      setMessage(message, '');
+      setMessage(errorBox, '');
+      if (!currentSession?.access_token) {
+        setMessage(errorBox, 'Sign in again before refreshing access.');
+        return;
+      }
+      refreshSubscriptionButton.disabled = true;
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/reconcile-subscription`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${currentSession.access_token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(payload.error || 'Unable to refresh subscription access.');
+        }
+        setMessage(message, `Access refreshed: ${(payload.tier || 'free').toUpperCase()} / ${payload.status || 'free'}.`);
+        await refreshSession();
+      } catch (err) {
+        setMessage(errorBox, err.message || 'Unable to refresh subscription access.');
+      } finally {
+        refreshSubscriptionButton.disabled = false;
+      }
+    });
+
     document.getElementById('briefMode').addEventListener('change', setOfficialModeFields);
+
+    document.getElementById('flightPlanActionForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('flightPlanActionMessage');
+      const errorBox = document.getElementById('flightPlanActionError');
+      const resultBox = document.getElementById('flightPlanActionResult');
+      setMessage(message, '');
+      setMessage(errorBox, '');
+      resultBox.style.display = 'none';
+      if (!currentSession?.access_token) {
+        setMessage(errorBox, 'Sign in again before running a flight-plan action.');
+        return;
+      }
+      try {
+        const action = document.getElementById('flightPlanAction').value;
+        const requestBody = {
+          flightIdentifier: normalizeFlightIdentifier(document.getElementById('flightPlanIdentifier').value),
+        };
+        const versionStamp = optionalText(document.getElementById('flightPlanVersionStamp').value);
+        if (versionStamp) requestBody.versionStamp = versionStamp;
+        if (action === 'activate') {
+          if (!versionStamp) throw new Error('Version stamp is required to activate a flight plan.');
+          requestBody.actualDepartureInstant = localDateTimeToIso(document.getElementById('flightPlanActualDeparture').value, 'Actual departure');
+        }
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/leidos-flight-plan`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${currentSession.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            mode: 'official',
+            action,
+            credentialed: document.getElementById('flightPlanCredentialed').value === 'true',
+            requestBody,
+          }),
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          const issueText = Array.isArray(payload.issues)
+            ? ` ${payload.issues.map((issue) => issue.message || issue.field).filter(Boolean).join(' ')}`
+            : '';
+          throw new Error(`${payload.error || 'Flight-plan action failed.'}${issueText}`);
+        }
+        setMessage(message, `${formatPilotType(action)} submitted.`);
+        resultBox.textContent = JSON.stringify(payload, null, 2);
+        resultBox.style.display = 'block';
+        await refreshSession();
+      } catch (err) {
+        setMessage(errorBox, err.message || 'Unable to run flight-plan action.');
+      }
+    });
 
     briefForm.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -2918,7 +4017,11 @@
       }
     });
 
-    client.auth.onAuthStateChange(() => {
+    client.auth.onAuthStateChange((event, session) => {
+      if (event === 'TOKEN_REFRESHED' && session) {
+        currentSession = session;
+        return;
+      }
       refreshSession();
     });
 

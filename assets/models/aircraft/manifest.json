@@ -1,0 +1,96 @@
+{
+  "generatedAt": "2026-05-06",
+  "source": "Sketchfab download API",
+  "models": [
+    {
+      "id": "cessna-172sp-nlm",
+      "displayName": "Cessna 172SP",
+      "match": ["cessna 172", "cessna 172sp", "c172", "172sp", "skyhawk"],
+      "path": "assets/models/aircraft/sketchfab/cessna-172sp-nlm/model.glb",
+      "bytes": 15998704,
+      "author": "NLM",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/cessna-172sp-c9cadc2f026946da8cf9715a683739e9"
+    },
+    {
+      "id": "cessna-172-light",
+      "displayName": "Cessna 172 Lightweight",
+      "match": ["cessna 172", "c172", "skyhawk"],
+      "path": "assets/models/aircraft/sketchfab/cessna-172-light/model.glb",
+      "bytes": 1668464,
+      "author": "teemuharkonen",
+      "license": "Free Standard",
+      "sourceUrl": "https://sketchfab.com/3d-models/cessna-172-ab5a296f984e4e07b4b80dad48479e47"
+    },
+    {
+      "id": "cessna-182",
+      "displayName": "Cessna 182",
+      "match": ["cessna 182", "c182", "skylane"],
+      "path": "assets/models/aircraft/sketchfab/cessna-182/model.glb",
+      "bytes": 3898488,
+      "author": "engineerdesign",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/cessna-182-f31b9e74b6c34285af8a1f5ede6da95e"
+    },
+    {
+      "id": "piper-pa28-cherokee",
+      "displayName": "Piper PA-28 Cherokee",
+      "match": ["piper pa-28", "pa28", "pa-28", "cherokee", "archer", "warrior"],
+      "path": "assets/models/aircraft/sketchfab/piper-pa28-cherokee/model.glb",
+      "bytes": 1511168,
+      "author": "INGSOC1984",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/piper-pa-28-cherokee-general-aviation-aircraft-0c65c2677bbc463787905434544f035f"
+    },
+    {
+      "id": "cirrus-sr22",
+      "displayName": "Cirrus SR22",
+      "match": ["cirrus sr22", "sr22", "cirrus"],
+      "path": "assets/models/aircraft/sketchfab/cirrus-sr22/model.glb",
+      "bytes": 4112916,
+      "author": "KOG_THORNS",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/cirrus-sr22-cba602c99c524cd4b40e5c2e5f9c5b4f"
+    },
+    {
+      "id": "beechcraft-bonanza-v35",
+      "displayName": "Beechcraft Bonanza V35",
+      "match": ["beechcraft bonanza", "bonanza", "beech35", "v35"],
+      "path": "assets/models/aircraft/sketchfab/beechcraft-bonanza-v35/model.glb",
+      "bytes": 1326432,
+      "author": "manilov.ap",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/beech35-ec5ca3a3ac63457eaff4bf2c76fd04e2"
+    },
+    {
+      "id": "beechcraft-b200-king-air",
+      "displayName": "Beechcraft B200 King Air",
+      "match": ["beechcraft b200", "b200", "king air", "super king air"],
+      "path": "assets/models/aircraft/sketchfab/beechcraft-b200-king-air/model.glb",
+      "bytes": 342996,
+      "author": "AllThingsSaurus",
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/beechcraft-b200-super-king-air-56515684301540daae67b378a44267f3"
+    },
+    {
+      "id": "beechcraft-super-king-air-heavy",
+      "displayName": "Beechcraft Super King Air",
+      "match": ["super king air", "king air"],
+      "path": "assets/models/aircraft/sketchfab/beechcraft-super-king-air-heavy/model.glb",
+      "bytes": 17111812,
+      "author": "helijah",
+      "license": "Free Standard",
+      "sourceUrl": "https://sketchfab.com/3d-models/beechcraft-super-king-air-21fa704d821541c09c552ba6c33b0b0a"
+    },
+    {
+      "id": "beechcraft-t6-texan-ii",
+      "displayName": "Beechcraft T-6 Texan II",
+      "match": ["t-6", "t6", "texan ii", "beechcraft t-6", "beechcraft t6"],
+      "path": "assets/models/aircraft/sketchfab/beechcraft-t6-texan-ii/model.glb",
+      "bytes": 3991360,
+      "author": "helijah",
+      "license": "Free Standard",
+      "sourceUrl": "https://sketchfab.com/3d-models/beechcraft-t6-texan-ii-59b501961deb4fa4a3ab4916182786db"
+    }
+  ]
+}

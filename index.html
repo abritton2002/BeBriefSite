@@ -68,7 +68,7 @@
       letter-spacing: -0.5px;
     }
 
-    .logo img { width: 36px; height: 36px; border-radius: 8px; }
+    .logo img { display: block; height: 42px; width: auto; }
 
     .nav-actions {
       display: flex;
@@ -167,28 +167,6 @@
       font-size: 14px;
     }
 
-    .hero-mockups {
-      position: relative;
-      height: 500px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .hero-mockup {
-      position: absolute;
-      height: 420px;
-      width: auto;
-      filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5));
-      transition: transform 0.3s ease;
-    }
-
-    .hero-mockup:nth-child(1) { transform: translateX(-80px) rotate(-8deg); z-index: 1; }
-    .hero-mockup:nth-child(2) { transform: translateX(0) rotate(0deg); z-index: 3; }
-    .hero-mockup:nth-child(3) { transform: translateX(80px) rotate(8deg); z-index: 2; }
-
-    .hero-mockup:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
-
     /* Feature Showcase */
     .feature-showcase {
       padding: 100px 0;
@@ -270,92 +248,6 @@
       filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.4));
     }
 
-    /* Mockup Gallery */
-    .mockup-gallery {
-      padding: 80px 0;
-      background: #18181b;
-      border-top: 1px solid #27272a;
-      border-bottom: 1px solid #27272a;
-      overflow: hidden;
-    }
-
-    .mockup-gallery h2 {
-      text-align: center;
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 60px;
-    }
-
-    .gallery-scroll {
-      display: flex;
-      gap: 32px;
-      animation: scroll 40s linear infinite;
-      width: max-content;
-    }
-
-    .gallery-scroll:hover { animation-play-state: paused; }
-
-    @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    .gallery-item {
-      flex-shrink: 0;
-      text-align: center;
-    }
-
-    .gallery-item img {
-      height: 380px;
-      width: auto;
-      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
-      transition: transform 0.3s;
-    }
-
-    .gallery-item:hover img { transform: scale(1.05); }
-
-    .gallery-item span {
-      display: block;
-      margin-top: 16px;
-      font-size: 14px;
-      color: #71717a;
-      font-weight: 500;
-    }
-
-    /* Data Sources */
-    .data-sources {
-      padding: 80px 0;
-    }
-
-    .data-sources h2 {
-      text-align: center;
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 40px;
-    }
-
-    .sources-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 32px;
-    }
-
-    .source-item {
-      font-size: 14px;
-      color: #a1a1aa;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .source-dot {
-      width: 6px;
-      height: 6px;
-      background: #4ade80;
-      border-radius: 50%;
-    }
-
     /* CTA Section */
     .cta-section {
       padding: 100px 0;
@@ -374,23 +266,6 @@
       color: #71717a;
       font-size: 18px;
       margin-bottom: 32px;
-    }
-
-    /* Disclaimer */
-    .disclaimer {
-      background: rgba(251, 191, 36, 0.1);
-      border: 1px solid rgba(251, 191, 36, 0.3);
-      border-radius: 12px;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto 60px;
-      text-align: center;
-    }
-
-    .disclaimer p {
-      color: #fbbf24;
-      font-size: 13px;
-      line-height: 1.6;
     }
 
     /* Platform refinement */
@@ -436,25 +311,6 @@
       min-height: 40px;
       padding: 9px 14px;
     }
-
-    .hero-mockups {
-      height: 430px;
-      justify-content: flex-end;
-      overflow: hidden;
-      border: 1px solid #27272a;
-      border-radius: 10px;
-      background: linear-gradient(180deg, rgba(24, 24, 27, 0.74), rgba(10, 10, 12, 0.88));
-    }
-
-    .hero-mockup {
-      height: 360px;
-      filter: drop-shadow(0 20px 36px rgba(0, 0, 0, 0.48));
-    }
-
-    .hero-mockup:nth-child(1) { transform: translateX(-116px) translateY(18px) rotate(-5deg); }
-    .hero-mockup:nth-child(2) { transform: translateX(-20px) translateY(0) rotate(0deg); }
-    .hero-mockup:nth-child(3) { transform: translateX(76px) translateY(22px) rotate(5deg); }
-    .hero-mockup:hover { transform: translateX(-20px) translateY(0) scale(1.02); }
 
     .feature-showcase {
       padding: 72px 0;
@@ -503,10 +359,6 @@
 
     .feature-mockup img { height: 360px; }
 
-    .mockup-gallery { padding: 58px 0; }
-
-    .data-sources { padding: 58px 0; }
-
     .cta-section { padding: 72px 0; }
 
     /* Footer */
@@ -543,11 +395,6 @@
       .hero-content { text-align: center; }
       .hero p { margin: 0 auto 32px; }
       .cta-buttons { justify-content: center; }
-      .hero-mockups { height: 350px; margin-top: 40px; }
-      .hero-mockup { height: 300px; }
-      .hero-mockup:nth-child(1) { transform: translateX(-60px) rotate(-8deg); }
-      .hero-mockup:nth-child(3) { transform: translateX(60px) rotate(8deg); }
-
       .feature-row { grid-template-columns: 1fr; gap: 40px; text-align: center; }
       .feature-row.reverse { direction: ltr; }
       .feature-text { order: 2; }
@@ -557,11 +404,6 @@
 
     @media (max-width: 640px) {
       .hero { padding: 60px 0 20px; }
-      .hero-mockups { height: 280px; }
-      .hero-mockup { height: 240px; }
-      .hero-mockup:nth-child(1) { transform: translateX(-40px) rotate(-8deg); }
-      .hero-mockup:nth-child(3) { transform: translateX(40px) rotate(8deg); }
-
       .feature-showcase { padding: 60px 0; }
       .feature-row { margin-bottom: 80px; }
       .feature-mockup img { height: 350px; }
@@ -634,10 +476,6 @@
       .btn {
         width: 100%;
         justify-content: center;
-      }
-      .hero-mockups {
-        height: 300px;
-        width: 100%;
       }
       .feature-showcase h2,
       .feature-showcase-subtitle {
@@ -753,19 +591,6 @@
       background: #f8fafc;
       transform: translateY(-1px);
     }
-    .hero-mockups {
-      width: min(860px, 100%);
-      height: 420px;
-      justify-content: center;
-      border: 1px solid #e2e8f0;
-      border-radius: 22px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.86), rgba(241,245,249,0.92));
-      box-shadow: 0 28px 80px rgba(15, 23, 42, 0.13);
-    }
-    .hero-mockup {
-      height: 350px;
-    }
     .feature-showcase {
       background: #ffffff;
       border-top: 1px solid #e5e7eb;
@@ -849,13 +674,89 @@
       .hero p {
         max-width: 330px;
       }
-      .hero-mockups {
-        height: 290px;
-        border-radius: 16px;
-      }
-      .hero-mockup {
-        height: 250px;
-      }
+    }
+
+    /* Dark product theme */
+    body {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.12), transparent 32%),
+        radial-gradient(circle at 14% 42%, rgba(56, 189, 248, 0.08), transparent 28%),
+        linear-gradient(180deg, #0b1018 0%, #07090d 52%, #05070a 100%);
+      color: #e5edf6;
+    }
+    header,
+    footer {
+      background: rgba(7, 9, 13, 0.88);
+      border-color: rgba(148, 163, 184, 0.18);
+      backdrop-filter: blur(18px);
+    }
+    .nav-link,
+    .copyright,
+    .footer-links a {
+      color: #94a3b8;
+    }
+    .nav-link:hover,
+    .footer-links a:hover {
+      color: #f8fafc;
+    }
+    .hero {
+      background:
+        radial-gradient(circle at 50% 16%, rgba(34, 211, 238, 0.12), transparent 34%),
+        linear-gradient(180deg, rgba(15, 23, 42, 0.34), rgba(5, 7, 10, 0));
+    }
+    .badge {
+      background: rgba(34, 211, 238, 0.1);
+      border-color: rgba(34, 211, 238, 0.26);
+      color: #67e8f9;
+    }
+    .hero h1,
+    .feature-showcase h2,
+    .feature-text h3,
+    .cta-section h2 {
+      color: #f8fafc;
+    }
+    .hero h1 span {
+      color: #22d3ee;
+    }
+    .hero p,
+    .feature-showcase-subtitle,
+    .feature-text p,
+    .feature-list li,
+    .cta-section p {
+      color: #94a3b8;
+    }
+    .btn-primary {
+      background: #22d3ee;
+      color: #031014;
+    }
+    .btn-primary:hover {
+      background: #67e8f9;
+    }
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.88);
+      border-color: rgba(148, 163, 184, 0.24);
+      color: #e5edf6;
+    }
+    .btn-secondary:hover {
+      background: rgba(30, 41, 59, 0.94);
+    }
+    .feature-row,
+    .feature-row.reverse {
+      background: rgba(15, 23, 42, 0.76);
+      border-color: rgba(148, 163, 184, 0.18);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
+    }
+    .feature-showcase,
+    .cta-section {
+      background: rgba(5, 7, 10, 0.62);
+      border-color: rgba(148, 163, 184, 0.16);
+    }
+    .feature-mockup {
+      background: rgba(8, 13, 20, 0.88);
+      border-color: rgba(148, 163, 184, 0.16);
+    }
+    .feature-list li::before {
+      background: #22d3ee;
     }
   </style>
 </head>
@@ -863,7 +764,7 @@
   <header>
     <div class="container">
       <div class="header-content">
-        <a href="/" class="logo"><img src="assets/icon.png" alt="BeBrief">BeBrief</a>
+        <a href="/" class="logo"><img src="assets/bebrief-logo-full-white.png" alt="BeBrief"></a>
         <nav class="nav-actions">
           <a href="app.html" class="btn btn-primary btn-small">Open Platform</a>
           <a href="mailto:FlyBeBrief@gmail.com" class="nav-link">Contact</a>
@@ -886,11 +787,6 @@
               </a>
               <a href="#features" class="btn btn-secondary">See Workflow</a>
             </div>
-          </div>
-          <div class="hero-mockups">
-            <img src="assets/weather.png" alt="Weather" class="hero-mockup">
-            <img src="assets/plan.png" alt="Route Planner" class="hero-mockup">
-            <img src="assets/performance.png" alt="Performance" class="hero-mockup">
           </div>
         </div>
       </div>
