@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeBrief Web</title>
+  <meta name="description" content="Sign in to your BeBrief profile from the web.">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #08090a;
+      --panel: rgba(18, 22, 24, 0.94);
+      --panel-2: rgba(10, 13, 15, 0.9);
+      --line: #2b3336;
+      --line-strong: #526064;
+      --text: #f3f7f5;
+      --muted: #92a09c;
+      --dim: #60706b;
+      --cyan: #49d7e8;
+      --green: #6ee7a2;
+      --amber: #f2c94c;
+      --red: #ff6b5f;
+    }
+    body {
+      min-height: 100vh;
+      font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        linear-gradient(90deg, rgba(73, 215, 232, 0.04) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(73, 215, 232, 0.035) 1px, transparent 1px),
+        radial-gradient(circle at 78% 8%, rgba(73, 215, 232, 0.14), transparent 34%),
+        radial-gradient(circle at 12% 34%, rgba(110, 231, 162, 0.1), transparent 32%),
+        var(--bg);
+      background-size: 44px 44px, 44px 44px, auto, auto, auto;
+      color: var(--text);
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+    }
+    a { color: inherit; }
+    .shell { max-width: 1160px; margin: 0 auto; padding: 24px; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--cyan);
+      font-size: 22px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .logo img { width: 34px; height: 34px; border-radius: 8px; }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .nav a, .nav button {
+      color: #a1a1aa;
+      text-decoration: none;
+      background: transparent;
+      border: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+    .nav a:hover, .nav button:hover { color: var(--text); }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.8fr);
+      gap: 28px;
+      align-items: start;
+      padding: 44px 0 28px;
+    }
+    .eyebrow {
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    h1 {
+      max-width: 720px;
+      font-size: clamp(38px, 6vw, 72px);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+    }
+    .lead {
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+    .notice {
+      margin-top: 18px;
+      border: 1px solid rgba(242, 201, 76, 0.34);
+      background: rgba(250, 204, 21, 0.08);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: #f8dfa0;
+      font-size: 13px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--panel), rgba(12, 15, 17, 0.94));
+      border-radius: 6px;
+      padding: 18px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.36);
+      position: relative;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 14px;
+      bottom: 14px;
+      width: 2px;
+      background: var(--cyan);
+      opacity: 0.7;
+    }
+    .auth-card { position: sticky; top: 20px; }
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .muted { color: var(--muted); font-size: 13px; }
+    .form { display: grid; gap: 12px; margin-top: 18px; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    label {
+      display: grid;
+      gap: 6px;
+      color: #c7d2ce;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      background: #070909;
+      color: var(--text);
+      border-radius: 4px;
+      padding: 13px 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      outline: none;
+    }
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(73, 215, 232, 0.13);
+    }
+    input[type="checkbox"] {
+      width: auto;
+      min-width: 18px;
+      height: 18px;
+      accent-color: var(--cyan);
+    }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding-top: 18px;
+    }
+    .button-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      padding: 11px 16px;
+      background: #161b1d;
+      color: var(--text);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .btn.primary {
+      border-color: var(--cyan);
+      background: var(--cyan);
+      color: #071012;
+    }
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .error {
+      display: none;
+      border: 1px solid rgba(255, 107, 95, 0.42);
+      background: rgba(255, 107, 95, 0.1);
+      color: #ffd4d0;
+      border-radius: 4px;
+      padding: 10px 12px;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .success {
+      display: none;
+      border: 1px solid rgba(110, 231, 162, 0.36);
+      background: rgba(110, 231, 162, 0.1);
+      color: #c8f7d8;
+      border-radius: 4px;
+      padding: 10px 12px;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .dashboard { display: none; }
+    .app-shell {
+      grid-template-columns: 236px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+      padding: 10px 0 40px;
+    }
+    .side-rail {
+      position: sticky;
+      top: 18px;
+      border: 1px solid var(--line);
+      background: rgba(11, 18, 24, 0.86);
+      border-radius: 6px;
+      padding: 12px;
+      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26);
+    }
+    .side-kicker {
+      color: var(--dim);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .side-title {
+      margin-top: 6px;
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+    .side-email {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+    .side-nav {
+      display: grid;
+      gap: 7px;
+      margin-top: 16px;
+    }
+    .side-tab {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 4px;
+      padding: 10px 10px;
+      text-align: left;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+    .side-tab:hover {
+      border-color: var(--line);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .side-tab.active {
+      border-color: rgba(73, 215, 232, 0.42);
+      background: rgba(73, 215, 232, 0.12);
+      color: #d7fbff;
+    }
+    .workspace {
+      min-width: 0;
+      display: grid;
+      gap: 14px;
+    }
+    .view {
+      display: none;
+      gap: 14px;
+    }
+    .view.active {
+      display: grid;
+    }
+    .view-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+    .span-12 { grid-column: span 12; }
+    .span-6 { grid-column: span 6; }
+    .span-4 { grid-column: span 4; }
+    .span-8 { grid-column: span 8; }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      border-radius: 4px;
+      padding: 12px;
+    }
+    .metric .label {
+      color: var(--dim);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .metric .value {
+      margin-top: 5px;
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .badge {
+      border: 1px solid rgba(73, 215, 232, 0.28);
+      background: rgba(73, 215, 232, 0.1);
+      color: #9eeaf2;
+      border-radius: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge.warn {
+      border-color: rgba(242, 201, 76, 0.34);
+      background: rgba(242, 201, 76, 0.1);
+      color: #f8dfa0;
+    }
+    .list { display: grid; gap: 9px; }
+    .row {
+      display: grid;
+      gap: 3px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      border-radius: 4px;
+      padding: 11px 12px;
+    }
+    .row-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text);
+      font-weight: 800;
+    }
+    .row-sub {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .btn.small {
+      min-height: 34px;
+      padding: 7px 10px;
+      font-size: 11px;
+    }
+    .btn.danger {
+      border-color: rgba(255, 107, 95, 0.44);
+      color: #ffd4d0;
+      background: rgba(255, 107, 95, 0.09);
+    }
+    .empty {
+      border: 1px dashed var(--line-strong);
+      border-radius: 4px;
+      padding: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .brief-result {
+      margin-top: 14px;
+      display: none;
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      background: rgba(34, 211, 238, 0.07);
+      border-radius: 10px;
+      padding: 13px;
+    }
+    .hazard-list {
+      margin-top: 10px;
+      display: grid;
+      gap: 7px;
+    }
+    .hazard {
+      border-left: 3px solid #facc15;
+      background: rgba(250, 204, 21, 0.08);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #fef3c7;
+      font-size: 13px;
+    }
+    .detail-box {
+      display: none;
+      border: 1px solid var(--line);
+      background: rgba(7, 9, 9, 0.78);
+      border-radius: 4px;
+      padding: 12px;
+      overflow: auto;
+      max-height: 360px;
+      white-space: pre-wrap;
+      color: #c7d2ce;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+    .mode-panel {
+      display: none;
+      grid-column: 1 / -1;
+      border: 1px solid rgba(242, 201, 76, 0.28);
+      background: rgba(242, 201, 76, 0.06);
+      border-radius: 4px;
+      padding: 12px;
+    }
+    .mode-panel.active {
+      display: grid;
+      gap: 12px;
+    }
+    @media (max-width: 840px) {
+      .shell { padding: 18px; }
+      header { align-items: flex-start; }
+      .nav { flex-wrap: wrap; justify-content: flex-end; }
+      .hero { grid-template-columns: 1fr; padding-top: 30px; }
+      .auth-card { position: static; }
+      .app-shell { grid-template-columns: 1fr; }
+      .side-rail { position: static; }
+      .side-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .view-grid { grid-template-columns: 1fr; }
+      .span-12, .span-6, .span-4 { grid-column: span 1; }
+      .span-8 { grid-column: span 1; }
+      .metric-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <a href="index.html" class="logo"><img src="assets/icon.png" alt="BeBrief">BeBrief</a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <button id="signOutButton" type="button" style="display:none">Sign out</button>
+      </nav>
+    </header>
+
+    <main>
+      <section id="signedOutView" class="hero">
+        <div>
+          <div class="eyebrow">BeBrief Web</div>
+          <h1>Use your same BeBrief profile from a browser.</h1>
+          <p class="lead">
+            Sign in with your existing BeBrief account to create advisory or official briefs, review recent source-packet records, and inspect synced profile and aircraft data.
+          </p>
+          <div class="notice">
+            Web briefs use shared server records. Advisory summaries do not replace official sources or PIC judgment.
+          </div>
+        </div>
+
+        <aside class="card auth-card">
+          <h2>Sign in</h2>
+          <p class="muted">Use the same email and password as the BeBrief app.</p>
+          <form id="authForm" class="form">
+            <label>
+              Email
+              <input id="email" type="email" autocomplete="email" required placeholder="pilot@example.com">
+            </label>
+            <label>
+              Password
+              <input id="password" type="password" autocomplete="current-password" required minlength="8" placeholder="Password">
+            </label>
+            <div class="button-row">
+              <button id="signInButton" class="btn primary" type="submit">Sign in</button>
+              <button id="signUpButton" class="btn" type="button">Create account</button>
+            </div>
+          </form>
+          <div id="authError" class="error"></div>
+          <div id="authSuccess" class="success"></div>
+        </aside>
+      </section>
+
+      <section id="dashboard" class="dashboard app-shell">
+        <aside class="side-rail">
+          <div class="side-kicker">BeBrief Web</div>
+          <div id="profileName" class="side-title">Loading profile...</div>
+          <div id="profileEmail" class="side-email"></div>
+          <div style="margin-top:12px"><span id="accessBadge" class="badge">Checking</span></div>
+          <nav class="side-nav" aria-label="Portal sections">
+            <button class="side-tab active" type="button" data-view="briefs">Briefs</button>
+            <button class="side-tab" type="button" data-view="profile">Profile</button>
+            <button class="side-tab" type="button" data-view="aircraft">Aircraft</button>
+            <button class="side-tab" type="button" data-view="account">Account</button>
+          </nav>
+        </aside>
+
+        <div class="workspace">
+          <div id="dashboardError" class="error"></div>
+
+          <section id="view-briefs" class="view active">
+            <div class="view-grid">
+              <div class="card span-8">
+                <div class="section-head">
+                  <div>
+                    <div class="eyebrow">Briefs</div>
+                    <h2>Create Brief</h2>
+                    <p class="muted">Advisory and official brief requests use the same authenticated Edge Functions as the app.</p>
+                  </div>
+                </div>
+                <form id="briefForm" class="form-grid">
+                  <label>
+                    Brief mode
+                    <select id="briefMode">
+                      <option value="advisory">Advisory brief</option>
+                      <option value="official">Official brief</option>
+                    </select>
+                  </label>
+                  <label>
+                    Aircraft ID
+                    <input id="aircraftIdentifier" type="text" maxlength="12" autocomplete="off" placeholder="Required for official">
+                  </label>
+                  <label>
+                    Route type
+                    <select id="briefRouteType">
+                      <option value="DOMESTIC">Domestic</option>
+                      <option value="ICAO">ICAO</option>
+                    </select>
+                  </label>
+                  <label>
+                    Filing authorization
+                    <select id="filingAuthorizationMode">
+                      <option value="uncredentialed">Uncredentialed official</option>
+                      <option value="credentialed">Credentialed 1800WXBRIEF</option>
+                    </select>
+                  </label>
+                  <label>
+                    Departure
+                    <input id="departureIcao" type="text" maxlength="4" autocomplete="off" placeholder="KTPA" required>
+                  </label>
+                  <label>
+                    Destination
+                    <input id="destinationIcao" type="text" maxlength="4" autocomplete="off" placeholder="KJFK" required>
+                  </label>
+                  <label>
+                    Waypoints
+                    <input id="waypoints" type="text" autocomplete="off" placeholder="Optional, space separated">
+                  </label>
+                  <label>
+                    Departure time
+                    <input id="departureTime" type="datetime-local" required>
+                  </label>
+                  <label>
+                    Groundspeed KT
+                    <input id="groundspeed" type="number" min="30" max="600" step="1" value="120" required>
+                  </label>
+                  <label>
+                    Corridor NM
+                    <input id="corridor" type="number" min="25" max="100" step="1" value="50" required>
+                  </label>
+                  <div class="button-row" style="align-self:end">
+                    <button id="briefButton" class="btn primary" type="submit">Generate Brief</button>
+                    <button id="refreshButton" class="btn" type="button">Refresh Data</button>
+                  </div>
+                  <div id="officialFields" class="mode-panel">
+                    <div class="notice" style="margin-top:0">
+                      Official mode requires flight-plan-style aircraft, fuel, pilot, and contact fields. This matches the app flow and marks `notABriefing=false` server-side.
+                    </div>
+                    <div class="form-grid" style="margin-top:0">
+                      <label>
+                        Aircraft type/equipment
+                        <input id="officialAircraftType" type="text" maxlength="10" autocomplete="off" placeholder="C172/G">
+                      </label>
+                      <label>
+                        Aircraft color
+                        <input id="officialAircraftColor" type="text" maxlength="80" autocomplete="off" placeholder="WHITE/BLUE">
+                      </label>
+                      <label>
+                        Cruise altitude
+                        <input id="officialCruiseAltitude" type="text" maxlength="8" autocomplete="off" placeholder="4500 or FL055">
+                      </label>
+                      <label>
+                        True airspeed KT
+                        <input id="officialTrueAirspeed" type="number" min="30" max="600" step="1" placeholder="110">
+                      </label>
+                      <label>
+                        Fuel on board
+                        <input id="officialFuelOnBoard" type="text" maxlength="12" autocomplete="off" placeholder="4:30 or PT4H30M">
+                      </label>
+                      <label>
+                        Alternate
+                        <input id="officialAlternate" type="text" maxlength="4" autocomplete="off" placeholder="Optional">
+                      </label>
+                      <label>
+                        Souls on board
+                        <input id="officialSouls" type="number" min="1" max="999" step="1" value="1">
+                      </label>
+                      <label>
+                        Pilot name
+                        <input id="officialPilotName" type="text" maxlength="100" autocomplete="name">
+                      </label>
+                      <label>
+                        Pilot phone
+                        <input id="officialPilotPhone" type="tel" maxlength="32" autocomplete="tel">
+                      </label>
+                      <label>
+                        Remarks
+                        <textarea id="officialRemarks" maxlength="240" placeholder="Optional"></textarea>
+                      </label>
+                    </div>
+                  </div>
+                </form>
+                <div id="briefError" class="error"></div>
+                <div id="briefSuccess" class="success"></div>
+                <div id="briefResult" class="brief-result"></div>
+              </div>
+
+              <div class="card span-4">
+                <div class="section-head">
+                  <h2>Recent Briefs</h2>
+                  <span id="briefCount" class="badge">0</span>
+                </div>
+                <div class="list" id="briefList"></div>
+                <pre id="briefDetail" class="detail-box"></pre>
+              </div>
+            </div>
+          </section>
+
+          <section id="view-profile" class="view">
+            <div class="view-grid">
+            <div class="card span-12">
+              <div class="section-head">
+                <div>
+                  <div class="eyebrow">Profile</div>
+                  <h2>Pilot Profile</h2>
+                  <p class="muted">Synced account and pilot profile fields shared with the mobile app.</p>
+                </div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="label">Pilot type</div>
+                  <div id="pilotType" class="value">-</div>
+                </div>
+                <div class="metric">
+                  <div class="label">Home airport</div>
+                  <div id="homeAirport" class="value">-</div>
+                </div>
+                <div class="metric">
+                  <div class="label">Total hours</div>
+                  <div id="totalHours" class="value">-</div>
+                </div>
+              </div>
+            </div>
+            <div class="card span-6">
+              <h2>Account Profile</h2>
+              <form id="profileForm" class="form-grid">
+                <label>
+                  Display name
+                  <input id="profileDisplayName" type="text" maxlength="80" autocomplete="name">
+                </label>
+                <label>
+                  Pilot type
+                  <select id="profilePilotType">
+                    <option value="student">Student</option>
+                    <option value="private">Private</option>
+                    <option value="commercial">Commercial</option>
+                    <option value="atp">ATP</option>
+                    <option value="cfi">CFI</option>
+                    <option value="other">Other</option>
+                  </select>
+                </label>
+                <label>
+                  Home airport
+                  <input id="profileHomeAirport" type="text" maxlength="4" autocomplete="off" placeholder="KTPA">
+                </label>
+                <label>
+                  Total hours
+                  <input id="profileTotalHours" type="number" min="0" max="100000" step="0.1">
+                </label>
+                <label>
+                  Phone
+                  <input id="profilePhone" type="tel" maxlength="32" autocomplete="tel">
+                </label>
+                <label>
+                  Emergency contact
+                  <input id="profileEmergencyName" type="text" maxlength="100">
+                </label>
+                <label>
+                  Emergency phone
+                  <input id="profileEmergencyPhone" type="tel" maxlength="32">
+                </label>
+                <label class="check-row">
+                  <input id="profileInstrument" type="checkbox"> Instrument rated
+                </label>
+                <label class="check-row">
+                  <input id="profileMulti" type="checkbox"> Multi-engine rated
+                </label>
+                <div class="button-row" style="align-self:end">
+                  <button id="saveProfileButton" class="btn primary" type="submit">Save Profile</button>
+                </div>
+              </form>
+              <div id="profileMessage" class="success"></div>
+              <div id="profileError" class="error"></div>
+            </div>
+            <div class="card span-6">
+              <h2>Pilot Filing Details</h2>
+              <form id="pilotDetailsForm" class="form-grid">
+                <label>
+                  Pilot name
+                  <input id="pilotName" type="text" maxlength="100" autocomplete="name">
+                </label>
+                <label>
+                  Pilot phone
+                  <input id="pilotPhone" type="tel" maxlength="32" autocomplete="tel">
+                </label>
+                <label>
+                  Certificate number
+                  <input id="pilotCertificate" type="text" maxlength="40" autocomplete="off">
+                </label>
+                <label>
+                  Pilot address
+                  <textarea id="pilotAddress" maxlength="240"></textarea>
+                </label>
+                <div class="button-row" style="align-self:end">
+                  <button id="savePilotDetailsButton" class="btn primary" type="submit">Save Details</button>
+                </div>
+              </form>
+              <div id="pilotDetailsMessage" class="success"></div>
+              <div id="pilotDetailsError" class="error"></div>
+            </div>
+            </div>
+          </section>
+
+          <section id="view-aircraft" class="view">
+            <div class="view-grid">
+            <div class="card span-5">
+              <div class="section-head">
+                <div>
+                  <div class="eyebrow">Aircraft Editor</div>
+                  <h2 id="aircraftFormTitle">Add Aircraft</h2>
+                </div>
+              </div>
+              <form id="aircraftForm" class="form-grid">
+                <input id="aircraftId" type="hidden">
+                <label>
+                  Tail number
+                  <input id="aircraftTail" type="text" maxlength="12" autocomplete="off" required placeholder="N12345">
+                </label>
+                <label>
+                  Nickname
+                  <input id="aircraftNickname" type="text" maxlength="80">
+                </label>
+                <label>
+                  Make
+                  <input id="aircraftMake" type="text" maxlength="80" required placeholder="Cessna">
+                </label>
+                <label>
+                  Model
+                  <input id="aircraftModel" type="text" maxlength="80" required placeholder="172N">
+                </label>
+                <label>
+                  Year
+                  <input id="aircraftYear" type="number" min="1903" max="2100" step="1">
+                </label>
+                <label>
+                  Basic empty weight
+                  <input id="basicEmptyWeight" type="number" min="1" max="1000000" step="0.1" required>
+                </label>
+                <label>
+                  Basic empty moment
+                  <input id="basicEmptyMoment" type="number" min="-10000000" max="10000000" step="0.1" required>
+                </label>
+                <label>
+                  Max takeoff weight
+                  <input id="maxTakeoffWeight" type="number" min="1" max="1000000" step="0.1" required>
+                </label>
+                <label>
+                  Max landing weight
+                  <input id="maxLandingWeight" type="number" min="1" max="1000000" step="0.1">
+                </label>
+                <label>
+                  Usable fuel gal
+                  <input id="usableFuel" type="number" min="0" max="100000" step="0.1">
+                </label>
+                <label>
+                  Cruise burn GPH
+                  <input id="cruiseBurn" type="number" min="0" max="100000" step="0.1">
+                </label>
+                <label>
+                  Fuel type
+                  <input id="fuelType" type="text" maxlength="24" placeholder="100LL">
+                </label>
+                <div class="button-row" style="align-self:end">
+                  <button id="saveAircraftButton" class="btn primary" type="submit">Save Aircraft</button>
+                  <button id="newAircraftButton" class="btn" type="button">New</button>
+                </div>
+              </form>
+              <div id="aircraftMessage" class="success"></div>
+              <div id="aircraftError" class="error"></div>
+            </div>
+            <div class="card span-7">
+              <div class="section-head">
+                <div>
+                  <div class="eyebrow">Aircraft</div>
+                  <h2>Saved Aircraft</h2>
+                </div>
+                <span id="aircraftCount" class="badge">0</span>
+              </div>
+              <div class="list" id="aircraftList"></div>
+            </div>
+            </div>
+          </section>
+
+          <section id="view-account" class="view">
+            <div class="view-grid">
+              <div class="card span-6">
+                <div class="section-head">
+                  <h2>Subscription</h2>
+                </div>
+                <div class="list" id="subscriptionList"></div>
+              </div>
+              <div class="card span-6">
+                <h2>App Settings</h2>
+                <form id="settingsForm" class="form-grid">
+                  <label>
+                    Units
+                    <select id="settingsUnits">
+                      <option value="nautical">Nautical</option>
+                      <option value="statute">Statute</option>
+                    </select>
+                  </label>
+                  <label>
+                    Time format
+                    <select id="settingsTimeFormat">
+                      <option value="12h">12 hour</option>
+                      <option value="24h">24 hour</option>
+                    </select>
+                  </label>
+                  <label>
+                    Timezone display
+                    <select id="settingsTimezone">
+                      <option value="local">Local</option>
+                      <option value="zulu">Zulu</option>
+                    </select>
+                  </label>
+                  <label>
+                    Map orientation
+                    <select id="settingsMapOrientation">
+                      <option value="trackUp">Track up</option>
+                      <option value="northUp">North up</option>
+                    </select>
+                  </label>
+                  <label>
+                    Default departure
+                    <input id="defaultDeparture" type="text" maxlength="4" autocomplete="off">
+                  </label>
+                  <label>
+                    Default destination
+                    <input id="defaultDestination" type="text" maxlength="4" autocomplete="off">
+                  </label>
+                  <label class="check-row">
+                    <input id="autoPopulateDefaults" type="checkbox"> Auto-populate defaults
+                  </label>
+                  <div class="button-row" style="align-self:end">
+                    <button id="saveSettingsButton" class="btn primary" type="submit">Save Settings</button>
+                  </div>
+                </form>
+                <div id="settingsMessage" class="success"></div>
+                <div id="settingsError" class="error"></div>
+              </div>
+              <div class="card span-6">
+                <h2>Security</h2>
+                <form id="emailForm" class="form-grid" style="margin-bottom:14px">
+                  <label>
+                    Account email
+                    <input id="accountEmail" type="email" autocomplete="email">
+                  </label>
+                  <div class="button-row" style="align-self:end">
+                    <button id="saveEmailButton" class="btn primary" type="submit">Update Email</button>
+                  </div>
+                </form>
+                <form id="passwordForm" class="form-grid">
+                  <label>
+                    New password
+                    <input id="newPassword" type="password" minlength="8" autocomplete="new-password">
+                  </label>
+                  <div class="button-row" style="align-self:end">
+                    <button id="savePasswordButton" class="btn primary" type="submit">Update Password</button>
+                  </div>
+                </form>
+                <div id="emailMessage" class="success"></div>
+                <div id="emailError" class="error"></div>
+                <div id="passwordMessage" class="success"></div>
+                <div id="passwordError" class="error"></div>
+              </div>
+              <div class="card span-6">
+                <h2>Sync Scope</h2>
+                <p class="muted">
+                  Web and phone now read and write the same profile, settings, aircraft, subscription, and server briefing records. Native map and weight-balance screens still have richer interaction, but the records edited here hydrate app-side through the existing Supabase sync path.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://jjtokkczweowkdgnnowx.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_2ZaX7pW-dxo66e3urmm6YQ_VcPPovbm';
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    });
+
+    const signedOutView = document.getElementById('signedOutView');
+    const dashboard = document.getElementById('dashboard');
+    const signOutButton = document.getElementById('signOutButton');
+    const authForm = document.getElementById('authForm');
+    const signUpButton = document.getElementById('signUpButton');
+    const authError = document.getElementById('authError');
+    const authSuccess = document.getElementById('authSuccess');
+    const signInButton = document.getElementById('signInButton');
+    const dashboardError = document.getElementById('dashboardError');
+    const briefForm = document.getElementById('briefForm');
+    const briefButton = document.getElementById('briefButton');
+    const refreshButton = document.getElementById('refreshButton');
+    const briefError = document.getElementById('briefError');
+    const briefSuccess = document.getElementById('briefSuccess');
+    const briefResult = document.getElementById('briefResult');
+
+    let currentSession = null;
+    let currentAircraft = [];
+    let currentBriefs = [];
+
+    function setMessage(element, message) {
+      element.textContent = message || '';
+      element.style.display = message ? 'block' : 'none';
+    }
+
+    function setActiveView(view) {
+      document.querySelectorAll('[data-view]').forEach((button) => {
+        button.classList.toggle('active', button.dataset.view === view);
+      });
+      document.querySelectorAll('.view').forEach((section) => {
+        section.classList.toggle('active', section.id === `view-${view}`);
+      });
+    }
+
+    function formatDate(value) {
+      if (!value) return 'Not set';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return 'Not set';
+      return date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+    }
+
+    function formatPilotType(value) {
+      if (!value) return '-';
+      return String(value).replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+    }
+
+    function renderEmpty(target, text) {
+      target.innerHTML = `<div class="empty">${text}</div>`;
+    }
+
+    function row(title, subtitle, badge) {
+      const badgeHtml = badge ? `<span class="badge">${escapeHtml(badge)}</span>` : '';
+      return `
+        <div class="row">
+          <div class="row-main"><span>${escapeHtml(title)}</span>${badgeHtml}</div>
+          <div class="row-sub">${escapeHtml(subtitle)}</div>
+        </div>
+      `;
+    }
+
+    function actionRow(title, subtitle, badge, actions) {
+      const badgeHtml = badge ? `<span class="badge">${escapeHtml(badge)}</span>` : '';
+      return `
+        <div class="row">
+          <div class="row-main"><span>${escapeHtml(title)}</span>${badgeHtml}</div>
+          <div class="row-sub">${escapeHtml(subtitle)}</div>
+          <div class="row-actions">${actions}</div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function setDefaultDepartureTime() {
+      const input = document.getElementById('departureTime');
+      if (input.value) return;
+      const date = new Date(Date.now() + 60 * 60 * 1000);
+      date.setSeconds(0, 0);
+      const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
+      input.value = local.toISOString().slice(0, 16);
+    }
+
+    function normalizeAirport(value, label) {
+      const normalized = String(value || '').trim().toUpperCase();
+      if (!/^[A-Z0-9]{3,4}$/.test(normalized)) {
+        throw new Error(`${label} must be a 3-4 character airport ID, such as KTPA.`);
+      }
+      return normalized;
+    }
+
+    function normalizeAircraftIdentifier(value) {
+      const normalized = String(value || '').trim().toUpperCase();
+      if (!normalized) return '';
+      if (!/^(N[1-9][0-9]{0,4}[A-Z]{0,2}|[A-Z0-9][A-Z0-9-]{1,11})$/.test(normalized)) {
+        throw new Error('Aircraft ID must be a valid tail or aircraft identifier.');
+      }
+      return normalized;
+    }
+
+    function normalizeRouteTokens(value) {
+      const trimmed = String(value || '').trim().toUpperCase();
+      if (!trimmed) return [];
+      const tokens = trimmed.split(/[\s,]+/).filter(Boolean);
+      for (const token of tokens) {
+        if (!/^[A-Z0-9]{2,12}$/.test(token)) {
+          throw new Error(`Route token "${token}" is not valid. Use aviation fixes separated by spaces.`);
+        }
+      }
+      return tokens;
+    }
+
+    function optionalText(value) {
+      const trimmed = String(value || '').trim();
+      return trimmed || null;
+    }
+
+    function optionalNumber(value, label, min = 0, max = 1_000_000) {
+      const raw = String(value ?? '').trim();
+      if (!raw) return null;
+      const number = Number(raw);
+      if (!Number.isFinite(number) || number < min || number > max) {
+        throw new Error(`${label} must be between ${min} and ${max}.`);
+      }
+      return number;
+    }
+
+    function requiredNumber(value, label, min = 0, max = 1_000_000) {
+      const number = optionalNumber(value, label, min, max);
+      if (number == null) throw new Error(`${label} is required.`);
+      return number;
+    }
+
+    function normalizeTailNumber(value) {
+      const normalized = normalizeAircraftIdentifier(value);
+      if (!normalized) throw new Error('Tail number is required.');
+      return normalized;
+    }
+
+    function normalizePhone(value, label) {
+      const trimmed = String(value || '').trim();
+      if (!trimmed) return null;
+      if (!/^[+0-9().\-\s]{7,32}$/.test(trimmed)) {
+        throw new Error(`${label} must be a valid phone number.`);
+      }
+      return trimmed;
+    }
+
+    function normalizePositiveInteger(value, label, min, max) {
+      const raw = String(value ?? '').trim();
+      if (!raw) throw new Error(`${label} is required.`);
+      const number = Number(raw);
+      if (!Number.isInteger(number) || number < min || number > max) {
+        throw new Error(`${label} must be a whole number between ${min} and ${max}.`);
+      }
+      return number;
+    }
+
+    function normalizeAircraftType(value) {
+      const normalized = String(value || '').trim().toUpperCase();
+      if (!/^[A-Z0-9]{2,6}(?:\/[A-Z0-9])?$/.test(normalized)) {
+        throw new Error('Aircraft type must look like C172/G.');
+      }
+      return normalized;
+    }
+
+    function normalizeAltitude(value) {
+      const upper = String(value || '').trim().toUpperCase();
+      if (!upper) throw new Error('Cruise altitude is required.');
+      const flMatch = upper.match(/^FL?(\d{2,3})$/);
+      if (flMatch) return flMatch[1].padStart(3, '0');
+      const digits = upper.replace(/\D/g, '');
+      if (!digits) throw new Error('Cruise altitude must be numeric, such as 4500 or FL055.');
+      const parsed = Number(digits);
+      if (!Number.isFinite(parsed) || parsed <= 0 || parsed > 60000) {
+        throw new Error('Cruise altitude must be between 1 and 60000 feet.');
+      }
+      return String(parsed >= 1000 ? Math.round(parsed / 100) : parsed).padStart(3, '0');
+    }
+
+    function normalizeFuelOnBoard(value) {
+      const trimmed = String(value || '').trim().toUpperCase();
+      if (!trimmed) throw new Error('Fuel on board is required.');
+      const iso = trimmed.match(/^PT(?:(\d+)H)?(?:(\d+)M)?$/);
+      if (iso) {
+        const hours = Number(iso[1] || 0);
+        const minutes = Number(iso[2] || 0);
+        if ((hours === 0 && minutes === 0) || minutes >= 60) throw new Error('Fuel on board must be a valid duration.');
+        return minutes > 0 ? `PT${hours}H${minutes}M` : `PT${hours}H`;
+      }
+      const hm = trimmed.match(/^(\d{1,2}):([0-5]\d)$/);
+      if (hm) {
+        const hours = Number(hm[1]);
+        const minutes = Number(hm[2]);
+        if (hours === 0 && minutes === 0) throw new Error('Fuel on board must be greater than zero.');
+        return minutes > 0 ? `PT${hours}H${minutes}M` : `PT${hours}H`;
+      }
+      const hhmm = trimmed.match(/^(\d{3,4})$/);
+      if (hhmm) {
+        const normalized = hhmm[1].padStart(4, '0');
+        const hours = Number(normalized.slice(0, 2));
+        const minutes = Number(normalized.slice(2));
+        if ((hours === 0 && minutes === 0) || minutes >= 60) throw new Error('Fuel on board must be a valid H:MM duration.');
+        return minutes > 0 ? `PT${hours}H${minutes}M` : `PT${hours}H`;
+      }
+      throw new Error('Fuel on board must be H:MM, HHMM, or PT#H#M.');
+    }
+
+    function parseJsonObject(value, fallback) {
+      if (!value) return fallback;
+      if (typeof value === 'string') {
+        try {
+          return JSON.parse(value);
+        } catch {
+          return fallback;
+        }
+      }
+      return value;
+    }
+
+    function defaultStations() {
+      return {
+        frontArm: 37,
+        rearArm: 73,
+        baggageArm: 95,
+        fuelArm: 48,
+      };
+    }
+
+    function defaultCgEnvelope() {
+      return [
+        { weight: 1500, forward: 35, aft: 47 },
+        { weight: 2400, forward: 39.5, aft: 47.3 },
+      ];
+    }
+
+    function defaultCharacteristics() {
+      return {
+        isMultiEngine: false,
+        isRetractableGear: false,
+        hasConstantSpeedProp: false,
+        numberOfSeats: 4,
+        numberOfBaggageAreas: 1,
+      };
+    }
+
+    function asArray(value) {
+      if (Array.isArray(value)) return value;
+      if (value) return [value];
+      return [];
+    }
+
+    function tfrText(row) {
+      const text = row?.text;
+      const raw = typeof text === 'string'
+        ? text
+        : text?.plainText || text?.encodedText || row?.plainText || row?.encodedText || '';
+      return String(raw)
+        .replace(/<br\s*\/?>/gi, ' ')
+        .replace(/&apos;/gi, "'")
+        .replace(/&quot;/gi, '"')
+        .replace(/&amp;/gi, '&')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function summarizeTfr(row) {
+      const impact = row?.ngbSummarizationInformation?.passingInformation?.flightAffectedBySummary
+        || row?.ngbSummarizationInformation?.summaryText;
+      if (impact) return String(impact);
+      const text = tfrText(row);
+      return text.length > 170 ? `${text.slice(0, 167)}...` : text || 'TFR row returned without display text.';
+    }
+
+    function extractBriefSummary(data) {
+      const weather = data?.data?.ngbweatherBriefing || data?.ngbweatherBriefing || {};
+      const tfrRows = asArray(weather?.tfr?.temporaryFlightRestrictionList);
+      const notamRows = asArray(weather?.ntmdep?.notamSection);
+      const metarRows = asArray(weather?.metar?.metarSection);
+      const tfrPreview = tfrRows.slice(0, 5).map(summarizeTfr);
+      return {
+        tfrCount: tfrRows.length,
+        notamCount: notamRows.length,
+        metarCount: metarRows.length,
+        tfrPreview,
+      };
+    }
+
+    function renderBriefResult(data, requestBody) {
+      const summary = extractBriefSummary(data);
+      const route = requestBody.nasRouteBriefingFields.route;
+      const hazards = summary.tfrPreview.length
+        ? `<div class="hazard-list">${summary.tfrPreview.map((item) => `<div class="hazard">${escapeHtml(item)}</div>`).join('')}</div>`
+        : '<div class="empty">No TFR rows returned for this route.</div>';
+      briefResult.innerHTML = `
+        <div class="row-main">
+          <span>${escapeHtml(route)}</span>
+          <span class="badge">${escapeHtml(data?.briefingId || 'Brief complete')}</span>
+        </div>
+        <div class="metric-grid">
+          <div class="metric"><div class="label">TFR</div><div class="value">${summary.tfrCount}</div></div>
+          <div class="metric"><div class="label">NOTAM</div><div class="value">${summary.notamCount}</div></div>
+          <div class="metric"><div class="label">METAR</div><div class="value">${summary.metarCount}</div></div>
+        </div>
+        ${hazards}
+      `;
+      briefResult.style.display = 'block';
+    }
+
+    async function safeQuery(label, query) {
+      const result = await query;
+      if (result.error) {
+        console.warn(`[${label}]`, result.error.message);
+        return { data: null, error: result.error };
+      }
+      return { data: result.data, error: null };
+    }
+
+    function fillProfileForm(profile) {
+      document.getElementById('profileDisplayName').value = profile?.display_name || '';
+      document.getElementById('profilePilotType').value = profile?.pilot_type || 'student';
+      document.getElementById('profileHomeAirport').value = profile?.home_airport_icao || '';
+      document.getElementById('profileTotalHours').value = profile?.total_hours == null ? '' : String(profile.total_hours);
+      document.getElementById('profilePhone').value = profile?.phone_number || '';
+      document.getElementById('profileEmergencyName').value = profile?.emergency_contact_name || '';
+      document.getElementById('profileEmergencyPhone').value = profile?.emergency_contact_phone || '';
+      document.getElementById('profileInstrument').checked = !!profile?.instrument_rated;
+      document.getElementById('profileMulti').checked = !!profile?.multi_engine_rated;
+    }
+
+    function fillSettingsForm(settings) {
+      document.getElementById('settingsUnits').value = settings?.units || 'nautical';
+      document.getElementById('settingsTimeFormat').value = settings?.time_format || '12h';
+      document.getElementById('settingsTimezone').value = settings?.timezone_display || 'local';
+      document.getElementById('settingsMapOrientation').value = settings?.map_orientation || 'trackUp';
+      document.getElementById('defaultDeparture').value = settings?.default_departure_icao || '';
+      document.getElementById('defaultDestination').value = settings?.default_destination_icao || '';
+      document.getElementById('autoPopulateDefaults').checked = settings?.auto_populate_defaults !== false;
+      document.getElementById('pilotName').value = settings?.pilot_name || '';
+      document.getElementById('pilotPhone').value = settings?.pilot_phone || '';
+      document.getElementById('pilotCertificate').value = settings?.pilot_certificate || '';
+      document.getElementById('pilotAddress').value = settings?.pilot_address || '';
+    }
+
+    function resetAircraftForm() {
+      document.getElementById('aircraftFormTitle').textContent = 'Add Aircraft';
+      document.getElementById('aircraftId').value = '';
+      document.getElementById('aircraftForm').reset();
+      document.getElementById('fuelType').value = '100LL';
+    }
+
+    function fillAircraftForm(aircraft) {
+      const fuel = parseJsonObject(aircraft.fuel, {});
+      document.getElementById('aircraftFormTitle').textContent = `Edit ${aircraft.tail_number}`;
+      document.getElementById('aircraftId').value = aircraft.id || '';
+      document.getElementById('aircraftTail').value = aircraft.tail_number || '';
+      document.getElementById('aircraftNickname').value = aircraft.nickname || '';
+      document.getElementById('aircraftMake').value = aircraft.make || '';
+      document.getElementById('aircraftModel').value = aircraft.model || '';
+      document.getElementById('aircraftYear').value = aircraft.year || '';
+      document.getElementById('basicEmptyWeight').value = aircraft.basic_empty_weight || '';
+      document.getElementById('basicEmptyMoment').value = aircraft.basic_empty_moment || '';
+      document.getElementById('maxTakeoffWeight').value = aircraft.max_takeoff_weight || '';
+      document.getElementById('maxLandingWeight').value = aircraft.max_landing_weight || '';
+      document.getElementById('usableFuel').value = fuel.usableCapacity ?? '';
+      document.getElementById('cruiseBurn').value = fuel.cruiseBurnRate ?? '';
+      document.getElementById('fuelType').value = fuel.fuelType || '100LL';
+      setActiveView('aircraft');
+    }
+
+    function setOfficialModeFields() {
+      const isOfficial = document.getElementById('briefMode').value === 'official';
+      document.getElementById('officialFields').classList.toggle('active', isOfficial);
+      document.getElementById('briefButton').textContent = isOfficial ? 'Generate Official Brief' : 'Generate Advisory Brief';
+    }
+
+    function hydrateOfficialDefaults(settings, aircraftList) {
+      const firstAircraft = aircraftList?.[0];
+      if (firstAircraft) {
+        const fuel = parseJsonObject(firstAircraft.fuel, {});
+        if (!document.getElementById('aircraftIdentifier').value) {
+          document.getElementById('aircraftIdentifier').value = firstAircraft.tail_number || '';
+        }
+        if (!document.getElementById('officialAircraftType').value) {
+          const type = `${String(firstAircraft.make || '').charAt(0)}${firstAircraft.model || ''}`.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
+          document.getElementById('officialAircraftType').value = type ? `${type}/G` : '';
+        }
+        if (!document.getElementById('officialTrueAirspeed').value && fuel.cruiseBurnRate) {
+          document.getElementById('officialTrueAirspeed').value = document.getElementById('groundspeed').value || '110';
+        }
+      }
+      document.getElementById('officialPilotName').value ||= settings?.pilot_name || '';
+      document.getElementById('officialPilotPhone').value ||= settings?.pilot_phone || '';
+    }
+
+    async function loadDashboard(session) {
+      const user = session.user;
+      currentSession = session;
+      signedOutView.style.display = 'none';
+      dashboard.style.display = 'grid';
+      signOutButton.style.display = 'inline';
+      setDefaultDepartureTime();
+      setMessage(dashboardError, '');
+
+      document.getElementById('profileEmail').textContent = user.email || '';
+      document.getElementById('profileName').textContent = user.email || 'BeBrief pilot';
+      document.getElementById('accountEmail').value = user.email || '';
+
+      const [profileResult, subscriptionResult, aircraftResult, briefsResult, settingsResult] = await Promise.all([
+        safeQuery('profile', client.from('profiles').select('display_name,email,phone_number,emergency_contact_name,emergency_contact_phone,pilot_type,total_hours,home_airport_icao,instrument_rated,multi_engine_rated').eq('id', user.id).maybeSingle()),
+        safeQuery('subscription', client.from('subscriptions').select('status,tier,trial_ends_at,subscription_expires_at,platform,product_id').eq('user_id', user.id).maybeSingle()),
+        safeQuery('aircraft', client.from('user_aircraft').select('id,tail_number,nickname,make,model,year,basic_empty_weight,basic_empty_moment,max_takeoff_weight,max_landing_weight,fuel,v_speeds,performance,updated_at').eq('user_id', user.id).order('updated_at', { ascending: false })),
+        safeQuery('briefs', client.from('official_briefings').select('id,mode,status,external_briefing_id,request_payload,response_payload,requested_at,completed_at,error_message').eq('user_id', user.id).order('requested_at', { ascending: false }).limit(25)),
+        safeQuery('settings', client.from('user_settings').select('*').eq('user_id', user.id).maybeSingle()),
+      ]);
+
+      const errors = [profileResult, subscriptionResult, aircraftResult, briefsResult, settingsResult]
+        .map((result) => result.error?.message)
+        .filter(Boolean);
+      if (errors.length > 0) {
+        setMessage(dashboardError, `Some synced data could not load: ${errors.join(' | ')}`);
+      }
+
+      const profile = profileResult.data;
+      const subscription = subscriptionResult.data;
+      const aircraft = aircraftResult.data || [];
+      const briefs = briefsResult.data || [];
+      const settings = settingsResult.data;
+      currentAircraft = aircraft;
+      currentBriefs = briefs;
+
+      document.getElementById('profileName').textContent = profile?.display_name || user.email || 'BeBrief pilot';
+      document.getElementById('pilotType').textContent = formatPilotType(profile?.pilot_type);
+      document.getElementById('homeAirport').textContent = profile?.home_airport_icao || '-';
+      document.getElementById('totalHours').textContent = profile?.total_hours == null ? '-' : String(profile.total_hours);
+      fillProfileForm(profile);
+      fillSettingsForm(settings);
+      hydrateOfficialDefaults(settings, aircraft);
+      setOfficialModeFields();
+
+      const accessBadge = document.getElementById('accessBadge');
+      const status = subscription?.status || 'free';
+      const tier = subscription?.tier || 'free';
+      accessBadge.textContent = `${tier} / ${status}`;
+      accessBadge.className = status === 'active' || status === 'trial' || tier === 'lifetime' ? 'badge' : 'badge warn';
+
+      const subscriptionList = document.getElementById('subscriptionList');
+      if (!subscription) {
+        renderEmpty(subscriptionList, 'No subscription row found yet.');
+      } else {
+        subscriptionList.innerHTML = [
+          row('Plan', `${tier.toUpperCase()} - ${status}`, subscription.platform || 'App'),
+          row('Trial ends', formatDate(subscription.trial_ends_at), null),
+          row('Access expires', formatDate(subscription.subscription_expires_at), null),
+        ].join('');
+      }
+
+      document.getElementById('aircraftCount').textContent = String(aircraft.length);
+      const aircraftList = document.getElementById('aircraftList');
+      if (aircraft.length === 0) {
+        renderEmpty(aircraftList, 'No saved aircraft yet.');
+      } else {
+        aircraftList.innerHTML = aircraft.map((item) => {
+          const title = item.nickname || item.tail_number || 'Aircraft';
+          const type = [item.year, item.make, item.model].filter(Boolean).join(' ');
+          const subtitle = [
+            type,
+            item.max_takeoff_weight ? `${Math.round(Number(item.max_takeoff_weight))} lb MTOW` : null,
+            item.updated_at ? `Updated ${formatDate(item.updated_at)}` : null,
+          ].filter(Boolean).join(' | ') || 'Aircraft profile';
+          return actionRow(title, subtitle, item.tail_number, `
+            <button class="btn small" type="button" data-aircraft-edit="${escapeHtml(item.id)}">Edit</button>
+            <button class="btn small danger" type="button" data-aircraft-delete="${escapeHtml(item.id)}">Delete</button>
+          `);
+        }).join('');
+      }
+
+      document.getElementById('briefCount').textContent = String(briefs.length);
+      const briefList = document.getElementById('briefList');
+      if (briefs.length === 0) {
+        renderEmpty(briefList, 'No server-recorded briefs yet.');
+      } else {
+        briefList.innerHTML = briefs.map((item) => {
+          const title = `${formatPilotType(item.mode)} brief`;
+          const requestPayload = parseJsonObject(item.request_payload, {});
+          const route = requestPayload?.nasRouteBriefingFields?.route;
+          const subtitle = [
+            route ? `Route: ${route}` : null,
+            `Status: ${item.status}`,
+            item.external_briefing_id ? `External ID: ${item.external_briefing_id}` : null,
+            `Requested: ${formatDate(item.requested_at)}`,
+          ].filter(Boolean).join(' | ');
+          return actionRow(title, subtitle, item.status || 'brief', `
+            <button class="btn small" type="button" data-brief-detail="${escapeHtml(item.id)}">View Source</button>
+          `);
+        }).join('');
+      }
+    }
+
+    async function refreshSession() {
+      setMessage(authError, '');
+      setMessage(dashboardError, '');
+      const { data, error } = await client.auth.getSession();
+      if (error) {
+        setMessage(authError, error.message);
+        return;
+      }
+      if (data.session) {
+        try {
+          await loadDashboard(data.session);
+        } catch (err) {
+          setMessage(dashboardError, err.message || 'Unable to load your BeBrief data.');
+        }
+      } else {
+        signedOutView.style.display = 'grid';
+        dashboard.style.display = 'none';
+        signOutButton.style.display = 'none';
+        currentSession = null;
+      }
+    }
+
+    document.querySelectorAll('[data-view]').forEach((button) => {
+      button.addEventListener('click', () => setActiveView(button.dataset.view));
+    });
+
+    document.getElementById('briefList').addEventListener('click', (event) => {
+      const button = event.target.closest('[data-brief-detail]');
+      if (!button) return;
+      const brief = currentBriefs.find((item) => item.id === button.dataset.briefDetail);
+      const detail = document.getElementById('briefDetail');
+      detail.textContent = JSON.stringify({
+        id: brief?.id,
+        mode: brief?.mode,
+        status: brief?.status,
+        externalBriefingId: brief?.external_briefing_id,
+        requestedAt: brief?.requested_at,
+        completedAt: brief?.completed_at,
+        error: brief?.error_message,
+        request: brief?.request_payload,
+        responseSummary: extractBriefSummary(parseJsonObject(brief?.response_payload, {})),
+      }, null, 2);
+      detail.style.display = 'block';
+    });
+
+    document.getElementById('aircraftList').addEventListener('click', async (event) => {
+      const editButton = event.target.closest('[data-aircraft-edit]');
+      const deleteButton = event.target.closest('[data-aircraft-delete]');
+      if (editButton) {
+        const aircraft = currentAircraft.find((item) => item.id === editButton.dataset.aircraftEdit);
+        if (aircraft) fillAircraftForm(aircraft);
+      }
+      if (deleteButton) {
+        const aircraft = currentAircraft.find((item) => item.id === deleteButton.dataset.aircraftDelete);
+        if (!aircraft) return;
+        const ok = window.confirm(`Delete ${aircraft.tail_number || 'this aircraft'} from your synced aircraft?`);
+        if (!ok) return;
+        setMessage(document.getElementById('aircraftError'), '');
+        const { error } = await client.from('user_aircraft').delete().eq('id', aircraft.id).eq('user_id', currentSession.user.id);
+        if (error) {
+          setMessage(document.getElementById('aircraftError'), error.message);
+          return;
+        }
+        setMessage(document.getElementById('aircraftMessage'), 'Aircraft deleted.');
+        resetAircraftForm();
+        await refreshSession();
+      }
+    });
+
+    document.getElementById('newAircraftButton').addEventListener('click', resetAircraftForm);
+
+    document.getElementById('profileForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('profileMessage');
+      const errorBox = document.getElementById('profileError');
+      setMessage(message, '');
+      setMessage(errorBox, '');
+      try {
+        const homeRaw = document.getElementById('profileHomeAirport').value;
+        const home = homeRaw.trim() ? normalizeAirport(homeRaw, 'Home airport') : null;
+        const payload = {
+          id: currentSession.user.id,
+          email: currentSession.user.email || null,
+          display_name: optionalText(document.getElementById('profileDisplayName').value),
+          pilot_type: document.getElementById('profilePilotType').value,
+          home_airport_icao: home,
+          total_hours: optionalNumber(document.getElementById('profileTotalHours').value, 'Total hours', 0, 100000),
+          phone_number: normalizePhone(document.getElementById('profilePhone').value, 'Phone'),
+          emergency_contact_name: optionalText(document.getElementById('profileEmergencyName').value),
+          emergency_contact_phone: normalizePhone(document.getElementById('profileEmergencyPhone').value, 'Emergency phone'),
+          instrument_rated: document.getElementById('profileInstrument').checked,
+          multi_engine_rated: document.getElementById('profileMulti').checked,
+          updated_at: new Date().toISOString(),
+        };
+        const { error } = await client.from('profiles').upsert(payload, { onConflict: 'id' });
+        if (error) throw error;
+        setMessage(message, 'Profile saved. The app will hydrate these values on sync.');
+        await refreshSession();
+      } catch (err) {
+        setMessage(errorBox, err.message || 'Unable to save profile.');
+      }
+    });
+
+    document.getElementById('settingsForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('settingsMessage');
+      const errorBox = document.getElementById('settingsError');
+      setMessage(message, '');
+      setMessage(errorBox, '');
+      try {
+        const depRaw = document.getElementById('defaultDeparture').value;
+        const destRaw = document.getElementById('defaultDestination').value;
+        const payload = {
+          user_id: currentSession.user.id,
+          units: document.getElementById('settingsUnits').value,
+          dark_mode: 'true',
+          time_format: document.getElementById('settingsTimeFormat').value,
+          timezone_display: document.getElementById('settingsTimezone').value,
+          map_orientation: document.getElementById('settingsMapOrientation').value,
+          theme: 'midnight',
+          default_departure_icao: depRaw.trim() ? normalizeAirport(depRaw, 'Default departure') : null,
+          default_destination_icao: destRaw.trim() ? normalizeAirport(destRaw, 'Default destination') : null,
+          auto_populate_defaults: document.getElementById('autoPopulateDefaults').checked,
+          updated_at: new Date().toISOString(),
+        };
+        const { error } = await client.from('user_settings').upsert(payload, { onConflict: 'user_id' });
+        if (error) throw error;
+        setMessage(message, 'Settings saved. The app will hydrate them on sync.');
+        await refreshSession();
+      } catch (err) {
+        setMessage(errorBox, err.message || 'Unable to save settings.');
+      }
+    });
+
+    document.getElementById('pilotDetailsForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('pilotDetailsMessage');
+      const errorBox = document.getElementById('pilotDetailsError');
+      setMessage(message, '');
+      setMessage(errorBox, '');
+      try {
+        const payload = {
+          user_id: currentSession.user.id,
+          pilot_name: optionalText(document.getElementById('pilotName').value),
+          pilot_phone: normalizePhone(document.getElementById('pilotPhone').value, 'Pilot phone'),
+          pilot_address: optionalText(document.getElementById('pilotAddress').value),
+          pilot_certificate: optionalText(document.getElementById('pilotCertificate').value),
+          updated_at: new Date().toISOString(),
+        };
+        const { error } = await client.from('user_settings').upsert(payload, { onConflict: 'user_id' });
+        if (error) throw error;
+        setMessage(message, 'Pilot filing details saved.');
+        await refreshSession();
+      } catch (err) {
+        setMessage(errorBox, err.message || 'Unable to save pilot details.');
+      }
+    });
+
+    document.getElementById('aircraftForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('aircraftMessage');
+      const errorBox = document.getElementById('aircraftError');
+      setMessage(message, '');
+      setMessage(errorBox, '');
+      try {
+        const id = document.getElementById('aircraftId').value || crypto.randomUUID();
+        const existing = currentAircraft.find((item) => item.id === id) || {};
+        const fuel = parseJsonObject(existing.fuel, {});
+        const payload = {
+          id,
+          user_id: currentSession.user.id,
+          tail_number: normalizeTailNumber(document.getElementById('aircraftTail').value),
+          nickname: optionalText(document.getElementById('aircraftNickname').value),
+          make: optionalText(document.getElementById('aircraftMake').value) || '',
+          model: optionalText(document.getElementById('aircraftModel').value) || '',
+          year: optionalNumber(document.getElementById('aircraftYear').value, 'Year', 1903, 2100),
+          basic_empty_weight: requiredNumber(document.getElementById('basicEmptyWeight').value, 'Basic empty weight', 1),
+          basic_empty_moment: requiredNumber(document.getElementById('basicEmptyMoment').value, 'Basic empty moment', -10000000, 10000000),
+          max_takeoff_weight: requiredNumber(document.getElementById('maxTakeoffWeight').value, 'Max takeoff weight', 1),
+          max_landing_weight: optionalNumber(document.getElementById('maxLandingWeight').value, 'Max landing weight', 1),
+          stations: parseJsonObject(existing.stations, defaultStations()),
+          fuel: {
+            ...fuel,
+            totalCapacity: optionalNumber(document.getElementById('usableFuel').value, 'Usable fuel', 0) ?? fuel.totalCapacity ?? 0,
+            usableCapacity: optionalNumber(document.getElementById('usableFuel').value, 'Usable fuel', 0) ?? fuel.usableCapacity ?? 0,
+            cruiseBurnRate: optionalNumber(document.getElementById('cruiseBurn').value, 'Cruise burn', 0) ?? fuel.cruiseBurnRate ?? 0,
+            fuelType: optionalText(document.getElementById('fuelType').value) || fuel.fuelType || '100LL',
+            fuelWeight: fuel.fuelWeight || 6,
+          },
+          v_speeds: parseJsonObject(existing.v_speeds, {}),
+          cg_envelope: parseJsonObject(existing.cg_envelope, defaultCgEnvelope()),
+          characteristics: parseJsonObject(existing.characteristics, defaultCharacteristics()),
+          performance: parseJsonObject(existing.performance, null),
+          created_at: existing.created_at || new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        if (!payload.make || !payload.model) throw new Error('Make and model are required.');
+        const { error } = await client.from('user_aircraft').upsert(payload, { onConflict: 'id' });
+        if (error) throw error;
+        setMessage(message, 'Aircraft saved. The app will hydrate this aircraft on sync.');
+        resetAircraftForm();
+        await refreshSession();
+      } catch (err) {
+        setMessage(errorBox, err.message || 'Unable to save aircraft.');
+      }
+    });
+
+    document.getElementById('passwordForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('passwordMessage');
+      const errorBox = document.getElementById('passwordError');
+      setMessage(message, '');
+      setMessage(errorBox, '');
+      const password = document.getElementById('newPassword').value;
+      if (password.length < 8) {
+        setMessage(errorBox, 'Password must be at least 8 characters.');
+        return;
+      }
+      const { error } = await client.auth.updateUser({ password });
+      if (error) {
+        setMessage(errorBox, error.message);
+        return;
+      }
+      document.getElementById('newPassword').value = '';
+      setMessage(message, 'Password updated.');
+    });
+
+    document.getElementById('emailForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('emailMessage');
+      const errorBox = document.getElementById('emailError');
+      setMessage(message, '');
+      setMessage(errorBox, '');
+      const email = document.getElementById('accountEmail').value.trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setMessage(errorBox, 'Enter a valid email address.');
+        return;
+      }
+      const { error } = await client.auth.updateUser({ email });
+      if (error) {
+        setMessage(errorBox, error.message);
+        return;
+      }
+      setMessage(message, 'Email update requested. Confirm it from your inbox if Supabase requires confirmation.');
+    });
+
+    authForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      setMessage(authError, '');
+      setMessage(authSuccess, '');
+      signInButton.disabled = true;
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const { error } = await client.auth.signInWithPassword({ email, password });
+      signInButton.disabled = false;
+      if (error) {
+        setMessage(authError, error.message);
+        return;
+      }
+      await refreshSession();
+    });
+
+    signUpButton.addEventListener('click', async () => {
+      setMessage(authError, '');
+      setMessage(authSuccess, '');
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      if (!email || password.length < 8) {
+        setMessage(authError, 'Enter an email and a password with at least 8 characters.');
+        return;
+      }
+      signUpButton.disabled = true;
+      const { error } = await client.auth.signUp({ email, password });
+      signUpButton.disabled = false;
+      if (error) {
+        setMessage(authError, error.message);
+        return;
+      }
+      setMessage(authSuccess, 'Account created. Check your email if confirmation is required, then sign in.');
+    });
+
+    signOutButton.addEventListener('click', async () => {
+      await client.auth.signOut();
+      await refreshSession();
+    });
+
+    refreshButton.addEventListener('click', async () => {
+      await refreshSession();
+    });
+
+    document.getElementById('briefMode').addEventListener('change', setOfficialModeFields);
+
+    briefForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      setMessage(briefError, '');
+      setMessage(briefSuccess, '');
+      briefResult.style.display = 'none';
+      if (!currentSession?.access_token) {
+        setMessage(briefError, 'Sign in again before creating a brief.');
+        return;
+      }
+
+      let requestBody;
+      try {
+        const mode = document.getElementById('briefMode').value === 'official' ? 'official' : 'advisory';
+        let officialDetails = null;
+        const departure = normalizeAirport(document.getElementById('departureIcao').value, 'Departure');
+        const destination = normalizeAirport(document.getElementById('destinationIcao').value, 'Destination');
+        const aircraftIdentifier = normalizeAircraftIdentifier(document.getElementById('aircraftIdentifier').value);
+        const waypoints = normalizeRouteTokens(document.getElementById('waypoints').value);
+        const groundspeed = Number(document.getElementById('groundspeed').value);
+        const corridor = Number(document.getElementById('corridor').value);
+        const departureValue = document.getElementById('departureTime').value;
+        const departureDate = departureValue ? new Date(departureValue) : null;
+        if (!departureDate || Number.isNaN(departureDate.getTime())) {
+          throw new Error('Choose a valid departure time.');
+        }
+        if (!Number.isFinite(groundspeed) || groundspeed < 30 || groundspeed > 600) {
+          throw new Error('Groundspeed must be between 30 and 600 knots.');
+        }
+        if (!Number.isFinite(corridor) || corridor < 25 || corridor > 100) {
+          throw new Error('Corridor must be between 25 and 100 NM.');
+        }
+        if (mode === 'official' && !aircraftIdentifier) {
+          throw new Error('Aircraft ID is required for official briefs.');
+        }
+        let trueAirspeed = Math.round(groundspeed);
+        let credentialed = false;
+        if (mode === 'official') {
+          const aircraftType = normalizeAircraftType(document.getElementById('officialAircraftType').value);
+          const aircraftColor = optionalText(document.getElementById('officialAircraftColor').value);
+          const cruiseAltitude = normalizeAltitude(document.getElementById('officialCruiseAltitude').value);
+          trueAirspeed = normalizePositiveInteger(document.getElementById('officialTrueAirspeed').value, 'True airspeed', 30, 600);
+          const fuelOnBoard = normalizeFuelOnBoard(document.getElementById('officialFuelOnBoard').value);
+          const alternateRaw = document.getElementById('officialAlternate').value;
+          const alternate = alternateRaw.trim() ? normalizeAirport(alternateRaw, 'Alternate') : null;
+          const souls = normalizePositiveInteger(document.getElementById('officialSouls').value, 'Souls on board', 1, 999);
+          const pilot = optionalText(document.getElementById('officialPilotName').value);
+          const phone = normalizePhone(document.getElementById('officialPilotPhone').value, 'Pilot phone');
+          credentialed = document.getElementById('filingAuthorizationMode').value === 'credentialed';
+          if (!aircraftColor) throw new Error('Aircraft color is required for official briefs.');
+          if (!pilot) throw new Error('Pilot name is required for official briefs.');
+          if (!phone) throw new Error('Pilot phone is required for official briefs.');
+          officialDetails = {
+            aircraftType,
+            aircraftColor,
+            cruiseAltitude,
+            trueAirspeed: String(trueAirspeed),
+            fuelOnBoard,
+            alternateAirport: alternate,
+            soulsOnBoard: String(souls),
+            remarks: optionalText(document.getElementById('officialRemarks').value),
+            pilotName: pilot,
+            pilotPhone: phone,
+            filingAuthorizationMode: credentialed ? 'credentialed' : 'uncredentialed',
+          };
+        }
+        const routeTokens = [departure, ...waypoints, destination];
+        requestBody = {
+          briefingType: 'NGB',
+          type: document.getElementById('briefRouteType').value,
+          notABriefing: mode === 'official' ? false : true,
+          routeCorridorWidth: corridor,
+          nasRouteBriefingFields: {
+            flightRules: 'VFR',
+            departure,
+            destination,
+            departureInstant: departureDate.toISOString().slice(0, 19) + '.0',
+            flightDuration: 'PT2H',
+            route: routeTokens.join(' '),
+            trueAirspeed,
+          },
+        };
+        if (mode === 'official') {
+          requestBody.aircraftIdentifier = aircraftIdentifier;
+          requestBody.bebriefOfficialDetails = officialDetails;
+        }
+        requestBody.__credentialed = credentialed;
+      } catch (err) {
+        setMessage(briefError, err.message || 'Check the route fields.');
+        return;
+      }
+
+      briefButton.disabled = true;
+      briefButton.textContent = 'Generating...';
+      try {
+        const mode = document.getElementById('briefMode').value === 'official' ? 'official' : 'advisory';
+        const endpoint = mode === 'official' ? 'leidos-official-briefing' : 'leidos-advisory-briefing';
+        const credentialed = requestBody.__credentialed === true;
+        delete requestBody.__credentialed;
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/${endpoint}`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${currentSession.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ mode, credentialed, requestBody }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data.error || `Briefing failed with HTTP ${response.status}.`);
+        }
+        renderBriefResult(data, requestBody);
+        setMessage(briefSuccess, 'Brief generated and saved to your BeBrief server records.');
+        await loadDashboard(currentSession);
+      } catch (err) {
+        setMessage(briefError, err.message || 'Unable to generate advisory brief.');
+      } finally {
+        briefButton.disabled = false;
+        setOfficialModeFields();
+      }
+    });
+
+    client.auth.onAuthStateChange(() => {
+      refreshSession();
+    });
+
+    refreshSession();
+  </script>
+</body>
+</html>
