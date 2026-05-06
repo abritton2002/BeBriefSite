@@ -5563,6 +5563,7 @@
           throw new Error(data.error || `Briefing failed with HTTP ${response.status}.`);
         }
         renderBriefResult(data, requestBody);
+        await loadDashboard(currentSession);
         setMessage(briefSuccess, '');
       } catch (err) {
         setMessage(briefError, err.message || 'Unable to generate advisory brief.');
