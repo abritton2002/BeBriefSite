@@ -3,900 +3,787 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BeBrief - VFR Preflight Platform</title>
-  <meta name="description" content="A VFR preflight platform for managing pilot profiles, aircraft, briefing records, and mobile-ready flight planning.">
+  <title>BeBrief - Preflight Briefing on iOS and Web</title>
+  <meta name="description" content="BeBrief is a synced preflight briefing platform for serious pilots: plan and brief on iOS, manage profile, aircraft, and briefing records on the web.">
 
-  <!-- Open Graph / Social -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="BeBrief - VFR Preflight Platform">
-  <meta property="og:description" content="Manage pilot profiles, aircraft, briefing records, and mobile-ready VFR preflight planning.">
+  <meta property="og:title" content="BeBrief - Preflight Briefing on iOS and Web">
+  <meta property="og:description" content="One BeBrief profile across iOS and web for briefing readiness, aircraft data, official briefing workflows, and source-backed flight review.">
   <meta property="og:image" content="assets/og-image.png">
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="BeBrief - VFR Preflight Platform">
-  <meta name="twitter:description" content="Profile, aircraft, briefing records, and VFR preflight planning across web and app.">
+  <meta name="twitter:title" content="BeBrief - Preflight Briefing on iOS and Web">
+  <meta name="twitter:description" content="Synced pilot profile, aircraft, briefing records, and readiness review across mobile and web.">
   <meta name="twitter:image" content="assets/twitter-card.png">
 
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #05080c;
+      --panel: #0b1118;
+      --panel-2: #101823;
+      --line: rgba(149, 173, 198, 0.2);
+      --line-strong: rgba(125, 211, 252, 0.42);
+      --text: #f5f8fb;
+      --muted: #9eb0c4;
+      --dim: #607083;
+      --cyan: #22d3ee;
+      --green: #41f08a;
+      --amber: #facc15;
+      --red: #fb7185;
+      --white: #ffffff;
+      --shadow: 0 32px 80px rgba(0, 0, 0, 0.42);
+    }
 
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      font-family: "Source Sans 3", sans-serif;
+      color: var(--text);
       background:
-        linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px),
-        radial-gradient(circle at 78% 12%, rgba(34, 211, 238, 0.16), transparent 35%),
-        radial-gradient(circle at 10% 40%, rgba(74, 222, 128, 0.1), transparent 32%),
-        #08090a;
-      background-size: 44px 44px, 44px 44px, auto, auto, auto;
-      color: #fafafa;
-      line-height: 1.6;
-      min-height: 100vh;
+        linear-gradient(90deg, rgba(125, 211, 252, 0.06) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(125, 211, 252, 0.045) 1px, transparent 1px),
+        var(--bg);
+      background-size: 64px 64px;
+      line-height: 1.5;
+      letter-spacing: 0;
       overflow-x: hidden;
     }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+    .container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
 
-    /* Header */
-    header {
-      padding: 24px 0;
-      border-bottom: 1px solid #27272a;
-      position: relative;
-      z-index: 100;
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(149, 173, 198, 0.14);
+      background: rgba(5, 8, 12, 0.82);
+      backdrop-filter: blur(18px);
     }
-
-    .header-content {
+    .nav {
+      height: 72px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
+      gap: 22px;
     }
-
-    .logo {
+    .logo img { height: 42px; width: auto; }
+    .nav-links {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 24px;
-      font-weight: 800;
-      color: #22d3ee;
-      text-decoration: none;
-      letter-spacing: -0.5px;
+      gap: 22px;
     }
-
-    .logo img { display: block; height: 42px; width: auto; }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .nav-link {
-      color: #a1a1aa;
-      text-decoration: none;
+    .nav-links a {
+      color: var(--muted);
       font-size: 14px;
-      font-weight: 500;
-      transition: color 0.2s;
+      font-weight: 700;
+      text-decoration: none;
     }
-
-    .nav-link:hover { color: #fafafa; }
-
-    /* Hero */
-    .hero {
-      padding: 74px 0 40px;
-      position: relative;
-      overflow: visible;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      align-items: center;
-    }
-
-    .hero-content { text-align: left; }
-
-    .badge {
-      display: inline-block;
-      background: rgba(34, 211, 238, 0.1);
-      border: 1px solid rgba(34, 211, 238, 0.3);
-      color: #22d3ee;
-      padding: 8px 16px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 24px;
-    }
-
-    .hero h1 {
-      font-size: clamp(42px, 7vw, 84px);
-      font-weight: 900;
-      letter-spacing: -0.06em;
-      line-height: 0.92;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-    }
-
-    .hero h1 span {
-      background: linear-gradient(135deg, #c8f7ff, #49d7e8 42%, #6ee7a2);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero p {
-      font-size: 18px;
-      color: #a1a1aa;
-      margin-bottom: 32px;
-      max-width: 500px;
-    }
-
-    .cta-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+    .nav-links a:hover { color: var(--white); }
 
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 16px 32px;
-      border-radius: 4px;
-      font-size: 16px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .btn-primary { background: #22d3ee; color: #0d0d0f; }
-    .btn-primary:hover { background: #06b6d4; transform: translateY(-2px); }
-
-    .btn-secondary { background: #18181b; color: #fafafa; border: 1px solid #27272a; }
-    .btn-secondary:hover { background: #27272a; transform: translateY(-2px); }
-
-    .btn-small {
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-    }
-
-    /* Feature Showcase */
-    .feature-showcase {
-      padding: 100px 0;
-      background: linear-gradient(180deg, #0d0d0f 0%, #111113 100%);
-    }
-
-    .feature-showcase h2 {
-      text-align: center;
-      font-size: 40px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      letter-spacing: -1px;
-    }
-
-    .feature-showcase-subtitle {
-      text-align: center;
-      color: #71717a;
-      margin-bottom: 80px;
-      font-size: 18px;
-    }
-
-    .feature-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-      margin-bottom: 120px;
-    }
-
-    .feature-row:last-child { margin-bottom: 0; }
-
-    .feature-row.reverse { direction: rtl; }
-    .feature-row.reverse > * { direction: ltr; }
-
-    .feature-text h3 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      color: #fafafa;
-    }
-
-    .feature-text p {
-      font-size: 16px;
-      color: #a1a1aa;
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-
-    .feature-list {
-      list-style: none;
-    }
-
-    .feature-list li {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #71717a;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    .feature-list li::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      background: #22d3ee;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .feature-mockup {
-      display: flex;
       justify-content: center;
-    }
-
-    .feature-mockup img {
-      height: 500px;
-      width: auto;
-      filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.4));
-    }
-
-    /* CTA Section */
-    .cta-section {
-      padding: 100px 0;
-      text-align: center;
-      background: linear-gradient(180deg, #0d0d0f 0%, #18181b 100%);
-    }
-
-    .cta-section h2 {
-      font-size: 40px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      letter-spacing: -1px;
-    }
-
-    .cta-section p {
-      color: #71717a;
-      font-size: 18px;
-      margin-bottom: 32px;
-    }
-
-    /* Platform refinement */
-    body {
-      background:
-        linear-gradient(90deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px),
-        #08090a;
-      letter-spacing: 0;
-    }
-
-    header { padding: 18px 0; }
-
-    .hero { padding: 58px 0 34px; }
-
-    .hero-grid {
-      grid-template-columns: minmax(0, 0.9fr) minmax(360px, 0.85fr);
-      gap: 36px;
-    }
-
-    .badge {
+      gap: 10px;
+      min-height: 46px;
+      padding: 12px 18px;
+      border: 1px solid var(--line);
       border-radius: 6px;
+      font-size: 14px;
+      font-weight: 900;
+      text-decoration: none;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      font-size: 11px;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
     }
-
-    .hero h1 {
-      max-width: 760px;
-      font-size: clamp(40px, 6vw, 78px);
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      color: #031014;
+      background: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 28px rgba(34, 211, 238, 0.18);
     }
-
-    .hero p { max-width: 620px; }
-
-    .btn {
-      border-radius: 6px;
-      min-height: 46px;
-      padding: 13px 20px;
+    .btn-secondary {
+      color: var(--text);
+      background: rgba(16, 24, 35, 0.74);
     }
+    .btn-secondary:hover { border-color: var(--line-strong); }
 
-    .btn-small {
-      border-radius: 6px;
-      min-height: 40px;
-      padding: 9px 14px;
-    }
-
-    .feature-showcase {
-      padding: 72px 0;
-      background: #0d0d0f;
-      border-top: 1px solid #27272a;
-    }
-
-    .feature-showcase h2,
-    .feature-showcase-subtitle {
-      text-align: left;
-      max-width: 780px;
-    }
-
-    .feature-showcase h2 {
-      font-size: clamp(30px, 4vw, 44px);
-      line-height: 1.05;
-    }
-
-    .feature-showcase-subtitle {
-      margin-bottom: 46px;
-      color: #a1a1aa;
-    }
-
-    .feature-row,
-    .feature-row.reverse {
-      direction: ltr;
-      grid-template-columns: minmax(0, 0.84fr) minmax(280px, 0.62fr);
-      gap: 34px;
-      align-items: center;
-      margin-bottom: 42px;
-      border: 1px solid #27272a;
-      border-radius: 10px;
-      padding: 24px;
-      background: rgba(24, 24, 27, 0.56);
-    }
-
-    .feature-text h3 { font-size: 24px; }
-
-    .feature-mockup {
-      min-height: 320px;
-      align-items: center;
+    .hero {
+      min-height: 92vh;
+      position: relative;
+      display: grid;
+      align-items: end;
+      padding: 150px 0 78px;
+      border-bottom: 1px solid var(--line);
       overflow: hidden;
-      border-radius: 8px;
-      background: #08090a;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(5, 8, 12, 0.98) 0%, rgba(5, 8, 12, 0.84) 39%, rgba(5, 8, 12, 0.22) 78%, rgba(5, 8, 12, 0.72) 100%),
+        linear-gradient(180deg, rgba(5, 8, 12, 0.1) 0%, rgba(5, 8, 12, 0.96) 100%),
+        url("assets/og-image.png") right 42% center / min(62vw, 840px) auto no-repeat;
+      filter: saturate(1.05);
+      transform: scale(1.01);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 130px;
+      background: linear-gradient(180deg, transparent, var(--bg));
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 44px;
+    }
+    .mission-tag {
+      display: inline-grid;
+      grid-auto-flow: column;
+      gap: 10px;
+      align-items: center;
+      width: fit-content;
+      padding: 8px 11px;
+      border: 1px solid rgba(34, 211, 238, 0.34);
+      color: #9cf3ff;
+      background: rgba(34, 211, 238, 0.08);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .mission-tag::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(65, 240, 138, 0.8);
+    }
+    h1, h2, h3 {
+      margin: 0;
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      line-height: 0.92;
+    }
+    h1 {
+      max-width: 780px;
+      font-size: clamp(64px, 11vw, 132px);
+      font-weight: 900;
+    }
+    h1 span { color: var(--cyan); }
+    .hero-copy {
+      max-width: 700px;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 23px);
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .hero-note {
+      color: var(--dim);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      max-width: 580px;
     }
 
-    .feature-mockup img { height: 360px; }
+    .readiness-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      background: rgba(7, 12, 18, 0.78);
+      box-shadow: var(--shadow);
+    }
+    .readiness-cell {
+      padding: 18px;
+      border-right: 1px solid var(--line);
+    }
+    .readiness-cell:last-child { border-right: 0; }
+    .readiness-cell span {
+      display: block;
+      color: var(--dim);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .readiness-cell strong {
+      display: block;
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.15;
+    }
 
-    .cta-section { padding: 72px 0; }
+    section { padding: 88px 0; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.6fr);
+      gap: 42px;
+      align-items: end;
+      margin-bottom: 34px;
+    }
+    .eyebrow {
+      color: var(--cyan);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    h2 {
+      font-size: clamp(42px, 6vw, 76px);
+      font-weight: 900;
+    }
+    .section-head p,
+    .section-copy {
+      color: var(--muted);
+      font-size: 18px;
+      margin: 0;
+    }
 
-    /* Footer */
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .platform-panel {
+      min-height: 540px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(16, 24, 35, 0.95), rgba(8, 13, 20, 0.95));
+      box-shadow: var(--shadow);
+    }
+    .platform-panel.web {
+      background:
+        linear-gradient(180deg, rgba(7, 12, 18, 0.5), rgba(7, 12, 18, 0.92)),
+        url("assets/og-image.png") center top / cover no-repeat;
+    }
+    .platform-panel.ios {
+      background:
+        linear-gradient(180deg, rgba(7, 12, 18, 0.42), rgba(7, 12, 18, 0.94)),
+        url("assets/plan.png") center 20px / auto 520px no-repeat;
+    }
+    .platform-content {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 28px;
+      background: linear-gradient(180deg, transparent, rgba(5, 8, 12, 0.96) 22%);
+    }
+    .platform-label {
+      display: inline-flex;
+      margin-bottom: 14px;
+      padding: 6px 9px;
+      border: 1px solid rgba(34, 211, 238, 0.34);
+      color: var(--cyan);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .platform-content h3 {
+      font-size: clamp(34px, 4.5vw, 52px);
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+    .platform-content p {
+      color: var(--muted);
+      font-size: 17px;
+      margin: 0 0 18px;
+      max-width: 560px;
+    }
+    .check-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .check-list li {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 9px;
+      color: #c9d6e3;
+      font-size: 15px;
+    }
+    .check-list li::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      margin-top: 9px;
+      background: var(--green);
+    }
+
+    .ops-grid {
+      display: grid;
+      grid-template-columns: 0.72fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .status-board {
+      border: 1px solid var(--line);
+      background: rgba(11, 17, 24, 0.82);
+      padding: 22px;
+    }
+    .status-board h3,
+    .feature-stack h3 {
+      font-size: 38px;
+      margin-bottom: 14px;
+    }
+    .status-line {
+      display: grid;
+      grid-template-columns: 94px 1fr;
+      gap: 16px;
+      padding: 13px 0;
+      border-top: 1px solid var(--line);
+    }
+    .status-line:first-of-type { margin-top: 16px; }
+    .status-code {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .green { color: var(--green); }
+    .amber { color: var(--amber); }
+    .red { color: var(--red); }
+    .status-line p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .feature-stack {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .feature-card {
+      border: 1px solid var(--line);
+      background: rgba(16, 24, 35, 0.72);
+      padding: 22px;
+    }
+    .feature-card img {
+      height: 230px;
+      width: 100%;
+      object-fit: contain;
+      object-position: center top;
+      margin-bottom: 16px;
+      background: #05070a;
+      border: 1px solid rgba(149, 173, 198, 0.12);
+    }
+    .feature-card h3 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .sync-band {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: #080d13;
+    }
+    .sync-flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+    .sync-step {
+      min-height: 170px;
+      padding: 18px;
+      background: #0b1118;
+    }
+    .sync-step span {
+      color: var(--cyan);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .sync-step strong {
+      display: block;
+      margin: 18px 0 8px;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 28px;
+      line-height: 0.95;
+      text-transform: uppercase;
+    }
+    .sync-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .limits {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.65fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+    .limits-main,
+    .limits-side {
+      border: 1px solid var(--line);
+      background: rgba(11, 17, 24, 0.82);
+      padding: 24px;
+    }
+    .limits-main h2 { margin-bottom: 16px; }
+    .limits-main p {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 760px;
+    }
+    .limits-side ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 13px;
+    }
+    .limits-side li {
+      color: #c9d6e3;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 13px;
+    }
+    .limits-side li:last-child { border-bottom: 0; padding-bottom: 0; }
+
+    .final-cta {
+      padding: 92px 0 76px;
+      background:
+        linear-gradient(90deg, rgba(34, 211, 238, 0.1) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(34, 211, 238, 0.08) 1px, transparent 1px),
+        #071018;
+      background-size: 48px 48px;
+      border-top: 1px solid var(--line);
+    }
+    .final-cta h2 { max-width: 820px; }
+    .final-cta p {
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 19px;
+      margin: 18px 0 28px;
+    }
+
     footer {
-      padding: 40px 0;
-      border-top: 1px solid #27272a;
-      background: #18181b;
+      border-top: 1px solid var(--line);
+      padding: 34px 0;
+      background: #05080c;
     }
-
-    .footer-content {
+    .footer-inner {
       display: flex;
       justify-content: space-between;
+      gap: 18px;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .footer-links { display: flex; gap: 24px; }
-
-    .footer-links a {
-      color: #71717a;
-      text-decoration: none;
+      color: var(--dim);
       font-size: 14px;
-      transition: color 0.2s;
     }
-
-    .footer-links a:hover { color: #fafafa; }
-
-    .copyright { color: #52525b; font-size: 14px; }
-
-    /* Responsive */
-    @media (max-width: 968px) {
-      .hero-grid { grid-template-columns: 1fr; text-align: center; }
-      .hero-content { text-align: center; }
-      .hero p { margin: 0 auto 32px; }
-      .cta-buttons { justify-content: center; }
-      .feature-row { grid-template-columns: 1fr; gap: 40px; text-align: center; }
-      .feature-row.reverse { direction: ltr; }
-      .feature-text { order: 2; }
-      .feature-mockup { order: 1; }
-      .feature-list { display: inline-block; text-align: left; }
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
     }
-
-    @media (max-width: 640px) {
-      .hero { padding: 60px 0 20px; }
-      .feature-showcase { padding: 60px 0; }
-      .feature-row { margin-bottom: 80px; }
-      .feature-mockup img { height: 350px; }
-
-      .gallery-item img { height: 280px; }
-
-      .footer-content { flex-direction: column; text-align: center; }
-    }
-
-    @media (max-width: 560px) {
-      html,
-      body {
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-      .container { padding: 0 18px; }
-      .hero,
-      .hero-grid,
-      .hero-content {
-        min-width: 0;
-      }
-      .hero-grid {
-        display: block;
-      }
-      .header-content {
-        display: grid;
-        grid-template-columns: 1fr;
-        align-items: flex-start;
-        gap: 14px;
-      }
-      .nav-actions {
-        width: 100%;
-        gap: 10px;
-      }
-      .nav-actions .btn-small {
-        width: 100%;
-      }
-      .nav-link {
-        display: none;
-      }
-      .badge {
-        display: block;
-        max-width: 320px;
-        margin-left: auto;
-        margin-right: auto;
-        white-space: normal;
-        text-align: center;
-        font-size: 10px;
-      }
-      .hero h1 {
-        font-size: 30px;
-        line-height: 1.03;
-        letter-spacing: 0;
-        max-width: 330px;
-        margin-left: auto;
-        margin-right: auto;
-        overflow-wrap: anywhere;
-      }
-      .hero p {
-        font-size: 16px;
-        max-width: 300px;
-      }
-      .cta-buttons {
-        display: grid;
-        grid-template-columns: 1fr;
-        max-width: 330px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      .btn {
-        width: 100%;
-        justify-content: center;
-      }
-      .feature-showcase h2,
-      .feature-showcase-subtitle {
-        text-align: left;
-      }
-      .feature-row,
-      .feature-row.reverse {
-        padding: 18px;
-        text-align: left;
-      }
-      .feature-list {
-        display: grid;
-      }
-    }
-
-    /* Clean product presentation */
-    body {
-      background: #f6f8fb;
-      color: #111827;
-    }
-    header,
-    footer {
-      background: rgba(255, 255, 255, 0.92);
-      border-color: #e5e7eb;
-    }
-    header {
-      position: sticky;
-      top: 0;
-      backdrop-filter: blur(18px);
-    }
-    .logo {
-      color: #0f172a;
-      letter-spacing: -0.03em;
-    }
-    .nav-link {
-      color: #475569;
-    }
-    .nav-link:hover {
-      color: #0f172a;
-    }
-    .hero {
-      min-height: calc(100vh - 78px);
-      display: grid;
-      align-items: center;
-      padding: 78px 0 54px;
-      background:
-        linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
-    }
-    .hero-grid {
-      grid-template-columns: 1fr;
-      gap: 34px;
-      text-align: center;
-      justify-items: center;
-    }
-    .hero-content {
-      text-align: center;
-      max-width: 820px;
-    }
-    .badge {
-      background: #eef6ff;
-      border-color: #d5e8ff;
-      color: #155e75;
-      border-radius: 999px;
-      margin-bottom: 18px;
-    }
-    .hero h1 {
-      max-width: 840px;
-      margin-left: auto;
-      margin-right: auto;
-      color: #0f172a;
-      font-size: clamp(46px, 8vw, 86px);
-      line-height: 0.96;
-      letter-spacing: -0.06em;
-      text-transform: none;
-    }
-    .hero h1 span {
-      background: none;
-      -webkit-text-fill-color: currentColor;
-      color: #0891b2;
-    }
-    .hero p {
-      max-width: 660px;
-      margin-left: auto;
-      margin-right: auto;
-      color: #475569;
-      font-size: 19px;
-      line-height: 1.65;
-    }
-    .cta-buttons {
-      justify-content: center;
-    }
-    .btn {
-      border-radius: 10px;
-      text-transform: none;
-      letter-spacing: 0;
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
       font-weight: 700;
-      box-shadow: none;
     }
-    .btn-primary {
-      background: #0f172a;
-      color: #ffffff;
-    }
-    .btn-primary:hover {
-      background: #1e293b;
-      transform: translateY(-1px);
-    }
-    .btn-secondary {
-      background: #ffffff;
-      color: #0f172a;
-      border-color: #dbe3ef;
-    }
-    .btn-secondary:hover {
-      background: #f8fafc;
-      transform: translateY(-1px);
-    }
-    .feature-showcase {
-      background: #ffffff;
-      border-top: 1px solid #e5e7eb;
-      padding: 84px 0;
-    }
-    .feature-showcase h2,
-    .feature-showcase-subtitle {
-      text-align: center;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .feature-showcase h2 {
-      color: #0f172a;
-      font-size: clamp(34px, 5vw, 56px);
-      letter-spacing: -0.05em;
-    }
-    .feature-showcase-subtitle {
-      color: #64748b;
-      max-width: 680px;
-      margin-bottom: 48px;
-    }
-    .feature-row,
-    .feature-row.reverse {
-      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr);
-      max-width: 1050px;
-      margin-left: auto;
-      margin-right: auto;
-      border: 1px solid #e5e7eb;
-      border-radius: 18px;
-      background: #ffffff;
-      box-shadow: 0 18px 48px rgba(15, 23, 42, 0.07);
-    }
-    .feature-text h3 {
-      color: #0f172a;
-      letter-spacing: -0.03em;
-    }
-    .feature-text p,
-    .feature-list li {
-      color: #64748b;
-    }
-    .feature-list li::before {
-      background: #0891b2;
-    }
-    .feature-mockup {
-      background: #f8fafc;
-      border: 1px solid #e5e7eb;
-    }
-    .cta-section {
-      background: #f6f8fb;
-      padding: 86px 0;
-    }
-    .cta-section h2 {
-      color: #0f172a;
-      letter-spacing: -0.04em;
-    }
-    .cta-section p {
-      color: #64748b;
-    }
-    .copyright,
-    .footer-links a {
-      color: #64748b;
-    }
-    @media (max-width: 968px) {
-      .hero {
-        min-height: auto;
+    .footer-links a:hover { color: var(--white); }
+
+    @media (max-width: 980px) {
+      .hero::before {
+        background:
+          linear-gradient(180deg, rgba(5, 8, 12, 0.78), rgba(5, 8, 12, 0.98)),
+          url("assets/og-image.png") center top 96px / 900px auto no-repeat;
       }
-      .feature-row,
-      .feature-row.reverse {
+      .hero { padding-top: 260px; min-height: auto; }
+      .section-head,
+      .ops-grid,
+      .limits {
         grid-template-columns: 1fr;
       }
-    }
-    @media (max-width: 560px) {
-      .hero {
-        padding: 48px 0 42px;
+      .platform-grid,
+      .feature-stack {
+        grid-template-columns: 1fr;
       }
-      .hero h1 {
-        font-size: 38px;
-        max-width: 350px;
-        letter-spacing: -0.04em;
-      }
-      .hero p {
-        max-width: 330px;
+      .sync-flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    /* Dark product theme */
-    body {
-      background:
-        radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.12), transparent 32%),
-        radial-gradient(circle at 14% 42%, rgba(56, 189, 248, 0.08), transparent 28%),
-        linear-gradient(180deg, #0b1018 0%, #07090d 52%, #05070a 100%);
-      color: #e5edf6;
-    }
-    header,
-    footer {
-      background: rgba(7, 9, 13, 0.88);
-      border-color: rgba(148, 163, 184, 0.18);
-      backdrop-filter: blur(18px);
-    }
-    .nav-link,
-    .copyright,
-    .footer-links a {
-      color: #94a3b8;
-    }
-    .nav-link:hover,
-    .footer-links a:hover {
-      color: #f8fafc;
-    }
-    .hero {
-      background:
-        radial-gradient(circle at 50% 16%, rgba(34, 211, 238, 0.12), transparent 34%),
-        linear-gradient(180deg, rgba(15, 23, 42, 0.34), rgba(5, 7, 10, 0));
-    }
-    .badge {
-      background: rgba(34, 211, 238, 0.1);
-      border-color: rgba(34, 211, 238, 0.26);
-      color: #67e8f9;
-    }
-    .hero h1,
-    .feature-showcase h2,
-    .feature-text h3,
-    .cta-section h2 {
-      color: #f8fafc;
-    }
-    .hero h1 span {
-      color: #22d3ee;
-    }
-    .hero p,
-    .feature-showcase-subtitle,
-    .feature-text p,
-    .feature-list li,
-    .cta-section p {
-      color: #94a3b8;
-    }
-    .btn-primary {
-      background: #22d3ee;
-      color: #031014;
-    }
-    .btn-primary:hover {
-      background: #67e8f9;
-    }
-    .btn-secondary {
-      background: rgba(15, 23, 42, 0.88);
-      border-color: rgba(148, 163, 184, 0.24);
-      color: #e5edf6;
-    }
-    .btn-secondary:hover {
-      background: rgba(30, 41, 59, 0.94);
-    }
-    .feature-row,
-    .feature-row.reverse {
-      background: rgba(15, 23, 42, 0.76);
-      border-color: rgba(148, 163, 184, 0.18);
-      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
-    }
-    .feature-showcase,
-    .cta-section {
-      background: rgba(5, 7, 10, 0.62);
-      border-color: rgba(148, 163, 184, 0.16);
-    }
-    .feature-mockup {
-      background: rgba(8, 13, 20, 0.88);
-      border-color: rgba(148, 163, 184, 0.16);
-    }
-    .feature-list li::before {
-      background: #22d3ee;
+    @media (max-width: 720px) {
+      .container { width: min(100% - 28px, 1180px); }
+      .nav { height: auto; min-height: 68px; align-items: flex-start; padding: 14px 0; }
+      .logo img { height: 34px; }
+      .nav-links a:not(.btn) { display: none; }
+      .btn { width: 100%; }
+      .nav-links { flex: 1; justify-content: flex-end; }
+      .nav-links .btn { width: auto; min-height: 40px; padding: 10px 12px; font-size: 12px; }
+      .hero { padding: 214px 0 46px; }
+      h1 { font-size: 58px; }
+      .hero-copy { font-size: 18px; }
+      .hero-actions { display: grid; grid-template-columns: 1fr; }
+      .readiness-strip { grid-template-columns: 1fr; }
+      .readiness-cell { border-right: 0; border-bottom: 1px solid var(--line); }
+      .readiness-cell:last-child { border-bottom: 0; }
+      section { padding: 64px 0; }
+      .platform-panel { min-height: 520px; }
+      .platform-panel.web { background-size: auto 100%, 760px auto; }
+      .platform-content { padding: 22px; }
+      .feature-card img { height: 210px; }
+      .sync-flow { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <div class="header-content">
-        <a href="/" class="logo"><img src="assets/bebrief-logo-full-white.png" alt="BeBrief"></a>
-        <nav class="nav-actions">
-          <a href="app.html" class="btn btn-primary btn-small">Open Platform</a>
-          <a href="mailto:FlyBeBrief@gmail.com" class="nav-link">Contact</a>
-        </nav>
-      </div>
+  <header class="site-header">
+    <div class="container nav">
+      <a href="/" class="logo" aria-label="BeBrief home">
+        <img src="assets/bebrief-logo-full-white.png" alt="BeBrief">
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#platforms">iOS + Web</a>
+        <a href="#briefing">Briefing</a>
+        <a href="#sync">Sync</a>
+        <a href="app.html" class="btn btn-primary">Open Web Platform</a>
+      </nav>
     </div>
   </header>
 
   <main>
     <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <div class="mission-tag">Synced preflight platform</div>
+          <h1>One pilot record. <span>Two places to brief.</span></h1>
+          <p class="hero-copy">BeBrief connects the iOS app and web platform around the same pilot profile, aircraft, briefing history, and source-backed readiness workflow.</p>
+          <div class="hero-actions">
+            <a href="app.html" class="btn btn-primary">Open Web Platform</a>
+            <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-secondary">Request iOS Access</a>
+          </div>
+          <p class="hero-note">Advisory app logic is not legal authority. Official briefing and filing workflows depend on approved Flight Service access and pilot verification.</p>
+        </div>
+
+        <div class="readiness-strip" aria-label="BeBrief readiness workflow">
+          <div class="readiness-cell">
+            <span>01 / executable</span>
+            <strong>Can this flight be briefed and flown within known constraints?</strong>
+          </div>
+          <div class="readiness-cell">
+            <span>02 / changed</span>
+            <strong>What moved since the last review?</strong>
+          </div>
+          <div class="readiness-cell">
+            <span>03 / hazards</span>
+            <strong>Weather, NOTAM, TFR, airspace, fuel, and performance risk.</strong>
+          </div>
+          <div class="readiness-cell">
+            <span>04 / source</span>
+            <strong>Raw supporting detail stays inspectable.</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="platforms">
       <div class="container">
-        <div class="hero-grid">
-          <div class="hero-content">
-            <h1>One pilot<br>record.<br><span>Every briefing<br>ready.</span></h1>
-            <p>Manage your profile, aircraft, filing details, and briefing records from the web, then use the iPhone app when you are planning, briefing, and flying.</p>
-            <div class="cta-buttons">
-              <a href="app.html" class="btn btn-primary">
-                <span>Open Platform</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </a>
-              <a href="#features" class="btn btn-secondary">See Workflow</a>
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Two synced surfaces</div>
+            <h2>The phone is for the brief. The web is for the record.</h2>
+          </div>
+          <p>Users should not have to rebuild their pilot profile, aircraft, Flight Service details, or briefing history on each device. BeBrief is designed around one shared operational record.</p>
+        </div>
+
+        <div class="platform-grid">
+          <article class="platform-panel ios">
+            <div class="platform-content">
+              <div class="platform-label">iOS app</div>
+              <h3>Mobile preflight cockpit</h3>
+              <p>Use the iPhone app for route creation, briefing review, hazard inspection, readiness status, PDF generation, map overview, W&B, and TOLD-style performance checks.</p>
+              <ul class="check-list">
+                <li>Advisory GO / CAUTION / NO-GO logic stays clearly labeled as app-generated.</li>
+                <li>Weather, NOTAM, TFR, winds, PIREP, and SIGMET detail remain drill-down inspectable.</li>
+                <li>Route edits can regenerate the active brief instead of forcing duplicate records.</li>
+              </ul>
             </div>
+          </article>
+
+          <article class="platform-panel web">
+            <div class="platform-content">
+              <div class="platform-label">Web platform</div>
+              <h3>Profile and briefing control</h3>
+              <p>Use the browser when a full keyboard and larger screen make account, aircraft, official fields, saved records, and briefing review faster.</p>
+              <ul class="check-list">
+                <li>Same Supabase-backed profile and aircraft data as the app.</li>
+                <li>Account, subscription, and Flight Service authorization visibility.</li>
+                <li>Designed to grow into full web parity without splitting user data.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="briefing">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Briefing readiness</div>
+            <h2>Not a pretty checklist. A source-backed review flow.</h2>
+          </div>
+          <p>The first screen should answer what serious pilots actually need before departure: whether the flight is executable, what changed, what is hazardous, what is missing, and what source supports the call.</p>
+        </div>
+
+        <div class="ops-grid">
+          <aside class="status-board">
+            <h3>Decision logic stays honest</h3>
+            <div class="status-line">
+              <div class="status-code green">GO</div>
+              <p>App advisory logic sees no surfaced blockers, but the pilot still verifies source data and legal requirements.</p>
+            </div>
+            <div class="status-line">
+              <div class="status-code amber">CAUTION</div>
+              <p>Weather, TFR, NOTAM, airspace, performance, stale data, or missing input requires review before continuing.</p>
+            </div>
+            <div class="status-line">
+              <div class="status-code red">NO-GO</div>
+              <p>Known critical conditions or missing required source data make the app recommend stopping until resolved.</p>
+            </div>
+            <div class="status-line">
+              <div class="status-code">SOURCE</div>
+              <p>Official briefing status, app summary, pilot-entered assumptions, and stale/missing data are separated.</p>
+            </div>
+          </aside>
+
+          <div class="feature-stack">
+            <article class="feature-card">
+              <img src="assets/weather.png" alt="BeBrief weather briefing screen">
+              <h3>Weather timeline</h3>
+              <p>Route-aware weather and TAF summaries stay compact first, with the source packet available when a pilot needs detail.</p>
+            </article>
+            <article class="feature-card">
+              <img src="assets/notams.png" alt="BeBrief NOTAM briefing screen">
+              <h3>NOTAM discipline</h3>
+              <p>High-volume NOTAM responses are grouped and treated as review work, not noise to hide from the pilot.</p>
+            </article>
+            <article class="feature-card">
+              <img src="assets/performance.png" alt="BeBrief performance screen">
+              <h3>Aircraft readiness</h3>
+              <p>Aircraft templates, W&B, fuel, and TOLD-style performance checks connect the brief to the actual aircraft profile.</p>
+            </article>
+            <article class="feature-card">
+              <img src="assets/airspace.png" alt="BeBrief airspace and route screen">
+              <h3>Hazard context</h3>
+              <p>Map and airspace views support situational review while source-backed legal decisions remain in the briefing packet.</p>
+            </article>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="feature-showcase" id="features">
+    <section id="sync" class="sync-band">
       <div class="container">
-        <h2>Built Around the Preflight Workflow</h2>
-        <p class="feature-showcase-subtitle">The web platform keeps pilot and aircraft data clean; the app handles route, weather, hazards, and go/no-go context.</p>
-
-        <div class="feature-row">
-          <div class="feature-text">
-            <h3>Profile and Aircraft Sync</h3>
-            <p>Maintain the pilot and aircraft records that feed briefing requests, official filing details, performance defaults, and app-side planning.</p>
-            <ul class="feature-list">
-              <li>Pilot contact and emergency details</li>
-              <li>Home airport and experience fields</li>
-              <li>Aircraft IDs, equipment, colors, and fuel defaults</li>
-              <li>Shared Supabase records across web and phone</li>
-            </ul>
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Shared data model</div>
+            <h2>Update once. Brief anywhere.</h2>
           </div>
-          <div class="feature-mockup">
-            <img src="assets/plan.png" alt="Route Planning">
-          </div>
+          <p>The web platform and iOS app should hydrate from the same Supabase account so profile, aircraft, settings, and briefing records do not drift.</p>
         </div>
 
-        <div class="feature-row reverse">
-          <div class="feature-text">
-            <h3>Briefing Workspace</h3>
-            <p>Create advisory or official briefing requests from a browser when a full keyboard and desktop screen are faster than a phone.</p>
-            <ul class="feature-list">
-              <li>Advisory and official modes</li>
-              <li>Route, waypoint, and departure-time entry</li>
-              <li>Credentialed 1800WXBRIEF path when linked</li>
-              <li>Saved server briefing records</li>
-            </ul>
+        <div class="sync-flow">
+          <div class="sync-step">
+            <span>ACCOUNT</span>
+            <strong>Sign in</strong>
+            <p>Email, Google, and supported mobile auth connect to the same BeBrief identity.</p>
           </div>
-          <div class="feature-mockup">
-            <img src="assets/weather.png" alt="Weather Dashboard">
+          <div class="sync-step">
+            <span>AIRCRAFT</span>
+            <strong>Select template</strong>
+            <p>Start from one of 22 supported aircraft, then customize exact tail-specific values.</p>
           </div>
-        </div>
-
-        <div class="feature-row">
-          <div class="feature-text">
-            <h3>Mobile Preflight Execution</h3>
-            <p>Use the app for the cockpit-side workflow: route review, weather and hazards, performance, map awareness, and final PIC decision support.</p>
-            <ul class="feature-list">
-              <li>Route and airport weather context</li>
-              <li>TFR, NOTAM, and airspace awareness</li>
-              <li>Performance and weight-balance tools</li>
-              <li>Mobile-first briefing review</li>
-            </ul>
+          <div class="sync-step">
+            <span>BRIEF</span>
+            <strong>Request data</strong>
+            <p>Advisory and official modes use Leidos-centered briefing paths when configured.</p>
           </div>
-          <div class="feature-mockup">
-            <img src="assets/performance.png" alt="Performance Calculator">
+          <div class="sync-step">
+            <span>REVIEW</span>
+            <strong>Inspect risk</strong>
+            <p>Weather, NOTAM, TFR, airspace, fuel, and performance signals are separated by source and freshness.</p>
           </div>
-        </div>
-
-        <div class="feature-row reverse">
-          <div class="feature-text">
-            <h3>Account Linking That Is Understandable</h3>
-            <p>The platform separates app identity from Flight Service authorization so pilots can see what is linked, what is missing, and which briefing mode they are using.</p>
-            <ul class="feature-list">
-              <li>Email/password and Google web sign-in</li>
-              <li>Sign in with Apple remains available on iPhone</li>
-              <li>Credentialed and uncredentialed official briefing paths</li>
-              <li>Clear account and subscription status</li>
-            </ul>
-          </div>
-          <div class="feature-mockup">
-            <img src="assets/notams.png" alt="NOTAMs">
-          </div>
-        </div>
-
-        <div class="feature-row">
-          <div class="feature-text">
-            <h3>Serious VFR Risk Review</h3>
-            <p>BeBrief keeps hazards visible without hiding the raw source context pilots need to inspect before making a legal and operational decision.</p>
-            <ul class="feature-list">
-              <li>Weather, NOTAM, TFR, and airport status</li>
-              <li>Fresh, stale, missing, and cached states</li>
-              <li>Official and advisory briefing modes</li>
-              <li>Route-level hazards versus airport-only issues</li>
-            </ul>
-          </div>
-          <div class="feature-mockup">
-            <img src="assets/airspace.png" alt="Airspace">
+          <div class="sync-step">
+            <span>RECORD</span>
+            <strong>Return later</strong>
+            <p>Saved brief status and profile updates remain available across iOS and web.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="cta-section">
+    <section>
+      <div class="container limits">
+        <div class="limits-main">
+          <div class="eyebrow">Clear claims</div>
+          <h2>Built for serious preflight. Not pretending to replace command judgment.</h2>
+          <p>BeBrief is designed to make briefing work easier to inspect, repeat, and sync. It does not certify a flight, replace the PIC, replace official sources, or turn a map overview into an approved aviation chart.</p>
+        </div>
+        <aside class="limits-side">
+          <ul>
+            <li>Official briefing status is separated from app advisory summaries.</li>
+            <li>Pilot-entered values are separated from authoritative source data.</li>
+            <li>Fresh, stale, missing, and cached data states should remain visible.</li>
+            <li>Aircraft templates require pilot customization against exact aircraft documents.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="final-cta">
       <div class="container">
-        <h2>Manage your BeBrief profile on the web.</h2>
-        <p>Use the browser for setup and account management, then pick up the same records in the app.</p>
-        <a href="app.html" class="btn btn-primary">Open Platform</a>
+        <div class="eyebrow">Fly the same profile on every surface</div>
+        <h2>Open the web platform now. Bring the same record to iOS.</h2>
+        <p>Use BeBrief on the web for account, aircraft, and briefing control. Use the iOS app for mobile route planning, readiness review, source inspection, and preflight workflow.</p>
+        <div class="hero-actions">
+          <a href="app.html" class="btn btn-primary">Open Web Platform</a>
+          <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-secondary">Request iOS Access</a>
+        </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-links">
-          <a href="mailto:FlyBeBrief@gmail.com">Support</a>
-          <a href="privacy.html">Privacy Policy</a>
-          <a href="terms.html">Terms of Service</a>
-        </div>
-        <p class="copyright">&copy; 2026 BeBrief. All rights reserved.</p>
+    <div class="container footer-inner">
+      <div>&copy; 2026 BeBrief. Preflight briefing support for pilots.</div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="mailto:FlyBeBrief@gmail.com">Support</a>
       </div>
     </div>
   </footer>
