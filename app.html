@@ -1376,12 +1376,12 @@
     .dashboard.app-shell {
       grid-template-columns: 188px minmax(0, 1fr);
       gap: 28px;
-      padding-top: 18px;
+      padding-top: 6px;
     }
     .side-rail {
       display: flex;
       flex-direction: column;
-      min-height: calc(100vh - 108px);
+      min-height: calc(100vh - 96px);
       border: 1px solid rgba(148, 163, 184, 0.14);
       border-radius: 18px;
       background:
@@ -1711,7 +1711,7 @@
       margin: 0;
     }
     .command-stage {
-      min-height: min(850px, calc(100vh - 116px));
+      min-height: min(760px, calc(100vh - 92px));
     }
     .command-stage-head {
       padding: 2px 2px 0;
@@ -1728,13 +1728,13 @@
     }
     .scene-shell,
     #commandScene {
-      min-height: min(650px, calc(100vh - 300px));
+      min-height: min(560px, calc(100vh - 268px));
     }
     .home-actions {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
-      margin-top: -24px;
+      margin-top: -56px;
       position: relative;
       z-index: 2;
     }
@@ -2634,6 +2634,7 @@
     let currentAircraftTemplates = [];
     let selectedCommandAircraftId = null;
     let dashboardLoadNonce = 0;
+    let dashboardHydrated = false;
     let commandSceneState = null;
     let threeModulesPromise = null;
 
@@ -3769,13 +3770,13 @@
 
       sessionLoader.style.display = 'none';
       dashboard.style.display = 'grid';
+      dashboardHydrated = true;
     }
 
-    async function refreshSession() {
+    async function refreshSession(options = {}) {
+      const force = options.force === true;
       setMessage(authError, '');
-      setMessage(dashboardError, '');
       document.body.classList.add('auth-pending');
-      sessionLoader.style.display = 'grid';
       const { data, error } = await client.auth.getSession();
       if (error) {
         document.body.classList.remove('auth-pending');
@@ -3784,6 +3785,21 @@
         return;
       }
       if (data.session) {
+        const sameUser = currentSession?.user?.id === data.session.user.id;
+        if (!force && dashboardHydrated && sameUser) {
+          currentSession = data.session;
+          signedOutView.style.display = 'none';
+          sessionLoader.style.display = 'none';
+          dashboard.style.display = 'grid';
+          signOutButton.style.display = 'inline';
+          document.body.classList.remove('auth-pending');
+          if (document.querySelector('#view-home.active')) {
+            requestAnimationFrame(() => resizeCommandScene());
+          }
+          return;
+        }
+        setMessage(dashboardError, '');
+        sessionLoader.style.display = 'grid';
         try {
           await loadDashboard(data.session);
         } catch (err) {
@@ -3795,6 +3811,7 @@
         }
       } else {
         dashboardLoadNonce++;
+        dashboardHydrated = false;
         signedOutView.style.display = 'grid';
         sessionLoader.style.display = 'none';
         dashboard.style.display = 'none';
@@ -3851,7 +3868,7 @@
         }
         setMessage(document.getElementById('aircraftMessage'), 'Aircraft deleted.');
         resetAircraftForm();
-        await refreshSession();
+        await refreshSession({ force: true });
       }
     });
 
@@ -3909,7 +3926,7 @@
         const { error } = await client.from('profiles').upsert(payload, { onConflict: 'id' });
         if (error) throw error;
         setMessage(message, 'Profile saved. The app will hydrate these values on sync.');
-        await refreshSession();
+        await refreshSession({ force: true });
       } catch (err) {
         setMessage(errorBox, err.message || 'Unable to save profile.');
       }
@@ -3941,7 +3958,7 @@
         const { error } = await client.from('user_settings').upsert(payload, { onConflict: 'user_id' });
         if (error) throw error;
         setMessage(message, 'Settings saved. The app will hydrate them on sync.');
-        await refreshSession();
+        await refreshSession({ force: true });
       } catch (err) {
         setMessage(errorBox, err.message || 'Unable to save settings.');
       }
@@ -3965,7 +3982,7 @@
         const { error } = await client.from('user_settings').upsert(payload, { onConflict: 'user_id' });
         if (error) throw error;
         setMessage(message, 'Pilot filing details saved.');
-        await refreshSession();
+        await refreshSession({ force: true });
       } catch (err) {
         setMessage(errorBox, err.message || 'Unable to save pilot details.');
       }
@@ -4083,7 +4100,7 @@
         if (error) throw error;
         setMessage(message, 'Aircraft saved. The app will hydrate this aircraft on sync.');
         resetAircraftForm();
-        await refreshSession();
+        await refreshSession({ force: true });
       } catch (err) {
         setMessage(errorBox, err.message || 'Unable to save aircraft.');
       }
@@ -4141,7 +4158,7 @@
         setMessage(authError, error.message);
         return;
       }
-      await refreshSession();
+      await refreshSession({ force: true });
     });
 
     googleSignInButton.addEventListener('click', async () => {
@@ -4180,11 +4197,11 @@
 
     signOutButton.addEventListener('click', async () => {
       await client.auth.signOut();
-      await refreshSession();
+      await refreshSession({ force: true });
     });
 
     refreshButton.addEventListener('click', async () => {
-      await refreshSession();
+      await refreshSession({ force: true });
     });
 
     document.getElementById('briefMode').addEventListener('change', setOfficialModeFields);
@@ -4235,7 +4252,7 @@
         setMessage(message, `${formatPilotType(action)} submitted.`);
         resultBox.textContent = JSON.stringify(payload, null, 2);
         resultBox.style.display = 'block';
-        await refreshSession();
+        await refreshSession({ force: true });
       } catch (err) {
         setMessage(errorBox, err.message || 'Unable to run flight-plan action.');
       }
