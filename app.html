@@ -2198,6 +2198,54 @@
     .brief-advisory-state {
       color: #ffffff;
     }
+    body {
+      background:
+        radial-gradient(circle at 72% 0%, rgba(34, 211, 238, 0.13), transparent 30%),
+        radial-gradient(circle at 10% 18%, rgba(59, 130, 246, 0.1), transparent 28%),
+        linear-gradient(180deg, #11131a 0%, #0d1017 44%, #090b10 100%);
+      background-attachment: fixed;
+    }
+    header {
+      background: rgba(17, 19, 26, 0.58);
+      border-color: rgba(148, 163, 184, 0.13);
+      border-radius: 14px;
+      padding: 14px 16px;
+      backdrop-filter: blur(16px);
+    }
+    .nav a,
+    .nav button {
+      color: #f8fafc;
+    }
+    .dashboard.app-shell {
+      align-items: start;
+    }
+    .side-rail {
+      background: rgba(23, 26, 34, 0.62);
+      border-color: rgba(148, 163, 184, 0.14);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(18px);
+    }
+    .side-context {
+      background: rgba(18, 21, 28, 0.58);
+      border-color: rgba(148, 163, 184, 0.12);
+    }
+    .side-tab {
+      background: transparent;
+      border-color: transparent;
+    }
+    .side-tab:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(148, 163, 184, 0.12);
+      box-shadow: none;
+    }
+    .side-tab.active {
+      background: rgba(34, 211, 238, 0.88);
+      border-color: rgba(34, 211, 238, 0.95);
+      box-shadow: 0 10px 30px rgba(34, 211, 238, 0.11);
+    }
+    .workspace {
+      background: transparent;
+    }
     .severity-green {
       border-color: rgba(34, 197, 94, 0.34);
     }
@@ -4859,7 +4907,7 @@
         safeQuery('profile', client.from('profiles').select('display_name,email,phone_number,emergency_contact_name,emergency_contact_phone,pilot_type,total_hours,home_airport_icao,instrument_rated,multi_engine_rated').eq('id', user.id).maybeSingle()),
         safeQuery('subscription', client.from('subscriptions').select('status,tier,trial_ends_at,subscription_expires_at,platform,product_id').eq('user_id', user.id).maybeSingle()),
         safeQuery('aircraft', client.from('user_aircraft').select('id,user_id,tail_number,nickname,make,model,year,basic_empty_weight,basic_empty_moment,max_ramp_weight,max_takeoff_weight,max_landing_weight,max_baggage_weight,stations,fuel,v_speeds,cg_envelope,performance,characteristics,created_at,updated_at').eq('user_id', user.id).order('updated_at', { ascending: false })),
-        safeQuery('briefs', client.from('official_briefings').select('id,mode,status,external_briefing_id,request_payload,response_payload,requested_at,completed_at,error_message').eq('user_id', user.id).order('requested_at', { ascending: false }).limit(25)),
+        safeQuery('briefs', client.from('official_briefings').select('id,mode,status,external_briefing_id,requested_at,completed_at,error_message').eq('user_id', user.id).order('requested_at', { ascending: false }).limit(25)),
         safeQuery('settings', client.from('user_settings').select('*').eq('user_id', user.id).maybeSingle()),
         safeQuery('templates', client.from('aircraft_templates').select('id,audience,label,subtitle,caution,template_data,sort_order').eq('is_active', true).order('sort_order', { ascending: true }).order('label', { ascending: true })),
       ]);
