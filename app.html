@@ -2060,6 +2060,158 @@
         display: grid;
       }
     }
+
+    /* Final slate unification: keep the portal visually aligned with the iOS app. */
+    :root {
+      --bg: #0f1117;
+      --panel: #171a22;
+      --panel-2: #12151c;
+      --line: #2a2f3a;
+      --line-strong: #3a414f;
+      --text: #f4f7fb;
+      --muted: #aab3c2;
+      --dim: #737e8f;
+      --cyan: #22d3ee;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+    body {
+      background: #0f1117;
+      color: var(--text);
+    }
+    header,
+    .card,
+    .auth-card,
+    .side-rail,
+    .side-context,
+    .loading-panel,
+    .metric,
+    .mode-panel,
+    .row,
+    .list-item,
+    .aircraft-table-wrap,
+    .detail-box,
+    .brief-result,
+    .brief-report,
+    .brief-section,
+    .brief-status-card,
+    .brief-dataset-card,
+    .brief-timeline-row,
+    .brief-source-row,
+    .home-action,
+    .cg-editor,
+    .empty {
+      background: #171a22;
+      background-image: none;
+      border-color: #2a2f3a;
+      box-shadow: none;
+    }
+    .workspace,
+    .view,
+    .command-stage,
+    .scene-shell {
+      background: transparent;
+    }
+    input,
+    select,
+    textarea,
+    .btn,
+    .side-tab,
+    .aircraft-table th,
+    .brief-raw pre {
+      background: #12151c;
+      border-color: #3a414f;
+      color: var(--text);
+      box-shadow: none;
+    }
+    .btn:hover,
+    .side-tab:hover,
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #22d3ee;
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.12);
+    }
+    .btn.primary,
+    .side-tab.active {
+      background: #22d3ee;
+      border-color: #22d3ee;
+      color: #071116;
+    }
+    .btn.google {
+      background: #f4f7fb;
+      border-color: #f4f7fb;
+      color: #111827;
+    }
+    .logo,
+    h1,
+    .card h2,
+    .section-head h2,
+    .command-stage h2,
+    .page-header h2,
+    .metric .value,
+    .row-main,
+    .aircraft-title,
+    .brief-report-title,
+    .brief-dataset-head h4,
+    .brief-data-row strong {
+      color: #f4f7fb;
+    }
+    .lead,
+    .muted,
+    .metric .label,
+    .row-sub,
+    .aircraft-subtitle,
+    .aircraft-cell-muted,
+    .brief-report-subtitle,
+    .brief-data-row p,
+    .brief-timeline-row span,
+    .brief-source-row span {
+      color: #aab3c2;
+    }
+    .brief-dataset-card {
+      padding: 0;
+      overflow: hidden;
+    }
+    .brief-dataset-head {
+      cursor: pointer;
+      list-style: none;
+      padding: 14px;
+    }
+    .brief-dataset-head::-webkit-details-marker {
+      display: none;
+    }
+    .brief-dataset-card .brief-row-list,
+    .brief-dataset-card .empty {
+      margin: 0 14px 14px;
+    }
+    .brief-dataset-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .brief-data-row p {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .brief-advisory-state {
+      color: #ffffff;
+    }
+    .severity-green {
+      border-color: rgba(34, 197, 94, 0.34);
+    }
+    .severity-amber {
+      border-color: rgba(245, 158, 11, 0.38);
+    }
+    .severity-red {
+      border-color: rgba(239, 68, 68, 0.42);
+    }
+    @media (max-width: 840px) {
+      .brief-dataset-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body class="auth-pending">
@@ -3378,17 +3530,33 @@
     }
 
     function tfrText(row) {
-      const text = row?.text;
-      const raw = typeof text === 'string'
-        ? text
-        : text?.plainText || text?.encodedText || row?.plainText || row?.encodedText || '';
-      return String(raw)
-        .replace(/<br\s*\/?>/gi, ' ')
-        .replace(/&apos;/gi, "'")
-        .replace(/&quot;/gi, '"')
-        .replace(/&amp;/gi, '&')
-        .replace(/\s+/g, ' ')
-        .trim();
+      const record = asRecord(row) || {};
+      const text = asRecord(record.text);
+      const direct = firstText(
+        record.text,
+        record.plainText,
+        record.encodedText,
+        record.tfrText,
+        record.notamText,
+        record.description,
+        record.summary,
+        record.remarks,
+        text?.plainText,
+        text?.encodedText,
+        text?.text,
+        text?.message,
+      );
+      if (direct) return cleanLeidosText(direct);
+
+      const coded = asArray(record.returnCodedMessage)
+        .map((item) => {
+          if (typeof item === 'string') return item;
+          const codedRow = asRecord(item);
+          return firstText(codedRow?.message, codedRow?.text, codedRow?.code);
+        })
+        .filter(Boolean)
+        .join(' | ');
+      return cleanLeidosText(coded);
     }
 
     function sourceText(row, fallback = '') {
@@ -3410,12 +3578,47 @@
       ) || '');
     }
 
-    function summarizeTfr(row) {
-      const impact = row?.ngbSummarizationInformation?.passingInformation?.flightAffectedBySummary
-        || row?.ngbSummarizationInformation?.summaryText;
-      if (impact) return String(impact);
-      const text = tfrText(row);
-      return text.length > 170 ? `${text.slice(0, 167)}...` : text || 'TFR row returned without display text.';
+    function buildTfrSummary(id, reason, text) {
+      if (reason) return `${id} ${cleanLeidosText(reason)}`.trim();
+      const cleaned = cleanLeidosText(text);
+      const match = cleaned.match(/^(FDC\s+\d+\/\d+\s+\w+\s+[^.]+(?:\.\.[^.]+)?)/i);
+      if (match?.[1]) return match[1].replace(/\.\./g, ' - ').trim();
+      const firstSentence = cleaned.split(/(?<=\.)\s+/)[0]?.trim();
+      if (firstSentence) return firstSentence.slice(0, 96);
+      return id;
+    }
+
+    function buildTfrCompactText(text) {
+      const cleaned = cleanLeidosText(text);
+      if (!cleaned) return '';
+      const purposeMatch = cleaned.match(/PURSUANT TO ([^.]+)\./i);
+      const areaMatch = cleaned.match(/WI AN AREA DEFINED AS ([^.]+)\./i);
+      const dateMatch = cleaned.match(/((?:JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)[^.]+?LOCAL)\./i);
+      const parts = [
+        purposeMatch?.[1] ? `Basis: ${purposeMatch[1]}` : null,
+        areaMatch?.[1] ? `Area: ${areaMatch[1]}` : null,
+        dateMatch?.[1] ? `Window: ${dateMatch[1]}` : null,
+      ].filter(Boolean);
+      if (parts.length) return parts.join(' | ');
+      return cleaned.length > 180 ? `${cleaned.slice(0, 177).trim()}...` : cleaned;
+    }
+
+    function toIsoFromUnknown(value) {
+      if (value == null || value === '') return null;
+      if (typeof value === 'number' && Number.isFinite(value)) {
+        const ms = value > 10_000_000_000 ? value : value * 1000;
+        return new Date(ms).toISOString();
+      }
+      const text = String(value).trim();
+      if (!text) return null;
+      const parsed = Date.parse(text);
+      return Number.isFinite(parsed) ? new Date(parsed).toISOString() : null;
+    }
+
+    function parseIsoMs(value) {
+      if (!value) return null;
+      const parsed = Date.parse(value);
+      return Number.isFinite(parsed) ? parsed : null;
     }
 
     function extractBriefSummary(data) {
@@ -3506,7 +3709,51 @@
       return rows;
     }
 
-    function extractNotamRows(weather) {
+    function inferNotamCategory(sectionCategory, keyword, raw) {
+      const source = `${sectionCategory || ''} ${keyword || ''} ${raw || ''}`.toUpperCase();
+      if (/\b(TWY|TAXIWAY|APRON|RAMP)\b/.test(source)) return 'taxiway';
+      if (/\b(RWY|RUNWAY)\b/.test(source)) return 'runway';
+      if (/\b(OBST|OBSTRUCTION|CRANE|TOWER)\b/.test(source)) return 'obstacle';
+      if (/\b(NAV|NAVAID|ILS|VOR|DME|GPS)\b/.test(source)) return 'navaid';
+      if (/\b(COMM|FREQ|FREQUENCY|ATIS|TOWER|GROUND|CTAF)\b/.test(source)) return 'services';
+      if (/\b(AIRSPACE|TFR|UAS|UNMANNED|SUA|RESTRICTED)\b/.test(source)) return 'airspace';
+      return sectionCategory || 'other';
+    }
+
+    function notamSeverityFromSource(record, raw, category) {
+      const source = `${firstText(record.notamSeverity, record.severity) || ''} ${category || ''} ${raw || ''}`.toUpperCase();
+      const criticalClosure = /\b(RWY|RUNWAY|AIRPORT|AD)\b.{0,80}\b(CLSD|CLOSED|UNSAFE)\b/.test(source);
+      if (/CRITICAL/.test(source) && criticalClosure) return 'red';
+      if (criticalClosure) return 'red';
+      if (/\b(WARNING|CAUTION|!FDC|TFR|AIRSPACE|GPS|NAV|COMM|OBST|UNSERVICEABLE|OUT OF SERVICE|RWY|RUNWAY)\b/.test(source)) return 'amber';
+      return 'green';
+    }
+
+    function formatNotamWindow(item) {
+      const start = item.effectiveStart ? new Date(item.effectiveStart).toISOString().slice(0, 16).replace('T', ' ') : 'unknown';
+      const end = item.effectiveEnd ? new Date(item.effectiveEnd).toISOString().slice(0, 16).replace('T', ' ') : 'open';
+      return `${start}Z-${end}Z`;
+    }
+
+    function estimateFlightWindow(fields) {
+      const departureMs = parseIsoMs(fields.departureInstant) || Date.now();
+      const durationMinutes = Math.max(45, Math.min(12 * 60, Number(fields.estimatedDurationMinutes) || 180));
+      return {
+        startMs: departureMs - 30 * 60_000,
+        endMs: departureMs + durationMinutes * 60_000 + 30 * 60_000,
+      };
+    }
+
+    function notamAppliesToFlightWindow(item, window) {
+      const start = parseIsoMs(item.effectiveStart);
+      const end = parseIsoMs(item.effectiveEnd);
+      if (start === null && end === null) return true;
+      if (start !== null && start > window.endMs) return false;
+      if (end !== null && end < window.startMs) return false;
+      return true;
+    }
+
+    function extractNotamItems(weather) {
       const notamKeys = Object.keys(weather || {}).filter((key) => /^ntm/i.test(key) || key === 'ddntm');
       const rows = [];
       const seen = new Set();
@@ -3529,23 +3776,46 @@
             const dedupeKey = `${id}:${raw.slice(0, 80)}`;
             if (seen.has(dedupeKey)) continue;
             seen.add(dedupeKey);
-            const upper = raw.toUpperCase();
-            const severity = /\b(RWY|RUNWAY|AIRPORT|AD)\b.{0,70}\b(CLSD|CLOSED|UNSAFE)\b/.test(upper)
-              ? 'red'
-              : /\b(FDC|TFR|AIRSPACE|GPS|NAV|COMM|OBST|OUT OF SERVICE|UNSERVICEABLE|RWY|RUNWAY)\b/.test(upper)
-                ? 'amber'
-                : 'green';
             const icao = firstText(record.icaoLocation, record.airportId, record.locationIdentifier) || extractIcao(raw) || heading;
+            const keyword = firstText(record.keyword, record.notamKeyword, heading);
+            const category = inferNotamCategory(key, keyword, raw);
+            const severity = notamSeverityFromSource(record, raw, category);
             rows.push({
-              title: `${String(icao).toUpperCase()} ${inferNotamLabel(raw, heading)}`,
-              subtitle: raw,
-              pillLabel: severity === 'red' ? 'CRIT' : severity === 'amber' ? 'WARN' : 'INFO',
+              id,
+              icao: String(icao).toUpperCase(),
+              category,
               severity,
+              summary: raw,
+              effectiveStart: toIsoFromUnknown(record.notamStartDate ?? record.effectiveStart ?? record.startTime ?? record.validFrom),
+              effectiveEnd: toIsoFromUnknown(record.notamEndDate ?? record.effectiveEnd ?? record.endTime ?? record.validTo),
             });
           }
         }
       }
       return rows;
+    }
+
+    function buildNotamSummaryRows(items) {
+      const groups = new Map();
+      for (const item of items) {
+        const key = `${item.icao}:${item.category}:${item.severity}`;
+        if (!groups.has(key)) {
+          groups.set(key, { ...item, items: [] });
+        }
+        groups.get(key).items.push(item);
+      }
+      return Array.from(groups.values()).map((group) => {
+        const sorted = group.items.slice().sort((a, b) => (parseIsoMs(a.effectiveStart) || 0) - (parseIsoMs(b.effectiveStart) || 0));
+        const sample = sorted[0] || group;
+        const count = sorted.length;
+        const label = group.severity === 'red' ? 'critical' : group.severity === 'amber' ? 'caution' : 'info';
+        return {
+          title: `${group.icao} ${String(group.category).toUpperCase()}`,
+          subtitle: `${count} active ${label} NOTAM${count === 1 ? '' : 's'} | Example: ${sample.summary} | Active ${formatNotamWindow(sample)}`,
+          pillLabel: group.severity === 'red' ? `${count} CRIT` : group.severity === 'amber' ? `${count} WARN` : `${count} INFO`,
+          severity: group.severity,
+        };
+      }).sort((a, b) => severityRank(a.severity) - severityRank(b.severity));
     }
 
     function extractTfrRows(weather) {
@@ -3558,12 +3828,24 @@
           const text = tfrText(row);
           const id = firstText(row.tfrNumber, row.notamNumber, row.id, row.identifier, row.number) || `TFR-${index + 1}`;
           const reason = firstText(row.reason, row.location, row.locationDescription, row.facilityId, row.type);
-          const detail = cleanLeidosText([impact, text].filter(Boolean).join(' | '));
-          if (!detail && !reason && id === `TFR-${index + 1}`) return null;
-          const notAffected = /\b(not affected|not impacting|outside route|does not affect|no impact)\b/i.test(detail);
+          const startsAt = toIsoFromUnknown(row.effectiveStart ?? row.startTime ?? row.validFrom ?? row.beginTime);
+          const endsAt = toIsoFromUnknown(row.effectiveEnd ?? row.endTime ?? row.validTo ?? row.expirationTime);
+          const hasUsefulIdentifier = id !== `TFR-${index + 1}`;
+          if (!text && !reason && !startsAt && !endsAt && !hasUsefulIdentifier) return null;
+          const compactText = buildTfrCompactText(text);
+          const baseDetails = impact || compactText || [
+            startsAt ? `Effective ${startsAt}` : null,
+            endsAt ? `Until ${endsAt}` : null,
+            'No TFR text was returned by the source. Verify at tfr.faa.gov before flight.',
+          ].filter(Boolean).join(' | ');
+          const routeImpactText = `${impact || ''} ${text} ${reason || ''}`;
+          const notAffected = /\b(not affected|not impacting|outside route|does not affect|no impact)\b/i.test(routeImpactText);
+          const actionHint = notAffected
+            ? 'Verify the source detail, but this does not appear to affect the planned route from the returned briefing data.'
+            : 'Review route, time, altitude, and applicability. If it affects the planned flight, reroute around it or choose an alternate waypoint before departure.';
           return {
-            title: reason ? `${id} ${reason}` : id,
-            subtitle: detail || 'TFR row returned without display text. Verify source before flight.',
+            title: buildTfrSummary(id, reason, text),
+            subtitle: `${baseDetails} ${actionHint}`.trim(),
             pillLabel: 'TFR',
             severity: notAffected ? 'green' : 'amber',
           };
@@ -3680,13 +3962,20 @@
       return { title, key, rows, emptyText, red, amber };
     }
 
+    function severityRank(severity) {
+      if (severity === 'red') return 0;
+      if (severity === 'amber') return 1;
+      return 2;
+    }
+
     function buildBriefPresentationData(data, requestBody) {
       const fields = requestBody?.nasRouteBriefingFields || {};
       const weather = getWeatherPacket(data);
       const weatherRows = [...extractMetarRows(weather), ...extractTafRows(weather)];
+      const notamItems = extractNotamItems(weather).filter((item) => notamAppliesToFlightWindow(item, estimateFlightWindow(fields)));
       const sections = {
         weather: buildDataset('Weather / TAF', 'weather', weatherRows, 'No METAR/TAF returned for this route.'),
-        notams: buildDataset('NOTAM', 'notams', extractNotamRows(weather), 'No NOTAM returned for this route.'),
+        notams: buildDataset('NOTAM', 'notams', buildNotamSummaryRows(notamItems), 'No NOTAM returned for this route.'),
         tfr: buildDataset('TFR / Alerts', 'tfr', extractTfrRows(weather), 'No TFR/route alert returned for this route.'),
         sigmets: buildDataset('SIGMET / AIRMET', 'sigmets', extractSigmetRows(weather), 'No SIGMET/AIRMET returned for this route.'),
         pireps: buildDataset('PIREP', 'pireps', extractPirepRows(weather), 'No PIREP returned for this route.'),
@@ -3710,7 +3999,7 @@
       };
     }
 
-    function renderRows(rows, emptyText, limit = 25) {
+    function renderRows(rows, emptyText, limit = 8) {
       if (!rows.length) return `<div class="empty">${escapeHtml(emptyText)}</div>`;
       return `<div class="brief-row-list">${rows.slice(0, limit).map((row) => `
         <div class="brief-data-row severity-${escapeHtml(row.severity || 'green')}">
@@ -3723,16 +4012,16 @@
 
     function renderDatasetCard(section) {
       return `
-        <article class="brief-dataset-card">
-          <div class="brief-dataset-head">
+        <details class="brief-dataset-card">
+          <summary class="brief-dataset-head">
             <div>
               <h4>${escapeHtml(section.title)}</h4>
               <div class="brief-dataset-meta">${section.rows.length} total | ${section.red} critical | ${section.amber} caution</div>
             </div>
             <span class="badge">${escapeHtml(section.key)}</span>
-          </div>
+          </summary>
           ${renderRows(section.rows, section.emptyText)}
-        </article>
+        </details>
       `;
     }
 
