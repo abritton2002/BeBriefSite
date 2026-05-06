@@ -467,6 +467,130 @@
       border-radius: 10px;
       padding: 13px;
     }
+    .brief-report {
+      display: none;
+      margin-top: 18px;
+      gap: 18px;
+    }
+    .brief-report.visible {
+      display: grid;
+    }
+    .brief-report-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      border: 1px solid rgba(34, 211, 238, 0.22);
+      background: linear-gradient(180deg, rgba(34, 211, 238, 0.12), rgba(15, 23, 42, 0.68));
+      border-radius: 18px;
+      padding: 22px;
+    }
+    .brief-report-title {
+      color: #f8fafc;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 0.98;
+      letter-spacing: 0;
+      margin: 0;
+    }
+    .brief-report-subtitle {
+      margin-top: 10px;
+      color: #91a4b8;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .brief-report-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .brief-status-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .brief-status-card {
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(8, 13, 20, 0.68);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .brief-status-card span,
+    .brief-status-card small {
+      display: block;
+      color: #91a4b8;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .brief-status-card strong {
+      display: block;
+      color: #f8fafc;
+      font-size: 34px;
+      line-height: 1;
+      margin: 12px 0 8px;
+    }
+    .brief-section {
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(8, 13, 20, 0.58);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .brief-section h3 {
+      color: #f8fafc;
+      font-size: 18px;
+      letter-spacing: 0;
+      margin-bottom: 12px;
+    }
+    .brief-source-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .brief-source-row {
+      display: grid;
+      gap: 4px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .brief-source-row span {
+      color: #91a4b8;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .brief-source-row strong {
+      color: #e5edf6;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+    .brief-raw {
+      margin-top: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .brief-raw summary {
+      cursor: pointer;
+      padding: 13px 14px;
+      color: #cbd5e1;
+      font-weight: 850;
+      background: rgba(15, 23, 42, 0.68);
+    }
+    .brief-raw pre {
+      max-height: 420px;
+      overflow: auto;
+      margin: 0;
+      padding: 14px;
+      background: rgba(2, 6, 12, 0.76);
+      color: #cbd5e1;
+      font: 12px/1.5 'IBM Plex Mono', monospace;
+      white-space: pre-wrap;
+    }
     .hazard-list {
       margin-top: 10px;
       display: grid;
@@ -569,6 +693,10 @@
       .span-12, .span-6, .span-4 { grid-column: span 1; }
       .span-8 { grid-column: span 1; }
       .metric-grid { grid-template-columns: 1fr; }
+      .brief-report-head { display: grid; }
+      .brief-report-actions { justify-content: flex-start; }
+      .brief-status-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .brief-source-grid { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
       .platform-row { grid-template-columns: 1fr; gap: 4px; }
       .workspace-intro { grid-template-columns: 1fr; }
@@ -615,6 +743,9 @@
       }
       .btn {
         width: 100%;
+      }
+      .brief-status-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -892,10 +1023,10 @@
       margin-bottom: 0;
     }
     .command-stage h2 {
-      font-size: clamp(34px, 4.8vw, 64px);
-      letter-spacing: -0.06em;
-      line-height: 0.95;
-      margin: 0 0 8px;
+      font-size: clamp(26px, 3.2vw, 42px);
+      letter-spacing: 0;
+      line-height: 1.05;
+      margin: 0;
     }
     .scene-shell {
       position: relative;
@@ -1342,30 +1473,6 @@
     .side-tab.active::before {
       background: #22d3ee;
     }
-    .side-actions {
-      margin-top: auto;
-      display: grid;
-      gap: 8px;
-      padding-top: 14px;
-    }
-    .side-action {
-      min-height: 38px;
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      background: rgba(15, 23, 42, 0.66);
-      color: #cbd5e1;
-      border-radius: 12px;
-      padding: 9px 10px;
-      text-align: left;
-      font: inherit;
-      font-size: 12px;
-      font-weight: 850;
-      cursor: pointer;
-    }
-    .side-action:hover {
-      border-color: rgba(34, 211, 238, 0.32);
-      color: #f8fafc;
-      background: rgba(34, 211, 238, 0.1);
-    }
     .workspace {
       gap: 22px;
       min-width: 0;
@@ -1714,10 +1821,6 @@
       .side-rail {
         min-height: auto;
       }
-      .side-actions {
-        margin-top: 0;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
       .side-nav {
           grid-template-columns: repeat(5, minmax(0, 1fr));
       }
@@ -1745,9 +1848,6 @@
       }
       .command-stage-head {
         display: grid;
-      }
-      .side-actions {
-        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -1809,16 +1909,9 @@
 
       <section id="dashboard" class="dashboard app-shell">
         <aside class="side-rail">
-          <div class="side-context">
-            <div class="side-kicker">Pilot</div>
-            <div id="sidePilotName" class="side-title">Welcome</div>
-            <div class="side-subtitle">Personal flight dashboard</div>
-          </div>
           <div class="side-context aircraft-context">
             <label for="commandAircraftSelect" class="side-kicker">Active Aircraft</label>
             <select id="commandAircraftSelect" aria-label="Select dashboard aircraft"></select>
-            <div id="sideAircraftName" class="side-aircraft-name">Primary Aircraft</div>
-            <div id="sideAircraftMeta" class="side-subtitle">Add an aircraft to personalize the web platform.</div>
           </div>
           <nav class="side-nav" aria-label="Portal sections">
             <button class="side-tab active" type="button" data-view="home">Home</button>
@@ -1827,11 +1920,6 @@
             <button class="side-tab" type="button" data-view="briefs">Briefs</button>
             <button class="side-tab" type="button" data-view="account">Account</button>
           </nav>
-          <div class="side-actions">
-            <button class="side-action" type="button" data-view-jump="briefs">Plan mission</button>
-            <button class="side-action" type="button" data-view-jump="aircraft">Edit aircraft</button>
-            <button class="side-action" type="button" data-view-jump="profile">Pilot settings</button>
-          </div>
         </aside>
 
         <div class="workspace">
@@ -1844,7 +1932,6 @@
                   <div>
                     <div class="eyebrow">Flight Dashboard</div>
                     <h2 id="commandWelcome">Welcome</h2>
-                    <p id="commandAircraftMeta" class="muted">Select an aircraft in the sidebar, then start the next workflow from here.</p>
                   </div>
                 </div>
                 <div class="scene-shell">
@@ -1873,18 +1960,18 @@
             <div class="page-header">
               <div>
                 <div class="eyebrow">Briefs</div>
-                <h2>Briefing requests</h2>
-                <p class="muted">Create advisory or official briefings and review recent records.</p>
+                <h2>Mission Brief</h2>
+                <p class="muted">Generate a route brief, then review the full report in one focused view.</p>
               </div>
               <button class="btn compact" type="button" data-view-jump="account">Flight Service link</button>
             </div>
             <div class="view-grid">
-              <div class="card span-8">
+              <div id="briefCreateCard" class="card span-12">
                 <div class="section-head">
                   <div>
                     <div class="eyebrow">Briefs</div>
                     <h2>Create Brief</h2>
-                    <p class="muted">Advisory and official brief requests use the same authenticated Edge Functions as the app.</p>
+                    <p class="muted">Build an advisory or official route brief from your synced BeBrief account.</p>
                   </div>
                 </div>
                 <form id="briefForm" class="form-grid">
@@ -1989,16 +2076,7 @@
                 </form>
                 <div id="briefError" class="error"></div>
                 <div id="briefSuccess" class="success"></div>
-                <div id="briefResult" class="brief-result"></div>
-              </div>
-
-              <div class="card span-4">
-                <div class="section-head">
-                  <h2>Recent Briefs</h2>
-                  <span id="briefCount" class="badge">0</span>
-                </div>
-                <div class="list" id="briefList"></div>
-                <pre id="briefDetail" class="detail-box"></pre>
+                <div id="briefResult" class="brief-report"></div>
               </div>
               <div class="card span-12">
                 <div class="section-head">
@@ -2948,25 +3026,86 @@
       };
     }
 
+    function briefStatusTone(count) {
+      if (count > 0) return 'Review';
+      return 'Clear';
+    }
+
+    function briefIdentifier(data) {
+      return data?.briefingId
+        || data?.externalBriefingId
+        || data?.data?.briefingId
+        || data?.data?.externalBriefingId
+        || 'Brief complete';
+    }
+
     function renderBriefResult(data, requestBody) {
       const summary = extractBriefSummary(data);
-      const route = requestBody.nasRouteBriefingFields.route;
+      const fields = requestBody?.nasRouteBriefingFields || {};
+      const route = fields.route || [fields.departure, fields.destination].filter(Boolean).join(' ');
+      const mode = document.getElementById('briefMode').value === 'official' ? 'Official' : 'Advisory';
+      const generatedAt = formatDate(new Date());
+      const departureTime = fields.departureInstant ? formatDate(fields.departureInstant) : 'Not set';
       const hazards = summary.tfrPreview.length
         ? `<div class="hazard-list">${summary.tfrPreview.map((item) => `<div class="hazard">${escapeHtml(item)}</div>`).join('')}</div>`
-        : '<div class="empty">No TFR rows returned for this route.</div>';
+        : '<div class="empty">No route TFR rows returned for this brief.</div>';
       briefResult.innerHTML = `
-        <div class="row-main">
-          <span>${escapeHtml(route)}</span>
-          <span class="badge">${escapeHtml(data?.briefingId || 'Brief complete')}</span>
+        <div class="brief-report-head">
+          <div>
+            <div class="eyebrow">${escapeHtml(mode)} Brief</div>
+            <h2 class="brief-report-title">${escapeHtml(route || 'Route brief')}</h2>
+            <p class="brief-report-subtitle">${escapeHtml(fields.departure || '-') } to ${escapeHtml(fields.destination || '-')} | Departure ${escapeHtml(departureTime)} | Generated ${escapeHtml(generatedAt)}</p>
+          </div>
+          <div class="brief-report-actions">
+            <span class="badge">${escapeHtml(briefIdentifier(data))}</span>
+            <button class="btn primary compact" type="button" data-new-brief>Generate new brief</button>
+          </div>
         </div>
-        <div class="metric-grid">
-          <div class="metric"><div class="label">TFR</div><div class="value">${summary.tfrCount}</div></div>
-          <div class="metric"><div class="label">NOTAM</div><div class="value">${summary.notamCount}</div></div>
-          <div class="metric"><div class="label">METAR</div><div class="value">${summary.metarCount}</div></div>
+        <div class="brief-status-grid">
+          <div class="brief-status-card">
+            <span>Route TFRs</span>
+            <strong>${summary.tfrCount}</strong>
+            <small>${briefStatusTone(summary.tfrCount)}</small>
+          </div>
+          <div class="brief-status-card">
+            <span>NOTAM Sections</span>
+            <strong>${summary.notamCount}</strong>
+            <small>${briefStatusTone(summary.notamCount)}</small>
+          </div>
+          <div class="brief-status-card">
+            <span>METAR Sections</span>
+            <strong>${summary.metarCount}</strong>
+            <small>${summary.metarCount ? 'Available' : 'None returned'}</small>
+          </div>
+          <div class="brief-status-card">
+            <span>Corridor</span>
+            <strong>${escapeHtml(requestBody?.routeCorridorWidth || '-')}</strong>
+            <small>NM route scan</small>
+          </div>
         </div>
-        ${hazards}
+        <section class="brief-section">
+          <h3>Route Hazards</h3>
+          ${hazards}
+        </section>
+        <section class="brief-section">
+          <h3>Brief Inputs</h3>
+          <div class="brief-source-grid">
+            <div class="brief-source-row"><span>Flight rules</span><strong>${escapeHtml(fields.flightRules || 'VFR')}</strong></div>
+            <div class="brief-source-row"><span>Route type</span><strong>${escapeHtml(requestBody?.type || '-')}</strong></div>
+            <div class="brief-source-row"><span>True airspeed</span><strong>${escapeHtml(fields.trueAirspeed || '-')} KT</strong></div>
+            <div class="brief-source-row"><span>Brief mode</span><strong>${escapeHtml(mode)}</strong></div>
+          </div>
+        </section>
+        <section class="brief-section">
+          <h3>Source Detail</h3>
+          <details class="brief-raw">
+            <summary>View response summary</summary>
+            <pre>${escapeHtml(JSON.stringify({ id: briefIdentifier(data), summary }, null, 2))}</pre>
+          </details>
+        </section>
       `;
-      briefResult.style.display = 'block';
+      briefForm.style.display = 'none';
+      briefResult.classList.add('visible');
     }
 
     async function loadThreeModules() {
@@ -3204,7 +3343,7 @@
     }
 
     function getAircraftDisplayName(aircraft) {
-      if (!aircraft) return 'Primary Aircraft';
+      if (!aircraft) return 'Aircraft';
       return aircraft.nickname || [aircraft.make, aircraft.model].filter(Boolean).join(' ') || aircraft.tail_number || 'Aircraft';
     }
 
@@ -3221,18 +3360,8 @@
       }
       const primary = aircraftList.find((item) => item.id === selectedCommandAircraftId) || aircraftList[0];
       const modelPath = getAircraftModelPath(primary);
-      const aircraftName = getAircraftDisplayName(primary);
-      const aircraftMeta = primary
-        ? [primary.year, primary.make, primary.model].filter(Boolean).join(' ') || 'Aircraft profile ready'
-        : 'Add an aircraft to personalize the web platform.';
       const pilotFirstName = getPilotFirstName(profile, currentSession?.user);
       document.getElementById('commandWelcome').textContent = `Welcome, ${pilotFirstName}`;
-      document.getElementById('commandAircraftMeta').textContent = primary
-        ? `${aircraftMeta}. Use the mission controls below or rotate the aircraft to inspect it.`
-        : 'Add an aircraft from the supported template list to personalize this workspace.';
-      document.getElementById('sidePilotName').textContent = pilotFirstName;
-      document.getElementById('sideAircraftName').textContent = aircraftName;
-      document.getElementById('sideAircraftMeta').textContent = aircraftMeta;
       const select = document.getElementById('commandAircraftSelect');
       if (aircraftList.length === 0) {
         select.innerHTML = '<option value="">Add an aircraft</option>';
@@ -3241,7 +3370,7 @@
         select.disabled = aircraftList.length < 2;
         select.innerHTML = aircraftList.map((item) => `
           <option value="${escapeHtml(item.id)}"${item.id === primary?.id ? ' selected' : ''}>
-            ${escapeHtml([item.tail_number, item.model || getAircraftDisplayName(item)].filter(Boolean).join(' - '))}
+            ${escapeHtml(item.tail_number || getAircraftDisplayName(item))}
           </option>
         `).join('');
       }
@@ -3638,27 +3767,6 @@
         `;
       }
 
-      document.getElementById('briefCount').textContent = String(briefs.length);
-      const briefList = document.getElementById('briefList');
-      if (briefs.length === 0) {
-        renderEmpty(briefList, 'No server-recorded briefs yet.');
-      } else {
-        briefList.innerHTML = briefs.map((item) => {
-          const title = `${formatPilotType(item.mode)} brief`;
-          const requestPayload = parseJsonObject(item.request_payload, {});
-          const route = requestPayload?.nasRouteBriefingFields?.route;
-          const subtitle = [
-            route ? `Route: ${route}` : null,
-            `Status: ${item.status}`,
-            item.external_briefing_id ? `External ID: ${item.external_briefing_id}` : null,
-            `Requested: ${formatDate(item.requested_at)}`,
-          ].filter(Boolean).join(' | ');
-          return actionRow(title, subtitle, item.status || 'brief', `
-            <button class="btn small" type="button" data-brief-detail="${escapeHtml(item.id)}">View Source</button>
-          `);
-        }).join('');
-      }
-
       sessionLoader.style.display = 'none';
       dashboard.style.display = 'grid';
     }
@@ -3711,23 +3819,16 @@
       renderCommandHome(currentAircraft, currentBriefs);
     });
 
-    document.getElementById('briefList').addEventListener('click', (event) => {
-      const button = event.target.closest('[data-brief-detail]');
+    briefResult.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-new-brief]');
       if (!button) return;
-      const brief = currentBriefs.find((item) => item.id === button.dataset.briefDetail);
-      const detail = document.getElementById('briefDetail');
-      detail.textContent = JSON.stringify({
-        id: brief?.id,
-        mode: brief?.mode,
-        status: brief?.status,
-        externalBriefingId: brief?.external_briefing_id,
-        requestedAt: brief?.requested_at,
-        completedAt: brief?.completed_at,
-        error: brief?.error_message,
-        request: brief?.request_payload,
-        responseSummary: extractBriefSummary(parseJsonObject(brief?.response_payload, {})),
-      }, null, 2);
-      detail.style.display = 'block';
+      briefResult.classList.remove('visible');
+      briefResult.innerHTML = '';
+      briefForm.style.display = 'grid';
+      setMessage(briefError, '');
+      setMessage(briefSuccess, '');
+      setDefaultDepartureTime();
+      setOfficialModeFields();
     });
 
     document.getElementById('aircraftList').addEventListener('click', async (event) => {
@@ -4144,7 +4245,9 @@
       event.preventDefault();
       setMessage(briefError, '');
       setMessage(briefSuccess, '');
-      briefResult.style.display = 'none';
+      briefResult.classList.remove('visible');
+      briefResult.innerHTML = '';
+      briefForm.style.display = 'grid';
       if (!currentSession?.access_token) {
         setMessage(briefError, 'Sign in again before creating a brief.');
         return;
@@ -4252,12 +4355,12 @@
           throw new Error(data.error || `Briefing failed with HTTP ${response.status}.`);
         }
         renderBriefResult(data, requestBody);
-        setMessage(briefSuccess, 'Brief generated and saved to your BeBrief server records.');
-        await loadDashboard(currentSession);
+        setMessage(briefSuccess, '');
       } catch (err) {
         setMessage(briefError, err.message || 'Unable to generate advisory brief.');
       } finally {
         briefButton.disabled = false;
+        briefButton.textContent = 'Generate Brief';
         setOfficialModeFields();
       }
     });
