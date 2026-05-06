@@ -543,6 +543,131 @@
       letter-spacing: 0;
       margin-bottom: 12px;
     }
+    .brief-route-status {
+      display: grid;
+      grid-template-columns: minmax(120px, 0.7fr) minmax(0, 1.3fr);
+      gap: 14px;
+    }
+    .brief-advisory-state {
+      display: grid;
+      place-items: center;
+      min-height: 150px;
+      border: 1px solid rgba(250, 204, 21, 0.28);
+      border-radius: 18px;
+      background: rgba(250, 204, 21, 0.1);
+      color: #fde68a;
+      font-size: 32px;
+      font-weight: 900;
+    }
+    .brief-risk-grid,
+    .brief-dataset-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .brief-risk-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    .brief-risk-chip,
+    .brief-dataset-card,
+    .brief-timeline-row {
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(15, 23, 42, 0.52);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .brief-risk-chip {
+      display: grid;
+      gap: 4px;
+    }
+    .brief-risk-chip span,
+    .brief-dataset-meta,
+    .brief-row-pill {
+      color: #91a4b8;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .brief-risk-chip strong {
+      color: #f8fafc;
+      font-size: 22px;
+    }
+    .brief-dataset-card {
+      display: grid;
+      gap: 12px;
+    }
+    .brief-dataset-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .brief-dataset-head h4 {
+      margin: 0;
+      color: #f8fafc;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+    .brief-row-list {
+      display: grid;
+      gap: 8px;
+    }
+    .brief-data-row {
+      display: grid;
+      gap: 6px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      background: rgba(2, 6, 12, 0.26);
+      border-radius: 12px;
+      padding: 11px;
+    }
+    .brief-data-row strong {
+      color: #e5edf6;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .brief-data-row p {
+      margin: 0;
+      color: #a8b5c6;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .brief-row-pill {
+      justify-self: start;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 999px;
+      padding: 3px 8px;
+    }
+    .brief-timeline {
+      display: grid;
+      gap: 8px;
+    }
+    .brief-timeline-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) minmax(140px, 0.7fr);
+      gap: 10px;
+      align-items: start;
+    }
+    .brief-timeline-row strong {
+      color: #f8fafc;
+      font-size: 15px;
+    }
+    .brief-timeline-row span {
+      color: #91a4b8;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .severity-red {
+      border-color: rgba(248, 113, 113, 0.42);
+      background: rgba(127, 29, 29, 0.18);
+    }
+    .severity-amber {
+      border-color: rgba(251, 191, 36, 0.36);
+      background: rgba(120, 53, 15, 0.16);
+    }
+    .severity-green {
+      border-color: rgba(74, 222, 128, 0.22);
+      background: rgba(20, 83, 45, 0.12);
+    }
     .brief-source-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -629,6 +754,30 @@
       display: grid;
       gap: 12px;
     }
+    .mode-panel-head {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 2px;
+    }
+    .mode-panel-head h3 {
+      margin: 0;
+      color: #f8fafc;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+    .brief-action-row {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      align-items: center;
+    }
+    .lifecycle-card {
+      display: none;
+    }
+    .lifecycle-card.active {
+      display: block;
+    }
     .auth-actions {
       display: grid;
       gap: 10px;
@@ -696,6 +845,9 @@
       .brief-report-head { display: grid; }
       .brief-report-actions { justify-content: flex-start; }
       .brief-status-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .brief-route-status { grid-template-columns: 1fr; }
+      .brief-risk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .brief-timeline-row { grid-template-columns: 1fr; }
       .brief-source-grid { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
       .platform-row { grid-template-columns: 1fr; gap: 4px; }
@@ -745,6 +897,9 @@
         width: 100%;
       }
       .brief-status-grid {
+        grid-template-columns: 1fr;
+      }
+      .brief-risk-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -1002,6 +1157,61 @@
       background: #fef2f2;
       color: #991b1b;
       border-radius: 10px;
+    }
+    .airport-autocomplete {
+      position: relative;
+      display: grid;
+      gap: 6px;
+    }
+    .airport-results {
+      display: none;
+      position: absolute;
+      z-index: 80;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 12px;
+      background: rgba(8, 13, 20, 0.98);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+    }
+    .airport-results.visible {
+      display: grid;
+    }
+    .airport-result {
+      display: grid;
+      gap: 2px;
+      border: 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      background: transparent;
+      color: #e5edf6;
+      padding: 10px 11px;
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+    }
+    .airport-result:last-child {
+      border-bottom: 0;
+    }
+    .airport-result:hover,
+    .airport-result:focus {
+      background: rgba(34, 211, 238, 0.1);
+      outline: none;
+    }
+    .airport-result strong {
+      color: #f8fafc;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+    }
+    .airport-result span,
+    .airport-helper {
+      color: #91a4b8;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .airport-helper {
+      min-height: 16px;
     }
     .command-home {
       display: grid;
@@ -2003,11 +2213,11 @@
                   </label>
                   <label>
                     Departure
-                    <input id="departureIcao" type="text" maxlength="4" autocomplete="off" placeholder="KTPA" required>
+                    <input id="departureIcao" type="text" maxlength="8" autocomplete="off" placeholder="KTPA" required>
                   </label>
                   <label>
                     Destination
-                    <input id="destinationIcao" type="text" maxlength="4" autocomplete="off" placeholder="KJFK" required>
+                    <input id="destinationIcao" type="text" maxlength="8" autocomplete="off" placeholder="KJFK" required>
                   </label>
                   <label>
                     Waypoints
@@ -2025,11 +2235,12 @@
                     Corridor NM
                     <input id="corridor" type="number" min="25" max="100" step="1" value="50" required>
                   </label>
-                  <div class="button-row" style="align-self:end">
-                    <button id="briefButton" class="btn primary" type="submit">Generate Brief</button>
-                    <button id="refreshButton" class="btn" type="button">Refresh Data</button>
-                  </div>
                   <div id="officialFields" class="mode-panel">
+                    <div class="mode-panel-head">
+                      <div class="eyebrow">Official Brief Details</div>
+                      <h3>Flight Service filing fields</h3>
+                      <p class="muted">These are only required when you generate an official brief or manage an official flight plan.</p>
+                    </div>
                     <div class="form-grid" style="margin-top:0">
                       <label>
                         Aircraft type/equipment
@@ -2053,7 +2264,7 @@
                       </label>
                       <label>
                         Alternate
-                        <input id="officialAlternate" type="text" maxlength="4" autocomplete="off" placeholder="Optional">
+                        <input id="officialAlternate" type="text" maxlength="8" autocomplete="off" placeholder="Optional">
                       </label>
                       <label>
                         Souls on board
@@ -2073,17 +2284,21 @@
                       </label>
                     </div>
                   </div>
+                  <div class="brief-action-row">
+                    <button id="refreshButton" class="btn" type="button">Refresh defaults</button>
+                    <button id="briefButton" class="btn primary" type="submit">Generate Brief</button>
+                  </div>
                 </form>
                 <div id="briefError" class="error"></div>
                 <div id="briefSuccess" class="success"></div>
                 <div id="briefResult" class="brief-report"></div>
               </div>
-              <div class="card span-12">
+              <div id="flightPlanLifecycleCard" class="card span-12 lifecycle-card">
                 <div class="section-head">
                   <div>
-                    <div class="eyebrow">Flight Plan Lifecycle</div>
-                    <h2>Retrieve, activate, close, or cancel an official flight plan</h2>
-                    <p class="muted">Lifecycle actions call the same authenticated `leidos-flight-plan` Edge Function used by the iOS app.</p>
+                    <div class="eyebrow">Official Flight Plan</div>
+                    <h2>Manage filed flight plan</h2>
+                    <p class="muted">Use this after an official brief returns a flight plan or proposal identifier. The values come from Flight Service responses, not advisory briefs.</p>
                   </div>
                 </div>
                 <form id="flightPlanActionForm" class="form-grid">
@@ -2180,7 +2395,7 @@
                 </label>
                 <label>
                   Home airport
-                  <input id="profileHomeAirport" type="text" maxlength="4" autocomplete="off" placeholder="KTPA">
+                  <input id="profileHomeAirport" type="text" maxlength="8" autocomplete="off" placeholder="KTPA">
                 </label>
                 <label>
                   Total hours
@@ -2545,11 +2760,11 @@
                   </label>
                   <label>
                     Default departure
-                    <input id="defaultDeparture" type="text" maxlength="4" autocomplete="off">
+                    <input id="defaultDeparture" type="text" maxlength="8" autocomplete="off">
                   </label>
                   <label>
                     Default destination
-                    <input id="defaultDestination" type="text" maxlength="4" autocomplete="off">
+                    <input id="defaultDestination" type="text" maxlength="8" autocomplete="off">
                   </label>
                   <label>
                     Default aircraft
@@ -2717,6 +2932,143 @@
         throw new Error(`${label} must be a 3-4 character airport ID, such as KTPA.`);
       }
       return normalized;
+    }
+
+    let airportsPromise = null;
+    let airportsCache = [];
+    const AIRPORT_SEARCH_ALIASES = {
+      nas: ['naval air station'],
+      mcas: ['marine corps air station'],
+      afb: ['air force base'],
+      aaf: ['army air field'],
+      jrb: ['joint reserve base'],
+      nolf: ['naval outlying field'],
+      nalf: ['naval auxiliary landing field'],
+      naaf: ['naval auxiliary air facility'],
+    };
+
+    async function loadAirports() {
+      if (airportsCache.length > 0) return airportsCache;
+      if (!airportsPromise) {
+        airportsPromise = fetch('assets/data/airports.json')
+          .then((response) => {
+            if (!response.ok) throw new Error('Airport data unavailable.');
+            return response.json();
+          })
+          .then((payload) => {
+            airportsCache = Array.isArray(payload?.airports) ? payload.airports : [];
+            return airportsCache;
+          })
+          .catch((err) => {
+            console.warn('[airport lookup]', err.message || err);
+            airportsCache = [];
+            return airportsCache;
+          });
+      }
+      return airportsPromise;
+    }
+
+    async function searchAirports(query) {
+      const trimmed = String(query || '').trim();
+      if (trimmed.length < 2) return [];
+      const airports = await loadAirports();
+      const upperQuery = trimmed.toUpperCase();
+      const lowerQuery = trimmed.toLowerCase();
+      const exactMatch = airports.filter((airport) => airport.icao === upperQuery);
+      if (exactMatch.length > 0) return exactMatch;
+      const searchTerms = [lowerQuery, ...(AIRPORT_SEARCH_ALIASES[lowerQuery] || [])];
+      const icaoMatches = airports.filter((airport) => String(airport.icao || '').includes(upperQuery));
+      const nameMatches = airports.filter((airport) => {
+        const name = String(airport.name || '').toLowerCase();
+        return searchTerms.some((term) => name.includes(term))
+          && !icaoMatches.some((match) => match.id === airport.id);
+      });
+      return [...icaoMatches, ...nameMatches].slice(0, 10);
+    }
+
+    function enhanceAirportField(inputId) {
+      const input = document.getElementById(inputId);
+      if (!input || input.dataset.airportEnhanced === 'true') return;
+      input.dataset.airportEnhanced = 'true';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'airport-autocomplete';
+      const results = document.createElement('div');
+      results.className = 'airport-results';
+      results.setAttribute('role', 'listbox');
+      const helper = document.createElement('div');
+      helper.className = 'airport-helper';
+      input.parentNode.insertBefore(wrapper, input);
+      wrapper.appendChild(input);
+      wrapper.appendChild(results);
+      wrapper.appendChild(helper);
+      let requestId = 0;
+      let blurTimer = null;
+
+      const clearResults = () => {
+        results.classList.remove('visible');
+        results.innerHTML = '';
+      };
+
+      const renderResults = (airports, activeRequestId) => {
+        if (activeRequestId !== requestId) return;
+        if (airports.length === 0 || document.activeElement !== input) {
+          clearResults();
+          return;
+        }
+        results.innerHTML = airports.map((airport) => `
+          <button class="airport-result" type="button" role="option" data-airport-icao="${escapeHtml(airport.icao)}" data-airport-name="${escapeHtml(airport.name || '')}">
+            <strong>${escapeHtml(airport.icao)}</strong>
+            <span>${escapeHtml(airport.name || 'Airport')}</span>
+          </button>
+        `).join('');
+        results.classList.add('visible');
+      };
+
+      const runSearch = () => {
+        const activeRequestId = ++requestId;
+        const value = input.value.trim();
+        if (value.length < 2) {
+          clearResults();
+          helper.textContent = '';
+          return;
+        }
+        window.setTimeout(async () => {
+          const airports = await searchAirports(value);
+          renderResults(airports, activeRequestId);
+        }, 120);
+      };
+
+      input.addEventListener('input', () => {
+        input.value = input.value.toUpperCase();
+        helper.textContent = '';
+        runSearch();
+      });
+      input.addEventListener('focus', () => {
+        if (blurTimer) {
+          window.clearTimeout(blurTimer);
+          blurTimer = null;
+        }
+        runSearch();
+      });
+      input.addEventListener('blur', () => {
+        blurTimer = window.setTimeout(clearResults, 220);
+      });
+      results.addEventListener('mousedown', (event) => {
+        const option = event.target.closest('[data-airport-icao]');
+        if (!option) return;
+        event.preventDefault();
+        input.value = option.dataset.airportIcao || '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        helper.textContent = option.dataset.airportName || '';
+        clearResults();
+      });
+    }
+
+    function initializeAirportLookup() {
+      ['departureIcao', 'destinationIcao', 'officialAlternate', 'profileHomeAirport', 'defaultDeparture', 'defaultDestination']
+        .forEach(enhanceAirportField);
+      loadAirports();
     }
 
     function normalizeAircraftIdentifier(value) {
@@ -2991,6 +3343,40 @@
       return [];
     }
 
+    function asRecord(value) {
+      return value && typeof value === 'object' && !Array.isArray(value) ? value : null;
+    }
+
+    function firstText(...values) {
+      for (const value of values) {
+        if (typeof value === 'string' && value.trim()) return value.trim();
+        if (typeof value === 'number' && Number.isFinite(value)) return String(value);
+      }
+      return null;
+    }
+
+    function cleanLeidosText(value) {
+      return String(value || '')
+        .replace(/<br\s*\/?>/gi, ' ')
+        .replace(/&apos;/gi, "'")
+        .replace(/&quot;/gi, '"')
+        .replace(/&amp;/gi, '&')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&#39;/g, "'")
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function getWeatherPacket(data) {
+      return asRecord(data?.data?.ngbweatherBriefing)
+        || asRecord(data?.ngbweatherBriefing)
+        || asRecord(data?.raw?.ngbweatherBriefing)
+        || asRecord(data?.raw?.data?.ngbweatherBriefing)
+        || {};
+    }
+
     function tfrText(row) {
       const text = row?.text;
       const raw = typeof text === 'string'
@@ -3005,6 +3391,25 @@
         .trim();
     }
 
+    function sourceText(row, fallback = '') {
+      const record = asRecord(row) || {};
+      return cleanLeidosText(firstText(
+        asRecord(record.text)?.encodedText,
+        asRecord(record.text)?.plainText,
+        asRecord(record.text)?.text,
+        record.encodedText,
+        record.plainText,
+        record.rawText,
+        record.notamTextEncoded,
+        record.notamTextPlainText,
+        record.notamText,
+        record.message,
+        record.description,
+        record.summary,
+        fallback,
+      ) || '');
+    }
+
     function summarizeTfr(row) {
       const impact = row?.ngbSummarizationInformation?.passingInformation?.flightAffectedBySummary
         || row?.ngbSummarizationInformation?.summaryText;
@@ -3014,17 +3419,321 @@
     }
 
     function extractBriefSummary(data) {
-      const weather = data?.data?.ngbweatherBriefing || data?.ngbweatherBriefing || {};
-      const tfrRows = asArray(weather?.tfr?.temporaryFlightRestrictionList);
-      const notamRows = asArray(weather?.ntmdep?.notamSection);
-      const metarRows = asArray(weather?.metar?.metarSection);
-      const tfrPreview = tfrRows.slice(0, 5).map(summarizeTfr);
+      const comprehensive = buildBriefPresentationData(data, {});
+      const tfrRows = comprehensive.sections.tfr.rows;
+      const notamRows = comprehensive.sections.notams.rows;
+      const metarRows = comprehensive.sections.weather.rows.filter((row) => row.pillLabel === 'METAR');
+      const tfrPreview = tfrRows.slice(0, 5).map((row) => row.subtitle || row.title);
       return {
         tfrCount: tfrRows.length,
         notamCount: notamRows.length,
         metarCount: metarRows.length,
         tfrPreview,
       };
+    }
+
+    function extractFixRows(weather, fields) {
+      const fixList = asArray(weather?.fixList?.fix);
+      const routeTokens = String(fields.route || '').split(/\s+/).filter(Boolean);
+      const sourceRows = fixList.length > 0
+        ? fixList
+        : routeTokens.map((token, index) => ({ fixName: token, sequence: index + 1 }));
+      return sourceRows.map((item, index) => {
+        const row = asRecord(item) || {};
+        const fixName = firstText(row.fixName, row.name, row.waypoint, row.icao, row.locationIdentifier) || routeTokens[index] || `WP${index + 1}`;
+        const eta = firstText(row.eta, row.etaZulu, row.arrivalTime, row.estimatedTimeOfArrival, row.passingTime) || (index === 0 ? 'DEP' : '');
+        const ete = firstText(row.estimatedTimeEnroute, row.ete, row.elapsedTime) || '';
+        return {
+          waypoint: fixName.toUpperCase(),
+          eta,
+          ete,
+          weather: firstText(row.condition, row.weather, row.flightCategory) || 'Route point',
+        };
+      });
+    }
+
+    function extractMetarRows(weather) {
+      const rows = [];
+      for (const sectionItem of asArray(weather?.metar?.metarSection)) {
+        const section = asRecord(sectionItem) || {};
+        for (const metarItem of asArray(section.metars)) {
+          const row = asRecord(metarItem) || {};
+          const current = asRecord(row.currentMetar) || {};
+          const airport = firstText(row.airportId, row.icaoLocation, current.icaoLocation) || 'METAR';
+          const raw = sourceText(current) || sourceText(row);
+          if (!raw) continue;
+          const category = firstText(current.condition, row.condition) || parseFlightCategory(raw);
+          rows.push({
+            title: `${airport.toUpperCase()} ${category || 'METAR'}`,
+            subtitle: raw,
+            pillLabel: 'METAR',
+            severity: severityFromCategory(category || raw),
+          });
+        }
+      }
+      return rows;
+    }
+
+    function extractTafRows(weather) {
+      const rows = [];
+      for (const tafItem of asArray(weather?.taf?.terminalAreaForecast)) {
+        const taf = asRecord(tafItem) || {};
+        const icao = firstText(taf.icaoLocation, taf.airportId) || 'TAF';
+        const segments = asArray(taf.tafData);
+        const encoded = segments
+          .map((item) => sourceText(item))
+          .filter(Boolean)
+          .join(' ');
+        const passing = segments
+          .map((item) => {
+            const row = asRecord(item) || {};
+            const condition = firstText(row.condition, row.flightCategory);
+            const passingTime = firstText(row.passingTime, row.validFrom, row.startTime);
+            return [passingTime, condition].filter(Boolean).join(' ');
+          })
+          .filter(Boolean)
+          .slice(0, 3)
+          .join(' | ');
+        if (!encoded && !passing) continue;
+        const category = parseFlightCategory(`${passing} ${encoded}`) || 'TAF';
+        rows.push({
+          title: `${icao.toUpperCase()} ${category}`,
+          subtitle: [passing, encoded].filter(Boolean).join(' | '),
+          pillLabel: 'TAF',
+          severity: severityFromCategory(category),
+        });
+      }
+      return rows;
+    }
+
+    function extractNotamRows(weather) {
+      const notamKeys = Object.keys(weather || {}).filter((key) => /^ntm/i.test(key) || key === 'ddntm');
+      const rows = [];
+      const seen = new Set();
+      for (const key of notamKeys) {
+        const sectionRoot = asRecord(weather[key]) || {};
+        const sectionRows = [
+          ...asArray(sectionRoot.notamSection),
+          ...asArray(sectionRoot.closedUnsafeNotam),
+        ];
+        for (const sectionItem of sectionRows) {
+          const section = asRecord(sectionItem) || {};
+          const heading = firstText(section.sectionHeading, section.location, section.locationType, key) || key;
+          const records = asArray(section.notamRecord);
+          if (records.length === 0 && sourceText(section)) records.push(section);
+          for (const recordItem of records) {
+            const record = asRecord(recordItem) || {};
+            const raw = sourceText(record);
+            if (!raw) continue;
+            const id = firstText(record.id, record.notamId, record.notamNumber) || `${key}-${rows.length}`;
+            const dedupeKey = `${id}:${raw.slice(0, 80)}`;
+            if (seen.has(dedupeKey)) continue;
+            seen.add(dedupeKey);
+            const upper = raw.toUpperCase();
+            const severity = /\b(RWY|RUNWAY|AIRPORT|AD)\b.{0,70}\b(CLSD|CLOSED|UNSAFE)\b/.test(upper)
+              ? 'red'
+              : /\b(FDC|TFR|AIRSPACE|GPS|NAV|COMM|OBST|OUT OF SERVICE|UNSERVICEABLE|RWY|RUNWAY)\b/.test(upper)
+                ? 'amber'
+                : 'green';
+            const icao = firstText(record.icaoLocation, record.airportId, record.locationIdentifier) || extractIcao(raw) || heading;
+            rows.push({
+              title: `${String(icao).toUpperCase()} ${inferNotamLabel(raw, heading)}`,
+              subtitle: raw,
+              pillLabel: severity === 'red' ? 'CRIT' : severity === 'amber' ? 'WARN' : 'INFO',
+              severity,
+            });
+          }
+        }
+      }
+      return rows;
+    }
+
+    function extractTfrRows(weather) {
+      return asArray(weather?.tfr?.temporaryFlightRestrictionList)
+        .map((item, index) => {
+          const row = asRecord(item) || {};
+          const summaryInfo = asRecord(row.ngbSummarizationInformation) || {};
+          const passingInfo = asRecord(summaryInfo.passingInformation) || {};
+          const impact = firstText(passingInfo.flightAffectedBySummary, summaryInfo.flightAffectedBySummary, summaryInfo.summaryText);
+          const text = tfrText(row);
+          const id = firstText(row.tfrNumber, row.notamNumber, row.id, row.identifier, row.number) || `TFR-${index + 1}`;
+          const reason = firstText(row.reason, row.location, row.locationDescription, row.facilityId, row.type);
+          const detail = cleanLeidosText([impact, text].filter(Boolean).join(' | '));
+          if (!detail && !reason && id === `TFR-${index + 1}`) return null;
+          const notAffected = /\b(not affected|not impacting|outside route|does not affect|no impact)\b/i.test(detail);
+          return {
+            title: reason ? `${id} ${reason}` : id,
+            subtitle: detail || 'TFR row returned without display text. Verify source before flight.',
+            pillLabel: 'TFR',
+            severity: notAffected ? 'green' : 'amber',
+          };
+        })
+        .filter(Boolean);
+    }
+
+    function extractSigmetRows(weather) {
+      const rows = [];
+      const addRows = (items, label) => {
+        for (const item of asArray(items)) {
+          const row = asRecord(item) || {};
+          const raw = sourceText(row) || cleanLeidosText(JSON.stringify(row).slice(0, 500));
+          const hazard = firstText(row.hazard, row.type, row.phenomenon, row.region) || label;
+          if (!raw && !hazard) continue;
+          rows.push({
+            title: `${label} ${hazard}`,
+            subtitle: raw || 'Source geometry/text returned by Leidos.',
+            pillLabel: label,
+            severity: label.includes('SIGMET') || /CONVECTIVE|SEVERE|TS|TURB|ICE/i.test(raw) ? 'amber' : 'green',
+          });
+        }
+      };
+      addRows(weather?.ws?.sigmetList, 'SIGMET');
+      addRows(weather?.wst?.convectiveSigmetList, 'CONV SIGMET');
+      addRows(weather?.cwa?.centerWeatherAdvisoryList, 'CWA');
+      addRows(weather?.cwa?.cwaList, 'CWA');
+      ['ifr', 'gifr', 'mtnobscn', 'gmtnobscn', 'icing', 'gicing', 'turbolo', 'gturblo', 'turbohigh', 'gturbhigh', 'windsgt30', 'gwindsgt30', 'llws', 'gllws', 'other'].forEach((key) => {
+        addRows(weather?.[key]?.airmetList, 'AIRMET');
+      });
+      return rows;
+    }
+
+    function extractPirepRows(weather) {
+      return asArray(weather?.pirep?.pirep).map((item, index) => {
+        const row = asRecord(item) || {};
+        const raw = sourceText(row) || cleanLeidosText(JSON.stringify(row).slice(0, 500));
+        return {
+          title: firstText(row.reportType, row.type, row.aircraftType) || `PIREP ${index + 1}`,
+          subtitle: raw || 'Pilot report returned by Leidos.',
+          pillLabel: String(firstText(row.reportType, row.type) || 'PIREP').toUpperCase(),
+          severity: /UUA|SEV|MOD-SEV|LLWS|ICING/i.test(raw) ? 'red' : 'amber',
+        };
+      });
+    }
+
+    function parseWindCode(entry) {
+      const altitude = Number(entry?.altitude);
+      const raw = firstText(entry?.directionSpeedTemp);
+      if (!raw || !Number.isFinite(altitude)) return null;
+      const compact = raw.replace(/\s+/g, '');
+      const dirCode = Number(compact.slice(0, 2));
+      const speedCode = Number(compact.slice(2, 4));
+      if (!Number.isFinite(dirCode) || !Number.isFinite(speedCode)) return null;
+      if (dirCode === 99 && speedCode === 0) return `${Math.round(altitude / 1000)}K: CALM`;
+      const direction = dirCode >= 51 && speedCode !== 99 ? (dirCode - 50) * 10 : dirCode * 10;
+      const speed = dirCode >= 51 && speedCode !== 99 ? speedCode + 100 : speedCode;
+      return `${Math.round(altitude / 1000)}K: ${String(direction).padStart(3, '0')}/${speed}kt`;
+    }
+
+    function extractWindRows(weather) {
+      const rows = [];
+      for (const windRow of asArray(weather?.fb?.windsAloft)) {
+        const row = asRecord(windRow) || {};
+        for (const stationItem of asArray(row.windsAloftData)) {
+          const station = asRecord(stationItem) || {};
+          const position = typeof station.position === 'string'
+            ? station.position
+            : firstText(asRecord(station.position)?.name, asRecord(station.position)?.locationIdentifier, station.station, station.stationId);
+          const samples = asArray(station.windData).map((item) => parseWindCode(asRecord(item))).filter(Boolean).slice(0, 5);
+          if (!samples.length) continue;
+          rows.push({
+            title: `${position || 'Winds'} Winds Aloft`,
+            subtitle: samples.join(' | '),
+            pillLabel: 'FB',
+            severity: /\/(?:4[5-9]|[5-9]\d|1\d\d)kt/i.test(samples.join(' ')) ? 'amber' : 'green',
+          });
+        }
+      }
+      return rows;
+    }
+
+    function parseFlightCategory(value) {
+      const match = String(value || '').toUpperCase().match(/\b(LIFR|IFR|MVFR|VFR)\b/);
+      return match ? match[1] : null;
+    }
+
+    function severityFromCategory(value) {
+      const category = parseFlightCategory(value);
+      if (category === 'IFR' || category === 'LIFR') return 'red';
+      if (category === 'MVFR') return 'amber';
+      return 'green';
+    }
+
+    function inferNotamLabel(raw, fallback) {
+      const source = `${fallback || ''} ${raw || ''}`.toUpperCase();
+      if (/\b(RWY|RUNWAY)\b/.test(source)) return 'RUNWAY';
+      if (/\b(TWY|TAXIWAY|APRON|RAMP)\b/.test(source)) return 'TAXIWAY';
+      if (/\b(OBST|CRANE|TOWER)\b/.test(source)) return 'OBST';
+      if (/\b(NAV|VOR|DME|ILS|GPS)\b/.test(source)) return 'NAVAID';
+      if (/\b(COMM|FREQ|ATIS|TOWER|GROUND|CTAF)\b/.test(source)) return 'COMM';
+      if (/\b(AIRSPACE|SUA|MOA|RESTRICTED)\b/.test(source)) return 'AIRSPACE';
+      return 'NOTAM';
+    }
+
+    function extractIcao(value) {
+      const match = String(value || '').toUpperCase().match(/\b[A-Z0-9]{3,4}\b/);
+      return match ? match[0] : null;
+    }
+
+    function buildDataset(title, key, rows, emptyText) {
+      const red = rows.filter((row) => row.severity === 'red').length;
+      const amber = rows.filter((row) => row.severity === 'amber').length;
+      return { title, key, rows, emptyText, red, amber };
+    }
+
+    function buildBriefPresentationData(data, requestBody) {
+      const fields = requestBody?.nasRouteBriefingFields || {};
+      const weather = getWeatherPacket(data);
+      const weatherRows = [...extractMetarRows(weather), ...extractTafRows(weather)];
+      const sections = {
+        weather: buildDataset('Weather / TAF', 'weather', weatherRows, 'No METAR/TAF returned for this route.'),
+        notams: buildDataset('NOTAM', 'notams', extractNotamRows(weather), 'No NOTAM returned for this route.'),
+        tfr: buildDataset('TFR / Alerts', 'tfr', extractTfrRows(weather), 'No TFR/route alert returned for this route.'),
+        sigmets: buildDataset('SIGMET / AIRMET', 'sigmets', extractSigmetRows(weather), 'No SIGMET/AIRMET returned for this route.'),
+        pireps: buildDataset('PIREP', 'pireps', extractPirepRows(weather), 'No PIREP returned for this route.'),
+        winds: buildDataset('Winds Aloft', 'winds', extractWindRows(weather), 'No winds aloft returned for this route.'),
+      };
+      const riskChips = [
+        { label: 'NOTAM', count: sections.notams.rows.length, severity: sections.notams.red ? 'red' : sections.notams.amber ? 'amber' : 'green' },
+        { label: 'TFR', count: sections.tfr.rows.length, severity: sections.tfr.amber ? 'amber' : 'green' },
+        { label: 'SIGMET', count: sections.sigmets.rows.length, severity: sections.sigmets.red ? 'red' : sections.sigmets.amber ? 'amber' : 'green' },
+        { label: 'PIREP', count: sections.pireps.rows.length, severity: sections.pireps.red ? 'red' : sections.pireps.amber ? 'amber' : 'green' },
+        { label: 'Winds', count: sections.winds.rows.length, severity: sections.winds.amber ? 'amber' : 'green' },
+      ];
+      const hasCritical = riskChips.some((chip) => chip.severity === 'red');
+      const hasCaution = riskChips.some((chip) => chip.severity === 'amber');
+      return {
+        fields,
+        sections,
+        timeline: extractFixRows(weather, fields),
+        riskChips,
+        advisoryStatus: hasCritical ? 'NO-GO' : hasCaution ? 'CAUTION' : 'GO',
+      };
+    }
+
+    function renderRows(rows, emptyText, limit = 25) {
+      if (!rows.length) return `<div class="empty">${escapeHtml(emptyText)}</div>`;
+      return `<div class="brief-row-list">${rows.slice(0, limit).map((row) => `
+        <div class="brief-data-row severity-${escapeHtml(row.severity || 'green')}">
+          <span class="brief-row-pill">${escapeHtml(row.pillLabel || 'INFO')}</span>
+          <strong>${escapeHtml(row.title || 'Source row')}</strong>
+          <p>${escapeHtml(row.subtitle || '')}</p>
+        </div>
+      `).join('')}</div>${rows.length > limit ? `<div class="empty">${rows.length - limit} more source row(s) returned. Open raw payload below for complete detail.</div>` : ''}`;
+    }
+
+    function renderDatasetCard(section) {
+      return `
+        <article class="brief-dataset-card">
+          <div class="brief-dataset-head">
+            <div>
+              <h4>${escapeHtml(section.title)}</h4>
+              <div class="brief-dataset-meta">${section.rows.length} total | ${section.red} critical | ${section.amber} caution</div>
+            </div>
+            <span class="badge">${escapeHtml(section.key)}</span>
+          </div>
+          ${renderRows(section.rows, section.emptyText)}
+        </article>
+      `;
     }
 
     function briefStatusTone(count) {
@@ -3041,15 +3750,29 @@
     }
 
     function renderBriefResult(data, requestBody) {
+      const presentation = buildBriefPresentationData(data, requestBody);
       const summary = extractBriefSummary(data);
       const fields = requestBody?.nasRouteBriefingFields || {};
       const route = fields.route || [fields.departure, fields.destination].filter(Boolean).join(' ');
       const mode = document.getElementById('briefMode').value === 'official' ? 'Official' : 'Advisory';
       const generatedAt = formatDate(new Date());
       const departureTime = fields.departureInstant ? formatDate(fields.departureInstant) : 'Not set';
-      const hazards = summary.tfrPreview.length
-        ? `<div class="hazard-list">${summary.tfrPreview.map((item) => `<div class="hazard">${escapeHtml(item)}</div>`).join('')}</div>`
-        : '<div class="empty">No route TFR rows returned for this brief.</div>';
+      const sectionList = Object.values(presentation.sections);
+      const timeline = presentation.timeline.length
+        ? `<div class="brief-timeline">${presentation.timeline.map((row) => `
+          <div class="brief-timeline-row">
+            <strong>${escapeHtml(row.waypoint)}</strong>
+            <span>${escapeHtml(row.weather || 'Route point')}</span>
+            <span>${escapeHtml([row.eta ? `ETA ${row.eta}` : null, row.ete ? `ETE ${row.ete}` : null].filter(Boolean).join(' | ') || 'Timing from source unavailable')}</span>
+          </div>
+        `).join('')}</div>`
+        : '<div class="empty">No route timeline returned for this brief.</div>';
+      const riskChips = presentation.riskChips.map((chip) => `
+        <div class="brief-risk-chip severity-${escapeHtml(chip.severity)}">
+          <span>${escapeHtml(chip.label)}</span>
+          <strong>${escapeHtml(chip.count)}</strong>
+        </div>
+      `).join('');
       briefResult.innerHTML = `
         <div class="brief-report-head">
           <div>
@@ -3062,6 +3785,14 @@
             <button class="btn primary compact" type="button" data-new-brief>Generate new brief</button>
           </div>
         </div>
+        <section class="brief-section">
+          <div class="brief-route-status">
+            <div class="brief-advisory-state severity-${escapeHtml(presentation.advisoryStatus === 'NO-GO' ? 'red' : presentation.advisoryStatus === 'CAUTION' ? 'amber' : 'green')}">
+              ${escapeHtml(presentation.advisoryStatus)}
+            </div>
+            <div class="brief-risk-grid">${riskChips}</div>
+          </div>
+        </section>
         <div class="brief-status-grid">
           <div class="brief-status-card">
             <span>Route TFRs</span>
@@ -3085,8 +3816,14 @@
           </div>
         </div>
         <section class="brief-section">
-          <h3>Route Hazards</h3>
-          ${hazards}
+          <h3>Route Timeline</h3>
+          ${timeline}
+        </section>
+        <section class="brief-section">
+          <h3>Briefing Data</h3>
+          <div class="brief-dataset-grid">
+            ${sectionList.map(renderDatasetCard).join('')}
+          </div>
         </section>
         <section class="brief-section">
           <h3>Brief Inputs</h3>
@@ -3100,8 +3837,8 @@
         <section class="brief-section">
           <h3>Source Detail</h3>
           <details class="brief-raw">
-            <summary>View response summary</summary>
-            <pre>${escapeHtml(JSON.stringify({ id: briefIdentifier(data), summary }, null, 2))}</pre>
+            <summary>View complete source payload</summary>
+            <pre>${escapeHtml(JSON.stringify(data, null, 2))}</pre>
           </details>
         </section>
       `;
@@ -3628,6 +4365,7 @@
     function setOfficialModeFields() {
       const isOfficial = document.getElementById('briefMode').value === 'official';
       document.getElementById('officialFields').classList.toggle('active', isOfficial);
+      document.getElementById('flightPlanLifecycleCard').classList.toggle('active', isOfficial);
       document.getElementById('briefButton').textContent = isOfficial ? 'Generate Official Brief' : 'Generate Advisory Brief';
     }
 
@@ -4377,7 +5115,6 @@
         setMessage(briefError, err.message || 'Unable to generate advisory brief.');
       } finally {
         briefButton.disabled = false;
-        briefButton.textContent = 'Generate Brief';
         setOfficialModeFields();
       }
     });
@@ -4390,6 +5127,7 @@
       refreshSession();
     });
 
+    initializeAirportLookup();
     refreshSession();
   </script>
 </body>
