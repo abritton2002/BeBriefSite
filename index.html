@@ -150,7 +150,13 @@
       font-size: clamp(64px, 11vw, 132px);
       font-weight: 900;
     }
-    h1 span { color: var(--cyan); }
+    h1 span {
+      display: block;
+      color: var(--cyan);
+      font-size: 0.72em;
+      line-height: 0.94;
+      margin-top: 8px;
+    }
     .hero-copy {
       max-width: 700px;
       color: var(--muted);
@@ -296,26 +302,26 @@
       display: grid;
       grid-template-columns: 0.72fr 1fr;
       gap: 18px;
-      align-items: stretch;
+      align-items: start;
     }
     .status-board {
       border: 1px solid var(--line);
       background: rgba(11, 17, 24, 0.82);
-      padding: 22px;
+      padding: 18px;
     }
     .status-board h3,
     .feature-stack h3 {
-      font-size: 38px;
+      font-size: 34px;
       margin-bottom: 14px;
     }
     .status-line {
       display: grid;
-      grid-template-columns: 94px 1fr;
-      gap: 16px;
-      padding: 13px 0;
+      grid-template-columns: 80px 1fr;
+      gap: 12px;
+      padding: 10px 0;
       border-top: 1px solid var(--line);
     }
-    .status-line:first-of-type { margin-top: 16px; }
+    .status-line:first-of-type { margin-top: 12px; }
     .status-code {
       font-family: "IBM Plex Mono", monospace;
       font-size: 12px;
@@ -328,7 +334,8 @@
     .status-line p {
       margin: 0;
       color: var(--muted);
-      font-size: 15px;
+      font-size: 14px;
+      line-height: 1.3;
     }
     .feature-stack {
       display: grid;
@@ -536,7 +543,7 @@
       <div class="container hero-inner">
         <div>
           <p class="hero-tagline">Preflight information, done briefly.</p>
-          <h1>Brief on iOS. <span>Review on web.</span></h1>
+          <h1>The preflight picture. <span>Clean, current, synced.</span></h1>
           <p class="hero-copy">BeBrief keeps the app and web platform tied to the same pilot profile, aircraft, briefing history, and readiness workflow.</p>
           <div class="hero-actions">
             <a href="app.html" class="btn btn-primary">Open Web Platform</a>
@@ -617,22 +624,18 @@
 
         <div class="ops-grid">
           <aside class="status-board">
-            <h3>Decision logic stays honest</h3>
+            <h3>Status logic</h3>
             <div class="status-line">
               <div class="status-code green">GO</div>
-              <p>App status sees no surfaced blockers, while the pilot still verifies the final flight decision.</p>
+              <p>No surfaced blockers. Pilot verifies the final call.</p>
             </div>
             <div class="status-line">
               <div class="status-code amber">CAUTION</div>
-              <p>Weather, TFR, NOTAM, airspace, performance, stale data, or missing input requires review before continuing.</p>
+              <p>Weather, airspace, performance, stale data, or missing input needs review.</p>
             </div>
             <div class="status-line">
               <div class="status-code red">NO-GO</div>
-              <p>Known critical conditions or missing required source data make the app recommend stopping until resolved.</p>
-            </div>
-            <div class="status-line">
-              <div class="status-code">SOURCE</div>
-              <p>Briefing status, app summary, pilot-entered assumptions, and stale/missing information are separated.</p>
+              <p>Critical conditions or missing required briefing detail should stop the workflow.</p>
             </div>
           </aside>
 
