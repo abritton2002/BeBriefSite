@@ -8,7 +8,7 @@
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="BeBrief - Preflight Briefing on iOS and Web">
-  <meta property="og:description" content="One BeBrief profile across iOS and web for briefing readiness, aircraft data, official briefing workflows, and source-backed flight review.">
+  <meta property="og:description" content="One BeBrief profile across iOS and web for briefing readiness, aircraft data, and saved flight review.">
   <meta property="og:image" content="assets/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
@@ -45,11 +45,7 @@
       margin: 0;
       font-family: "Source Sans 3", sans-serif;
       color: var(--text);
-      background:
-        linear-gradient(90deg, rgba(125, 211, 252, 0.06) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(125, 211, 252, 0.045) 1px, transparent 1px),
-        var(--bg);
-      background-size: 64px 64px;
+      background: var(--bg);
       line-height: 1.5;
       letter-spacing: 0;
       overflow-x: hidden;
@@ -65,9 +61,8 @@
       left: 0;
       right: 0;
       z-index: 20;
-      border-bottom: 1px solid rgba(149, 173, 198, 0.14);
-      background: rgba(5, 8, 12, 0.82);
-      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(149, 173, 198, 0.1);
+      background: var(--bg);
     }
     .nav {
       height: 72px;
@@ -83,7 +78,7 @@
       gap: 22px;
     }
     .nav-links a {
-      color: var(--muted);
+      color: var(--white);
       font-size: 14px;
       font-weight: 700;
       text-decoration: none;
@@ -108,7 +103,7 @@
     }
     .btn:hover { transform: translateY(-1px); }
     .btn-primary {
-      color: #031014;
+      color: #020617;
       background: var(--cyan);
       border-color: var(--cyan);
       box-shadow: 0 0 28px rgba(34, 211, 238, 0.18);
@@ -128,51 +123,20 @@
       border-bottom: 1px solid var(--line);
       overflow: hidden;
     }
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(5, 8, 12, 0.98) 0%, rgba(5, 8, 12, 0.84) 39%, rgba(5, 8, 12, 0.22) 78%, rgba(5, 8, 12, 0.72) 100%),
-        linear-gradient(180deg, rgba(5, 8, 12, 0.1) 0%, rgba(5, 8, 12, 0.96) 100%),
-        url("assets/og-image.png") right 42% center / min(62vw, 840px) auto no-repeat;
-      filter: saturate(1.05);
-      transform: scale(1.01);
-    }
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto 0 0 0;
-      height: 130px;
-      background: linear-gradient(180deg, transparent, var(--bg));
-    }
     .hero-inner {
       position: relative;
       z-index: 1;
       display: grid;
       gap: 44px;
     }
-    .mission-tag {
-      display: inline-grid;
-      grid-auto-flow: column;
-      gap: 10px;
-      align-items: center;
-      width: fit-content;
-      padding: 8px 11px;
-      border: 1px solid rgba(34, 211, 238, 0.34);
-      color: #9cf3ff;
-      background: rgba(34, 211, 238, 0.08);
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-    .mission-tag::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      background: var(--green);
-      box-shadow: 0 0 18px rgba(65, 240, 138, 0.8);
+    .hero-tagline {
+      margin: 0 0 18px;
+      color: var(--cyan);
+      font-family: "Source Sans 3", sans-serif;
+      font-size: clamp(24px, 3vw, 38px);
+      font-style: italic;
+      font-weight: 600;
+      line-height: 1.05;
     }
     h1, h2, h3 {
       margin: 0;
@@ -198,13 +162,6 @@
       flex-wrap: wrap;
       align-items: center;
     }
-    .hero-note {
-      color: var(--dim);
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      max-width: 580px;
-    }
-
     .readiness-strip {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -578,14 +535,13 @@
     <section class="hero">
       <div class="container hero-inner">
         <div>
-          <div class="mission-tag">Synced preflight platform</div>
-          <h1>One pilot record. <span>Two places to brief.</span></h1>
-          <p class="hero-copy">BeBrief connects the iOS app and web platform around the same pilot profile, aircraft, briefing history, and source-backed readiness workflow.</p>
+          <p class="hero-tagline">Preflight information, done briefly.</p>
+          <h1>Brief on iOS. <span>Review on web.</span></h1>
+          <p class="hero-copy">BeBrief keeps the app and web platform tied to the same pilot profile, aircraft, briefing history, and readiness workflow.</p>
           <div class="hero-actions">
             <a href="app.html" class="btn btn-primary">Open Web Platform</a>
             <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-secondary">Request iOS Access</a>
           </div>
-          <p class="hero-note">Advisory app logic is not legal authority. Official briefing and filing workflows depend on approved Flight Service access and pilot verification.</p>
         </div>
 
         <div class="readiness-strip" aria-label="BeBrief readiness workflow">
@@ -603,7 +559,7 @@
           </div>
           <div class="readiness-cell">
             <span>04 / source</span>
-            <strong>Raw supporting detail stays inspectable.</strong>
+            <strong>Supporting detail stays easy to inspect.</strong>
           </div>
         </div>
       </div>
@@ -616,7 +572,7 @@
             <div class="eyebrow">Two synced surfaces</div>
             <h2>The phone is for the brief. The web is for the record.</h2>
           </div>
-          <p>Users should not have to rebuild their pilot profile, aircraft, Flight Service details, or briefing history on each device. BeBrief is designed around one shared operational record.</p>
+          <p>Users should not have to rebuild their pilot profile, aircraft, briefing details, or briefing history on each device. BeBrief is designed around one shared flight record.</p>
         </div>
 
         <div class="platform-grid">
@@ -639,9 +595,9 @@
               <h3>Profile and briefing control</h3>
               <p>Use the browser when a full keyboard and larger screen make account, aircraft, official fields, saved records, and briefing review faster.</p>
               <ul class="check-list">
-                <li>Same Supabase-backed profile and aircraft data as the app.</li>
-                <li>Account, subscription, and Flight Service authorization visibility.</li>
-                <li>Designed to grow into full web parity without splitting user data.</li>
+                <li>Same BeBrief profile and aircraft records as the app.</li>
+                <li>Account, subscription, and briefing connection visibility.</li>
+                <li>Built to keep web and iOS workflows aligned.</li>
               </ul>
             </div>
           </article>
@@ -654,9 +610,9 @@
         <div class="section-head">
           <div>
             <div class="eyebrow">Briefing readiness</div>
-            <h2>Not a pretty checklist. A source-backed review flow.</h2>
+            <h2>Not a pretty checklist. A disciplined review flow.</h2>
           </div>
-          <p>The first screen should answer what serious pilots actually need before departure: whether the flight is executable, what changed, what is hazardous, what is missing, and what source supports the call.</p>
+          <p>The first screen should answer what serious pilots actually need before departure: whether the flight is executable, what changed, what is hazardous, what is missing, and what supporting detail needs review.</p>
         </div>
 
         <div class="ops-grid">
@@ -664,7 +620,7 @@
             <h3>Decision logic stays honest</h3>
             <div class="status-line">
               <div class="status-code green">GO</div>
-              <p>App advisory logic sees no surfaced blockers, but the pilot still verifies source data and legal requirements.</p>
+              <p>App status sees no surfaced blockers, while the pilot still verifies the final flight decision.</p>
             </div>
             <div class="status-line">
               <div class="status-code amber">CAUTION</div>
@@ -676,7 +632,7 @@
             </div>
             <div class="status-line">
               <div class="status-code">SOURCE</div>
-              <p>Official briefing status, app summary, pilot-entered assumptions, and stale/missing data are separated.</p>
+              <p>Briefing status, app summary, pilot-entered assumptions, and stale/missing information are separated.</p>
             </div>
           </aside>
 
@@ -689,7 +645,7 @@
             <article class="feature-card">
               <img src="assets/notams.png" alt="BeBrief NOTAM briefing screen">
               <h3>Briefing sections</h3>
-              <p>Weather, NOTAM, TFR, PIREP, SIGMET, and winds data are organized into source-backed review areas.</p>
+              <p>Weather, NOTAM, TFR, PIREP, SIGMET, and winds data are organized into focused review areas.</p>
             </article>
             <article class="feature-card">
               <img src="assets/performance.png" alt="BeBrief performance screen">
@@ -699,7 +655,7 @@
             <article class="feature-card">
               <img src="assets/airspace.png" alt="BeBrief airspace and route screen">
               <h3>Hazard context</h3>
-              <p>Map and airspace views support situational review while source-backed legal decisions remain in the briefing packet.</p>
+              <p>Map and airspace views support situational review while key decisions remain in the briefing packet.</p>
             </article>
             <article class="feature-card">
               <img src="assets/hangar.png" alt="BeBrief hangar aircraft management screen">
@@ -715,17 +671,17 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="eyebrow">Shared data model</div>
+            <div class="eyebrow">Same account</div>
             <h2>Update once. Brief anywhere.</h2>
           </div>
-          <p>The web platform and iOS app should hydrate from the same Supabase account so profile, aircraft, settings, and briefing records do not drift.</p>
+          <p>The web platform and iOS app use the same BeBrief account so profile, aircraft, settings, and briefing records do not drift.</p>
         </div>
 
         <div class="sync-flow">
           <div class="sync-step">
             <span>ACCOUNT</span>
             <strong>Sign in</strong>
-            <p>Email, Google, and supported mobile auth connect to the same BeBrief identity.</p>
+            <p>Email, Google, and supported mobile sign-in connect to the same BeBrief identity.</p>
           </div>
           <div class="sync-step">
             <span>AIRCRAFT</span>
@@ -735,12 +691,12 @@
           <div class="sync-step">
             <span>BRIEF</span>
             <strong>Request data</strong>
-            <p>Advisory and official modes use Leidos-centered briefing paths when configured.</p>
+            <p>Generate advisory or official briefs when your account is configured.</p>
           </div>
           <div class="sync-step">
             <span>REVIEW</span>
             <strong>Inspect risk</strong>
-            <p>Weather, NOTAM, TFR, airspace, fuel, and performance signals are separated by source and freshness.</p>
+            <p>Weather, NOTAM, TFR, airspace, fuel, and performance signals are separated by freshness and priority.</p>
           </div>
           <div class="sync-step">
             <span>RECORD</span>
@@ -754,14 +710,14 @@
     <section>
       <div class="container limits">
         <div class="limits-main">
-          <div class="eyebrow">Clear claims</div>
-          <h2>Built for serious preflight. Not pretending to replace command judgment.</h2>
-          <p>BeBrief is designed to make briefing work easier to inspect, repeat, and sync. It does not certify a flight, replace the PIC, replace official sources, or turn a map overview into an approved aviation chart.</p>
+          <div class="eyebrow">Pilot control</div>
+          <h2>Keep the brief clear. Keep the decision yours.</h2>
+          <p>BeBrief organizes the information pilots review before flight so the workflow is faster to inspect, repeat, and carry across devices.</p>
         </div>
         <aside class="limits-side">
           <ul>
             <li>Official briefing status is separated from app advisory summaries.</li>
-            <li>Pilot-entered values are separated from authoritative source data.</li>
+            <li>Pilot-entered values are separated from returned briefing information.</li>
             <li>Fresh, stale, missing, and cached data states should remain visible.</li>
             <li>Aircraft templates require pilot customization against exact aircraft documents.</li>
           </ul>
@@ -773,7 +729,7 @@
       <div class="container">
         <div class="eyebrow">Fly the same profile on every surface</div>
         <h2>Open the web platform now. Bring the same record to iOS.</h2>
-        <p>Use BeBrief on the web for account, aircraft, and briefing control. Use the iOS app for mobile route planning, readiness review, source inspection, and preflight workflow.</p>
+        <p>Use BeBrief on the web for account, aircraft, and briefing control. Use the iOS app for mobile route planning, readiness review, detail inspection, and preflight workflow.</p>
         <div class="hero-actions">
           <a href="app.html" class="btn btn-primary">Open Web Platform</a>
           <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-secondary">Request iOS Access</a>
