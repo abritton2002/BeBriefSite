@@ -3,31 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BeBrief - VFR Flight Briefing App</title>
-  <meta name="description" content="Your complete preflight companion. Weather, NOTAMs, TFRs, and performance calculations in one streamlined app.">
+  <title>BeBrief - VFR Preflight Platform</title>
+  <meta name="description" content="A VFR preflight platform for managing pilot profiles, aircraft, briefing records, and mobile-ready flight planning.">
 
   <!-- Open Graph / Social -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="BeBrief - VFR Flight Briefing App">
-  <meta property="og:description" content="Your complete preflight companion. Weather, NOTAMs, TFRs, and performance calculations in one streamlined app.">
+  <meta property="og:title" content="BeBrief - VFR Preflight Platform">
+  <meta property="og:description" content="Manage pilot profiles, aircraft, briefing records, and mobile-ready VFR preflight planning.">
   <meta property="og:image" content="assets/og-image.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="BeBrief - VFR Flight Briefing App">
-  <meta name="twitter:description" content="Your complete preflight companion for VFR pilots.">
+  <meta name="twitter:title" content="BeBrief - VFR Preflight Platform">
+  <meta name="twitter:description" content="Profile, aircraft, briefing records, and VFR preflight planning across web and app.">
   <meta name="twitter:image" content="assets/twitter-card.png">
 
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background:
         linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px),
         linear-gradient(180deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px),
@@ -393,6 +393,122 @@
       line-height: 1.6;
     }
 
+    /* Platform refinement */
+    body {
+      background:
+        linear-gradient(90deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+        #08090a;
+      letter-spacing: 0;
+    }
+
+    header { padding: 18px 0; }
+
+    .hero { padding: 58px 0 34px; }
+
+    .hero-grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(360px, 0.85fr);
+      gap: 36px;
+    }
+
+    .badge {
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 11px;
+    }
+
+    .hero h1 {
+      max-width: 760px;
+      font-size: clamp(40px, 6vw, 78px);
+    }
+
+    .hero p { max-width: 620px; }
+
+    .btn {
+      border-radius: 6px;
+      min-height: 46px;
+      padding: 13px 20px;
+    }
+
+    .btn-small {
+      border-radius: 6px;
+      min-height: 40px;
+      padding: 9px 14px;
+    }
+
+    .hero-mockups {
+      height: 430px;
+      justify-content: flex-end;
+      overflow: hidden;
+      border: 1px solid #27272a;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(24, 24, 27, 0.74), rgba(10, 10, 12, 0.88));
+    }
+
+    .hero-mockup {
+      height: 360px;
+      filter: drop-shadow(0 20px 36px rgba(0, 0, 0, 0.48));
+    }
+
+    .hero-mockup:nth-child(1) { transform: translateX(-116px) translateY(18px) rotate(-5deg); }
+    .hero-mockup:nth-child(2) { transform: translateX(-20px) translateY(0) rotate(0deg); }
+    .hero-mockup:nth-child(3) { transform: translateX(76px) translateY(22px) rotate(5deg); }
+    .hero-mockup:hover { transform: translateX(-20px) translateY(0) scale(1.02); }
+
+    .feature-showcase {
+      padding: 72px 0;
+      background: #0d0d0f;
+      border-top: 1px solid #27272a;
+    }
+
+    .feature-showcase h2,
+    .feature-showcase-subtitle {
+      text-align: left;
+      max-width: 780px;
+    }
+
+    .feature-showcase h2 {
+      font-size: clamp(30px, 4vw, 44px);
+      line-height: 1.05;
+    }
+
+    .feature-showcase-subtitle {
+      margin-bottom: 46px;
+      color: #a1a1aa;
+    }
+
+    .feature-row,
+    .feature-row.reverse {
+      direction: ltr;
+      grid-template-columns: minmax(0, 0.84fr) minmax(280px, 0.62fr);
+      gap: 34px;
+      align-items: center;
+      margin-bottom: 42px;
+      border: 1px solid #27272a;
+      border-radius: 10px;
+      padding: 24px;
+      background: rgba(24, 24, 27, 0.56);
+    }
+
+    .feature-text h3 { font-size: 24px; }
+
+    .feature-mockup {
+      min-height: 320px;
+      align-items: center;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #08090a;
+    }
+
+    .feature-mockup img { height: 360px; }
+
+    .mockup-gallery { padding: 58px 0; }
+
+    .data-sources { padding: 58px 0; }
+
+    .cta-section { padding: 72px 0; }
+
     /* Footer */
     footer {
       padding: 40px 0;
@@ -454,6 +570,293 @@
 
       .footer-content { flex-direction: column; text-align: center; }
     }
+
+    @media (max-width: 560px) {
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+      .container { padding: 0 18px; }
+      .hero,
+      .hero-grid,
+      .hero-content {
+        min-width: 0;
+      }
+      .hero-grid {
+        display: block;
+      }
+      .header-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .nav-actions {
+        width: 100%;
+        gap: 10px;
+      }
+      .nav-actions .btn-small {
+        width: 100%;
+      }
+      .nav-link {
+        display: none;
+      }
+      .badge {
+        display: block;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+        white-space: normal;
+        text-align: center;
+        font-size: 10px;
+      }
+      .hero h1 {
+        font-size: 30px;
+        line-height: 1.03;
+        letter-spacing: 0;
+        max-width: 330px;
+        margin-left: auto;
+        margin-right: auto;
+        overflow-wrap: anywhere;
+      }
+      .hero p {
+        font-size: 16px;
+        max-width: 300px;
+      }
+      .cta-buttons {
+        display: grid;
+        grid-template-columns: 1fr;
+        max-width: 330px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .hero-mockups {
+        height: 300px;
+        width: 100%;
+      }
+      .feature-showcase h2,
+      .feature-showcase-subtitle {
+        text-align: left;
+      }
+      .feature-row,
+      .feature-row.reverse {
+        padding: 18px;
+        text-align: left;
+      }
+      .feature-list {
+        display: grid;
+      }
+    }
+
+    /* Clean product presentation */
+    body {
+      background: #f6f8fb;
+      color: #111827;
+    }
+    header,
+    footer {
+      background: rgba(255, 255, 255, 0.92);
+      border-color: #e5e7eb;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(18px);
+    }
+    .logo {
+      color: #0f172a;
+      letter-spacing: -0.03em;
+    }
+    .nav-link {
+      color: #475569;
+    }
+    .nav-link:hover {
+      color: #0f172a;
+    }
+    .hero {
+      min-height: calc(100vh - 78px);
+      display: grid;
+      align-items: center;
+      padding: 78px 0 54px;
+      background:
+        linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+    }
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 34px;
+      text-align: center;
+      justify-items: center;
+    }
+    .hero-content {
+      text-align: center;
+      max-width: 820px;
+    }
+    .badge {
+      background: #eef6ff;
+      border-color: #d5e8ff;
+      color: #155e75;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      max-width: 840px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #0f172a;
+      font-size: clamp(46px, 8vw, 86px);
+      line-height: 0.96;
+      letter-spacing: -0.06em;
+      text-transform: none;
+    }
+    .hero h1 span {
+      background: none;
+      -webkit-text-fill-color: currentColor;
+      color: #0891b2;
+    }
+    .hero p {
+      max-width: 660px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #475569;
+      font-size: 19px;
+      line-height: 1.65;
+    }
+    .cta-buttons {
+      justify-content: center;
+    }
+    .btn {
+      border-radius: 10px;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 700;
+      box-shadow: none;
+    }
+    .btn-primary {
+      background: #0f172a;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: #1e293b;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: #dbe3ef;
+    }
+    .btn-secondary:hover {
+      background: #f8fafc;
+      transform: translateY(-1px);
+    }
+    .hero-mockups {
+      width: min(860px, 100%);
+      height: 420px;
+      justify-content: center;
+      border: 1px solid #e2e8f0;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.86), rgba(241,245,249,0.92));
+      box-shadow: 0 28px 80px rgba(15, 23, 42, 0.13);
+    }
+    .hero-mockup {
+      height: 350px;
+    }
+    .feature-showcase {
+      background: #ffffff;
+      border-top: 1px solid #e5e7eb;
+      padding: 84px 0;
+    }
+    .feature-showcase h2,
+    .feature-showcase-subtitle {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .feature-showcase h2 {
+      color: #0f172a;
+      font-size: clamp(34px, 5vw, 56px);
+      letter-spacing: -0.05em;
+    }
+    .feature-showcase-subtitle {
+      color: #64748b;
+      max-width: 680px;
+      margin-bottom: 48px;
+    }
+    .feature-row,
+    .feature-row.reverse {
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr);
+      max-width: 1050px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      background: #ffffff;
+      box-shadow: 0 18px 48px rgba(15, 23, 42, 0.07);
+    }
+    .feature-text h3 {
+      color: #0f172a;
+      letter-spacing: -0.03em;
+    }
+    .feature-text p,
+    .feature-list li {
+      color: #64748b;
+    }
+    .feature-list li::before {
+      background: #0891b2;
+    }
+    .feature-mockup {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+    }
+    .cta-section {
+      background: #f6f8fb;
+      padding: 86px 0;
+    }
+    .cta-section h2 {
+      color: #0f172a;
+      letter-spacing: -0.04em;
+    }
+    .cta-section p {
+      color: #64748b;
+    }
+    .copyright,
+    .footer-links a {
+      color: #64748b;
+    }
+    @media (max-width: 968px) {
+      .hero {
+        min-height: auto;
+      }
+      .feature-row,
+      .feature-row.reverse {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 560px) {
+      .hero {
+        padding: 48px 0 42px;
+      }
+      .hero h1 {
+        font-size: 38px;
+        max-width: 350px;
+        letter-spacing: -0.04em;
+      }
+      .hero p {
+        max-width: 330px;
+      }
+      .hero-mockups {
+        height: 290px;
+        border-radius: 16px;
+      }
+      .hero-mockup {
+        height: 250px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -462,7 +865,7 @@
       <div class="header-content">
         <a href="/" class="logo"><img src="assets/icon.png" alt="BeBrief">BeBrief</a>
         <nav class="nav-actions">
-          <a href="app.html" class="btn btn-primary btn-small">Web Sign In</a>
+          <a href="app.html" class="btn btn-primary btn-small">Open Platform</a>
           <a href="mailto:FlyBeBrief@gmail.com" class="nav-link">Contact</a>
         </nav>
       </div>
@@ -474,15 +877,14 @@
       <div class="container">
         <div class="hero-grid">
           <div class="hero-content">
-            <div class="badge">Coming Soon to iOS & Android</div>
-            <h1>Your Complete<br><span>Preflight Companion</span></h1>
-            <p>Weather, NOTAMs, TFRs, and performance calculations in one streamlined app. Make confident go/no-go decisions.</p>
+            <h1>One pilot<br>record.<br><span>Every briefing<br>ready.</span></h1>
+            <p>Manage your profile, aircraft, filing details, and briefing records from the web, then use the iPhone app when you are planning, briefing, and flying.</p>
             <div class="cta-buttons">
-              <a href="#features" class="btn btn-primary">
-                <span>Explore Features</span>
+              <a href="app.html" class="btn btn-primary">
+                <span>Open Platform</span>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
-              <a href="app.html" class="btn btn-secondary">Open Web Sign In</a>
+              <a href="#features" class="btn btn-secondary">See Workflow</a>
             </div>
           </div>
           <div class="hero-mockups">
@@ -496,18 +898,18 @@
 
     <section class="feature-showcase" id="features">
       <div class="container">
-        <h2>Everything You Need to Brief</h2>
-        <p class="feature-showcase-subtitle">Professional-grade tools designed for VFR pilots</p>
+        <h2>Built Around the Preflight Workflow</h2>
+        <p class="feature-showcase-subtitle">The web platform keeps pilot and aircraft data clean; the app handles route, weather, hazards, and go/no-go context.</p>
 
         <div class="feature-row">
           <div class="feature-text">
-            <h3>Route Planning & Go/No-Go</h3>
-            <p>Plan your route with real-time weather analysis. Get instant go/no-go recommendations based on current conditions, forecasts, and your aircraft performance.</p>
+            <h3>Profile and Aircraft Sync</h3>
+            <p>Maintain the pilot and aircraft records that feed briefing requests, official filing details, performance defaults, and app-side planning.</p>
             <ul class="feature-list">
-              <li>Multi-waypoint route planning</li>
-              <li>Automatic weather analysis</li>
-              <li>Flight category indicators</li>
-              <li>ETA-based forecasting</li>
+              <li>Pilot contact and emergency details</li>
+              <li>Home airport and experience fields</li>
+              <li>Aircraft IDs, equipment, colors, and fuel defaults</li>
+              <li>Shared Supabase records across web and phone</li>
             </ul>
           </div>
           <div class="feature-mockup">
@@ -517,13 +919,13 @@
 
         <div class="feature-row reverse">
           <div class="feature-text">
-            <h3>Live Weather & METARs</h3>
-            <p>Real-time METAR and TAF data from NOAA Aviation Weather Center. See VFR, MVFR, IFR, and LIFR conditions at a glance with decoded, human-readable summaries.</p>
+            <h3>Briefing Workspace</h3>
+            <p>Create advisory or official briefing requests from a browser when a full keyboard and desktop screen are faster than a phone.</p>
             <ul class="feature-list">
-              <li>Real-time METAR updates</li>
-              <li>TAF forecasts decoded</li>
-              <li>Winds aloft data</li>
-              <li>Flight category color coding</li>
+              <li>Advisory and official modes</li>
+              <li>Route, waypoint, and departure-time entry</li>
+              <li>Credentialed 1800WXBRIEF path when linked</li>
+              <li>Saved server briefing records</li>
             </ul>
           </div>
           <div class="feature-mockup">
@@ -533,13 +935,13 @@
 
         <div class="feature-row">
           <div class="feature-text">
-            <h3>Performance Calculator</h3>
-            <p>Takeoff and landing performance calculations for 50+ aircraft types. Automatically adjusts for temperature, altitude, wind, and runway conditions.</p>
+            <h3>Mobile Preflight Execution</h3>
+            <p>Use the app for the cockpit-side workflow: route review, weather and hazards, performance, map awareness, and final PIC decision support.</p>
             <ul class="feature-list">
-              <li>Takeoff & landing distances</li>
-              <li>Density altitude calculations</li>
-              <li>Weight & balance tracking</li>
-              <li>CG envelope visualization</li>
+              <li>Route and airport weather context</li>
+              <li>TFR, NOTAM, and airspace awareness</li>
+              <li>Performance and weight-balance tools</li>
+              <li>Mobile-first briefing review</li>
             </ul>
           </div>
           <div class="feature-mockup">
@@ -549,13 +951,13 @@
 
         <div class="feature-row reverse">
           <div class="feature-text">
-            <h3>Smart NOTAMs</h3>
-            <p>No more parsing through walls of text. NOTAMs are automatically categorized, prioritized, and filtered. Critical alerts for runway closures and TFRs are highlighted.</p>
+            <h3>Account Linking That Is Understandable</h3>
+            <p>The platform separates app identity from Flight Service authorization so pilots can see what is linked, what is missing, and which briefing mode they are using.</p>
             <ul class="feature-list">
-              <li>Categorized by type</li>
-              <li>Priority-based sorting</li>
-              <li>TFR alerts highlighted</li>
-              <li>Plain English summaries</li>
+              <li>Email/password and Google web sign-in</li>
+              <li>Sign in with Apple remains available on iPhone</li>
+              <li>Credentialed and uncredentialed official briefing paths</li>
+              <li>Clear account and subscription status</li>
             </ul>
           </div>
           <div class="feature-mockup">
@@ -565,13 +967,13 @@
 
         <div class="feature-row">
           <div class="feature-text">
-            <h3>Airspace Awareness</h3>
-            <p>See TFRs, restricted areas, and special use airspace along your route. Never fly into airspace you shouldn't be in.</p>
+            <h3>Serious VFR Risk Review</h3>
+            <p>BeBrief keeps hazards visible without hiding the raw source context pilots need to inspect before making a legal and operational decision.</p>
             <ul class="feature-list">
-              <li>TFR visualization</li>
-              <li>Restricted & prohibited areas</li>
-              <li>MOAs and alert areas</li>
-              <li>Route conflict detection</li>
+              <li>Weather, NOTAM, TFR, and airport status</li>
+              <li>Fresh, stale, missing, and cached states</li>
+              <li>Official and advisory briefing modes</li>
+              <li>Route-level hazards versus airport-only issues</li>
             </ul>
           </div>
           <div class="feature-mockup">
@@ -581,50 +983,11 @@
       </div>
     </section>
 
-    <section class="mockup-gallery">
-      <div class="container">
-        <h2>See More Features</h2>
-      </div>
-      <div class="gallery-scroll">
-        <div class="gallery-item"><img src="assets/map.png" alt="Map View"><span>Interactive Map</span></div>
-        <div class="gallery-item"><img src="assets/told.png" alt="TOLD Calculator"><span>TOLD Calculator</span></div>
-        <div class="gallery-item"><img src="assets/aircraft.png" alt="Aircraft Profile"><span>Aircraft Profiles</span></div>
-        <div class="gallery-item"><img src="assets/runways.png" alt="Runway Info"><span>Runway Data</span></div>
-        <div class="gallery-item"><img src="assets/fuel.png" alt="Fuel Planning"><span>Fuel Planning</span></div>
-        <div class="gallery-item"><img src="assets/brief.png" alt="Brief Export"><span>Brief Export</span></div>
-        <div class="gallery-item"><img src="assets/aircraft-list.png" alt="Aircraft List"><span>Aircraft Library</span></div>
-        <!-- Duplicate for infinite scroll -->
-        <div class="gallery-item"><img src="assets/map.png" alt="Map View"><span>Interactive Map</span></div>
-        <div class="gallery-item"><img src="assets/told.png" alt="TOLD Calculator"><span>TOLD Calculator</span></div>
-        <div class="gallery-item"><img src="assets/aircraft.png" alt="Aircraft Profile"><span>Aircraft Profiles</span></div>
-        <div class="gallery-item"><img src="assets/runways.png" alt="Runway Info"><span>Runway Data</span></div>
-        <div class="gallery-item"><img src="assets/fuel.png" alt="Fuel Planning"><span>Fuel Planning</span></div>
-        <div class="gallery-item"><img src="assets/brief.png" alt="Brief Export"><span>Brief Export</span></div>
-        <div class="gallery-item"><img src="assets/aircraft-list.png" alt="Aircraft List"><span>Aircraft Library</span></div>
-      </div>
-    </section>
-
-    <section class="data-sources">
-      <div class="container">
-        <h2>Trusted Data Sources</h2>
-        <div class="sources-grid">
-          <div class="source-item"><span class="source-dot"></span>NOAA Aviation Weather Center</div>
-          <div class="source-item"><span class="source-dot"></span>FAA NOTAM System</div>
-          <div class="source-item"><span class="source-dot"></span>FAA ArcGIS</div>
-          <div class="source-item"><span class="source-dot"></span>FAA NASR</div>
-          <div class="source-item"><span class="source-dot"></span>USAF AHAS</div>
-        </div>
-      </div>
-    </section>
-
     <section class="cta-section">
       <div class="container">
-        <div class="disclaimer">
-          <p><strong>Important:</strong> BeBrief is not an official FAA weather briefing source and does not satisfy 14 CFR 91.103 requirements. Always obtain an official briefing from 1800wxbrief.com before flight.</p>
-        </div>
-        <h2>Ready to Simplify Your Preflight?</h2>
-        <p>Join pilots who brief smarter, not harder.</p>
-        <a href="mailto:FlyBeBrief@gmail.com?subject=Early Access Request" class="btn btn-primary">Request Early Access</a>
+        <h2>Manage your BeBrief profile on the web.</h2>
+        <p>Use the browser for setup and account management, then pick up the same records in the app.</p>
+        <a href="app.html" class="btn btn-primary">Open Platform</a>
       </div>
     </section>
   </main>

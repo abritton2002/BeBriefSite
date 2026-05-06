@@ -9,8 +9,9 @@
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -29,7 +30,7 @@
     }
     body {
       min-height: 100vh;
-      font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background:
         linear-gradient(90deg, rgba(73, 215, 232, 0.04) 1px, transparent 1px),
         linear-gradient(180deg, rgba(73, 215, 232, 0.035) 1px, transparent 1px),
@@ -429,11 +430,11 @@
       gap: 7px;
     }
     .hazard {
-      border-left: 3px solid #facc15;
-      background: rgba(250, 204, 21, 0.08);
+      border-left: 3px solid #0891b2;
+      background: rgba(8, 145, 178, 0.08);
       border-radius: 8px;
       padding: 8px 10px;
-      color: #fef3c7;
+      color: #164e63;
       font-size: 13px;
     }
     .detail-box {
@@ -461,6 +462,108 @@
       display: grid;
       gap: 12px;
     }
+    .platform-brief {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+      max-width: 760px;
+    }
+    .platform-row {
+      display: grid;
+      grid-template-columns: 132px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      border-top: 1px solid rgba(82, 96, 100, 0.42);
+      padding-top: 12px;
+    }
+    .platform-row strong {
+      color: #dff7f8;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .platform-row span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .auth-actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .auth-divider {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      color: var(--dim);
+      font: 700 11px 'IBM Plex Mono', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      height: 1px;
+      background: var(--line);
+    }
+    .btn.google {
+      background: #f8fafc;
+      border-color: #f8fafc;
+      color: #071012;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .btn.full { width: 100%; }
+    .dashboard.app-shell {
+      grid-template-columns: 254px minmax(0, 1fr);
+      gap: 18px;
+    }
+    .side-rail {
+      border-radius: 8px;
+      box-shadow: none;
+    }
+    .card {
+      border-radius: 8px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+    }
+    .card::before { display: none; }
+    .workspace-intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+    .sync-rail {
+      display: grid;
+      gap: 10px;
+      border: 1px solid rgba(73, 215, 232, 0.22);
+      background: rgba(73, 215, 232, 0.055);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .sync-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid rgba(82, 96, 100, 0.36);
+      padding-bottom: 9px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .sync-item:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+    .sync-item strong {
+      color: var(--text);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .section-head h2 {
+      line-height: 1.1;
+    }
     @media (max-width: 840px) {
       .shell { padding: 18px; }
       header { align-items: flex-start; }
@@ -475,6 +578,619 @@
       .span-8 { grid-column: span 1; }
       .metric-grid { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
+      .platform-row { grid-template-columns: 1fr; gap: 4px; }
+      .workspace-intro { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+      .shell,
+      .hero,
+      .workspace {
+        min-width: 0;
+      }
+      header {
+        flex-wrap: wrap;
+      }
+      .nav {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 12px;
+      }
+      h1 {
+        font-size: 32px;
+        line-height: 1.02;
+        letter-spacing: 0;
+        max-width: 320px;
+        overflow-wrap: anywhere;
+      }
+      .lead {
+        font-size: 16px;
+        max-width: 300px;
+      }
+      .platform-brief,
+      .notice,
+      .auth-card {
+        max-width: 330px;
+      }
+      .hero {
+        gap: 22px;
+      }
+      .button-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
+
+    /* Professional portal redesign */
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel-2: #f8fafc;
+      --line: #e5e7eb;
+      --line-strong: #cbd5e1;
+      --text: #0f172a;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --cyan: #0891b2;
+      --green: #16a34a;
+      --amber: #d97706;
+      --red: #dc2626;
+    }
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    body {
+      background: #f5f7fb;
+      color: var(--text);
+      letter-spacing: 0;
+    }
+    .shell {
+      max-width: 1440px;
+      padding: 22px 32px 32px;
+    }
+    header {
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 18px;
+    }
+    .logo {
+      color: #0f172a;
+      letter-spacing: -0.03em;
+    }
+    .nav a,
+    .nav button {
+      color: #475569;
+      font-weight: 700;
+    }
+    .nav a:hover,
+    .nav button:hover {
+      color: #0f172a;
+    }
+    .hero {
+      min-height: calc(100vh - 92px);
+      grid-template-columns: minmax(0, 0.95fr) minmax(360px, 430px);
+      align-items: center;
+      gap: 64px;
+      padding: 54px 0;
+    }
+    .eyebrow {
+      color: #0891b2;
+      letter-spacing: 0.08em;
+    }
+    h1 {
+      max-width: 760px;
+      color: #0f172a;
+      font-size: clamp(44px, 6.6vw, 76px);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+      text-transform: none;
+    }
+    .lead {
+      max-width: 620px;
+      color: #475569;
+      font-size: 18px;
+      line-height: 1.65;
+    }
+    .card,
+    .auth-card,
+    .side-rail {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+    }
+    .card::before {
+      display: none;
+    }
+    .auth-card {
+      position: static;
+      padding: 24px;
+    }
+    .card h2 {
+      color: #0f172a;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+    .muted {
+      color: #64748b;
+      line-height: 1.55;
+    }
+    label {
+      color: #334155;
+      letter-spacing: 0.03em;
+    }
+    input,
+    select,
+    textarea {
+      min-height: 44px;
+      background: #ffffff;
+      border-color: #cbd5e1;
+      color: #0f172a;
+      border-radius: 10px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #0891b2;
+      box-shadow: 0 0 0 4px rgba(8, 145, 178, 0.12);
+    }
+    .btn {
+      border-radius: 10px;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 700;
+      background: #ffffff;
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+    .btn.primary {
+      background: #0f172a;
+      border-color: #0f172a;
+      color: #ffffff;
+    }
+    .btn.google {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+    .auth-divider {
+      color: #94a3b8;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      background: #e5e7eb;
+    }
+    .notice {
+      display: none !important;
+    }
+    .dashboard.app-shell {
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+      padding-top: 24px;
+    }
+    .side-rail {
+      top: 22px;
+      padding: 18px;
+      box-shadow: none;
+    }
+    .side-kicker {
+      color: #0891b2;
+    }
+    .side-title {
+      color: #0f172a;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+    .side-email {
+      color: #64748b;
+    }
+    .badge {
+      background: #eef6ff;
+      border-color: #d5e8ff;
+      color: #155e75;
+      border-radius: 999px;
+    }
+    .side-nav {
+      gap: 6px;
+      margin-top: 20px;
+    }
+    .side-tab {
+      min-height: 42px;
+      border: 0;
+      background: transparent;
+      color: #475569;
+      border-radius: 10px;
+      padding: 11px 12px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .side-tab.active {
+      background: #0f172a;
+      border-color: #0f172a;
+      color: #ffffff;
+    }
+    .workspace {
+      gap: 18px;
+      min-width: 0;
+    }
+    .view-grid {
+      gap: 18px;
+    }
+    .card {
+      padding: 22px;
+    }
+    .section-head {
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .section-head h2 {
+      color: #0f172a;
+      font-size: 22px;
+      line-height: 1.15;
+    }
+    .workspace-intro {
+      grid-template-columns: 1fr;
+      margin-bottom: 6px;
+    }
+    .metric-grid {
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .metric {
+      background: #f8fafc;
+      border-color: #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .metric .label {
+      color: #64748b;
+    }
+    .metric .value {
+      color: #0f172a;
+      font-size: 23px;
+      letter-spacing: -0.04em;
+    }
+    .form,
+    .form-grid {
+      gap: 14px;
+    }
+    .mode-panel {
+      background: #f8fafc;
+      border-color: #e5e7eb;
+      border-radius: 12px;
+    }
+    .list-item {
+      background: #ffffff;
+      border-color: #e5e7eb;
+      border-radius: 12px;
+      color: #0f172a;
+    }
+    .detail-box,
+    .brief-result {
+      background: #f8fafc;
+      border-color: #e5e7eb;
+      color: #334155;
+      border-radius: 12px;
+    }
+    .success {
+      border-color: #bbf7d0;
+      background: #f0fdf4;
+      color: #166534;
+      border-radius: 10px;
+    }
+    .error {
+      border-color: #fecaca;
+      background: #fef2f2;
+      color: #991b1b;
+      border-radius: 10px;
+    }
+    .command-home {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .command-stage {
+      grid-row: span 2;
+      min-height: 680px;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      padding: 24px;
+      overflow: hidden;
+    }
+    .command-stage-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .command-stage h2 {
+      font-size: clamp(30px, 4vw, 52px);
+      letter-spacing: -0.06em;
+      line-height: 0.95;
+      margin: 0 0 8px;
+    }
+    .scene-shell {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      border: 1px solid #dbe3ef;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(8, 145, 178, 0.1), transparent 38%),
+        linear-gradient(180deg, #f8fafc, #eef3f8);
+    }
+    #commandScene {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+    }
+    .scene-fallback {
+      display: none;
+      position: absolute;
+      inset: 0;
+      place-items: center;
+      color: #64748b;
+      font-weight: 700;
+    }
+    .scene-fallback.visible {
+      display: grid;
+    }
+    .scene-overlay {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      pointer-events: none;
+    }
+    .scene-overlay div {
+      border: 1px solid rgba(203, 213, 225, 0.82);
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(16px);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .scene-overlay span {
+      display: block;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .scene-overlay strong {
+      display: block;
+      margin-top: 4px;
+      color: #0f172a;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+    .command-panel {
+      min-height: 0;
+    }
+    .control-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .control-tile {
+      display: grid;
+      gap: 5px;
+      min-height: 76px;
+      width: 100%;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      background: #ffffff;
+      padding: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+    }
+    .control-tile:hover {
+      border-color: #0891b2;
+      background: #f8fafc;
+      transform: translateY(-1px);
+    }
+    .control-tile span {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .control-tile strong {
+      color: #0f172a;
+      font-size: 20px;
+      letter-spacing: -0.04em;
+    }
+    .command-list {
+      display: grid;
+      gap: 10px;
+    }
+    .command-flight {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 13px;
+      background: #ffffff;
+    }
+    .command-flight strong {
+      display: block;
+      color: #0f172a;
+      font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .command-flight span {
+      display: block;
+      margin-top: 4px;
+      color: #64748b;
+      font-size: 12px;
+    }
+    .aircraft-table-card {
+      overflow: hidden;
+    }
+    .aircraft-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      background: #ffffff;
+    }
+    .aircraft-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .aircraft-table th,
+    .aircraft-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      vertical-align: middle;
+    }
+    .aircraft-table th {
+      background: #f8fafc;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .aircraft-table tr:last-child td {
+      border-bottom: 0;
+    }
+    .aircraft-primary {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+    .aircraft-title {
+      color: #0f172a;
+      font-weight: 800;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .aircraft-subtitle {
+      color: #64748b;
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .aircraft-tail {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      border: 1px solid #d5e8ff;
+      background: #eef6ff;
+      color: #155e75;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .aircraft-cell-muted {
+      color: #64748b;
+      font-size: 13px;
+    }
+    .aircraft-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .btn.danger {
+      border-color: #fecaca;
+      background: #fff7f7;
+      color: #b91c1c;
+    }
+    @media (max-width: 920px) {
+      .shell {
+        padding: 18px;
+      }
+      .hero {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+      .dashboard.app-shell {
+        grid-template-columns: 1fr;
+      }
+      .side-rail {
+        position: static;
+      }
+      .side-nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .command-home {
+        grid-template-columns: 1fr;
+      }
+      .command-stage {
+        min-height: 560px;
+      }
+      #view-aircraft .span-4,
+      #view-aircraft .span-8 {
+        grid-column: span 1;
+      }
+    }
+    @media (max-width: 560px) {
+      .hero {
+        display: block;
+      }
+      h1 {
+        max-width: 340px;
+        font-size: 34px;
+        letter-spacing: -0.04em;
+      }
+      .lead {
+        max-width: 340px;
+        font-size: 16px;
+      }
+      .auth-card {
+        max-width: 340px;
+        width: 100%;
+        overflow: hidden;
+      }
+      input,
+      select,
+      textarea {
+        min-width: 0;
+      }
+      .side-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .command-stage {
+        min-height: 500px;
+        padding: 18px;
+      }
+      .scene-shell,
+      #commandScene {
+        min-height: 380px;
+      }
+      .scene-overlay {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        padding: 18px;
+      }
     }
   </style>
 </head>
@@ -493,19 +1209,19 @@
     <main>
       <section id="signedOutView" class="hero">
         <div>
-          <div class="eyebrow">BeBrief Web</div>
-          <h1>Use your same BeBrief profile from a browser.</h1>
+          <h1>Manage your<br>BeBrief profile<br>from any browser.</h1>
           <p class="lead">
-            Sign in with your existing BeBrief account to create advisory or official briefs, review recent source-packet records, and inspect synced profile and aircraft data.
+            Set up pilot details, aircraft records, briefing defaults, and account access on the web. The mobile app stays ready for cockpit and ramp workflows with the same synced records.
           </p>
-          <div class="notice">
-            Web briefs use shared server records. Advisory summaries do not replace official sources or PIC judgment.
-          </div>
         </div>
 
         <aside class="card auth-card">
-          <h2>Sign in</h2>
-          <p class="muted">Use the same email and password as the BeBrief app.</p>
+          <h2>Sign in to BeBrief</h2>
+          <p class="muted">Use email/password or Google on desktop. iPhone users can still use Sign in with Apple in the app.</p>
+          <div class="auth-actions">
+            <button id="googleSignInButton" class="btn google full" type="button">Continue with Google</button>
+            <div class="auth-divider">or</div>
+          </div>
           <form id="authForm" class="form">
             <label>
               Email
@@ -532,9 +1248,10 @@
           <div id="profileEmail" class="side-email"></div>
           <div style="margin-top:12px"><span id="accessBadge" class="badge">Checking</span></div>
           <nav class="side-nav" aria-label="Portal sections">
-            <button class="side-tab active" type="button" data-view="briefs">Briefs</button>
+            <button class="side-tab active" type="button" data-view="home">Home</button>
             <button class="side-tab" type="button" data-view="profile">Profile</button>
             <button class="side-tab" type="button" data-view="aircraft">Aircraft</button>
+            <button class="side-tab" type="button" data-view="briefs">Briefs</button>
             <button class="side-tab" type="button" data-view="account">Account</button>
           </nav>
         </aside>
@@ -542,7 +1259,74 @@
         <div class="workspace">
           <div id="dashboardError" class="error"></div>
 
-          <section id="view-briefs" class="view active">
+          <section id="view-home" class="view active">
+            <div class="command-home">
+              <div class="command-stage card">
+                <div class="command-stage-head">
+                  <div>
+                    <div class="eyebrow">Flight Deck</div>
+                    <h2 id="commandAircraftName">Primary Aircraft</h2>
+                    <p id="commandAircraftMeta" class="muted">Add an aircraft to personalize the web platform.</p>
+                  </div>
+                  <span id="commandTailBadge" class="badge">Aircraft</span>
+                </div>
+                <div class="scene-shell">
+                  <canvas id="commandScene" aria-label="3D aircraft and topographic route scene"></canvas>
+                  <div id="sceneFallback" class="scene-fallback">3D flight deck unavailable</div>
+                  <div class="scene-overlay">
+                    <div>
+                      <span>Altitude</span>
+                      <strong id="commandAltitude">VFR</strong>
+                    </div>
+                    <div>
+                      <span>Route</span>
+                      <strong id="commandRoute">Ready</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <aside class="command-panel card">
+                <div class="section-head">
+                  <div>
+                    <h2>Controls</h2>
+                    <p class="muted">Fast access to the workflows pilots use before flight.</p>
+                  </div>
+                </div>
+                <div class="control-grid">
+                  <button class="control-tile" type="button" data-home-view="briefs">
+                    <span>New brief</span>
+                    <strong>Plan</strong>
+                  </button>
+                  <button class="control-tile" type="button" data-home-view="aircraft">
+                    <span>Aircraft</span>
+                    <strong>Manage</strong>
+                  </button>
+                  <button class="control-tile" type="button" data-home-view="profile">
+                    <span>Pilot</span>
+                    <strong>Profile</strong>
+                  </button>
+                  <button class="control-tile" type="button" data-home-view="account">
+                    <span>Account</span>
+                    <strong>Settings</strong>
+                  </button>
+                </div>
+              </aside>
+
+              <aside class="command-panel card">
+                <div class="section-head">
+                  <div>
+                    <h2>Recent Flights</h2>
+                    <p class="muted">Latest briefing records from your account.</p>
+                  </div>
+                  <span id="commandBriefCount" class="badge">0</span>
+                </div>
+                <div id="commandRecentList" class="command-list"></div>
+              </aside>
+            </div>
+          </section>
+
+          <section id="view-briefs" class="view">
             <div class="view-grid">
               <div class="card span-8">
                 <div class="section-head">
@@ -577,6 +1361,7 @@
                       <option value="uncredentialed">Uncredentialed official</option>
                       <option value="credentialed">Credentialed 1800WXBRIEF</option>
                     </select>
+                    <span class="muted">Credentialed filing needs linked Flight Service credentials in Account. Uncredentialed official briefing can still work without stored credentials.</span>
                   </label>
                   <label>
                     Departure
@@ -607,9 +1392,6 @@
                     <button id="refreshButton" class="btn" type="button">Refresh Data</button>
                   </div>
                   <div id="officialFields" class="mode-panel">
-                    <div class="notice" style="margin-top:0">
-                      Official mode requires flight-plan-style aircraft, fuel, pilot, and contact fields. This matches the app flow and marks `notABriefing=false` server-side.
-                    </div>
                     <div class="form-grid" style="margin-top:0">
                       <label>
                         Aircraft type/equipment
@@ -672,29 +1454,31 @@
 
           <section id="view-profile" class="view">
             <div class="view-grid">
-            <div class="card span-12">
-              <div class="section-head">
-                <div>
-                  <div class="eyebrow">Profile</div>
-                  <h2>Pilot Profile</h2>
-                  <p class="muted">Synced account and pilot profile fields shared with the mobile app.</p>
+              <div class="card span-12">
+                <div class="workspace-intro">
+                  <div class="section-head">
+                    <div>
+                      <div class="eyebrow">Profile Command</div>
+                      <h2>Pilot profile, filing details, and app sync</h2>
+                      <p class="muted">This is the browser home base for managing the records that power BeBrief on iPhone and web.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="label">Pilot type</div>
+                    <div id="pilotType" class="value">-</div>
+                  </div>
+                  <div class="metric">
+                    <div class="label">Home airport</div>
+                    <div id="homeAirport" class="value">-</div>
+                  </div>
+                  <div class="metric">
+                    <div class="label">Total hours</div>
+                    <div id="totalHours" class="value">-</div>
+                  </div>
                 </div>
               </div>
-              <div class="metric-grid">
-                <div class="metric">
-                  <div class="label">Pilot type</div>
-                  <div id="pilotType" class="value">-</div>
-                </div>
-                <div class="metric">
-                  <div class="label">Home airport</div>
-                  <div id="homeAirport" class="value">-</div>
-                </div>
-                <div class="metric">
-                  <div class="label">Total hours</div>
-                  <div id="totalHours" class="value">-</div>
-                </div>
-              </div>
-            </div>
             <div class="card span-6">
               <h2>Account Profile</h2>
               <form id="profileForm" class="form-grid">
@@ -777,7 +1561,7 @@
 
           <section id="view-aircraft" class="view">
             <div class="view-grid">
-            <div class="card span-5">
+            <div class="card span-4 aircraft-editor-card">
               <div class="section-head">
                 <div>
                   <div class="eyebrow">Aircraft Editor</div>
@@ -842,7 +1626,7 @@
               <div id="aircraftMessage" class="success"></div>
               <div id="aircraftError" class="error"></div>
             </div>
-            <div class="card span-7">
+            <div class="card span-8 aircraft-table-card">
               <div class="section-head">
                 <div>
                   <div class="eyebrow">Aircraft</div>
@@ -902,6 +1686,12 @@
                     Default destination
                     <input id="defaultDestination" type="text" maxlength="4" autocomplete="off">
                   </label>
+                  <label>
+                    Default aircraft
+                    <select id="defaultAircraft">
+                      <option value="">None</option>
+                    </select>
+                  </label>
                   <label class="check-row">
                     <input id="autoPopulateDefaults" type="checkbox"> Auto-populate defaults
                   </label>
@@ -937,12 +1727,6 @@
                 <div id="passwordMessage" class="success"></div>
                 <div id="passwordError" class="error"></div>
               </div>
-              <div class="card span-6">
-                <h2>Sync Scope</h2>
-                <p class="muted">
-                  Web and phone now read and write the same profile, settings, aircraft, subscription, and server briefing records. Native map and weight-balance screens still have richer interaction, but the records edited here hydrate app-side through the existing Supabase sync path.
-                </p>
-              </div>
             </div>
           </section>
         </div>
@@ -966,6 +1750,7 @@
     const signOutButton = document.getElementById('signOutButton');
     const authForm = document.getElementById('authForm');
     const signUpButton = document.getElementById('signUpButton');
+    const googleSignInButton = document.getElementById('googleSignInButton');
     const authError = document.getElementById('authError');
     const authSuccess = document.getElementById('authSuccess');
     const signInButton = document.getElementById('signInButton');
@@ -980,6 +1765,7 @@
     let currentSession = null;
     let currentAircraft = [];
     let currentBriefs = [];
+    let commandSceneState = null;
 
     function setMessage(element, message) {
       element.textContent = message || '';
@@ -993,6 +1779,9 @@
       document.querySelectorAll('.view').forEach((section) => {
         section.classList.toggle('active', section.id === `view-${view}`);
       });
+      if (view === 'home') {
+        requestAnimationFrame(() => resizeCommandScene());
+      }
     }
 
     function formatDate(value) {
@@ -1276,6 +2065,189 @@
       briefResult.style.display = 'block';
     }
 
+    function createAircraftMesh(THREE) {
+      const aircraft = new THREE.Group();
+      const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.42, metalness: 0.18 });
+      const accentMaterial = new THREE.MeshStandardMaterial({ color: 0x0891b2, roughness: 0.34, metalness: 0.08 });
+      const glassMaterial = new THREE.MeshStandardMaterial({ color: 0x67e8f9, roughness: 0.18, metalness: 0.2, transparent: true, opacity: 0.72 });
+
+      const fuselage = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 1.55, 10, 24), bodyMaterial);
+      fuselage.rotation.z = Math.PI / 2;
+      aircraft.add(fuselage);
+
+      const wing = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.08, 0.08), accentMaterial);
+      wing.position.y = 0.02;
+      aircraft.add(wing);
+
+      const tail = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.06, 0.06), accentMaterial);
+      tail.position.x = -0.8;
+      tail.position.z = 0.18;
+      aircraft.add(tail);
+
+      const fin = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.42, 3), accentMaterial);
+      fin.position.x = -0.75;
+      fin.position.z = 0.36;
+      fin.rotation.y = Math.PI / 2;
+      aircraft.add(fin);
+
+      const nose = new THREE.Mesh(new THREE.ConeGeometry(0.23, 0.44, 24), bodyMaterial);
+      nose.position.x = 0.98;
+      nose.rotation.z = -Math.PI / 2;
+      aircraft.add(nose);
+
+      const canopy = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 12), glassMaterial);
+      canopy.scale.set(1.2, 0.72, 0.44);
+      canopy.position.set(0.3, 0, 0.2);
+      aircraft.add(canopy);
+
+      aircraft.rotation.set(-0.45, 0.1, -0.18);
+      aircraft.position.set(0, 0.16, 0.72);
+      return aircraft;
+    }
+
+    function createTerrainMesh(THREE) {
+      const group = new THREE.Group();
+      const surfaceMaterial = new THREE.MeshStandardMaterial({
+        color: 0xdbeafe,
+        roughness: 0.88,
+        metalness: 0,
+        transparent: true,
+        opacity: 0.94,
+        side: THREE.DoubleSide,
+      });
+      const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0891b2, transparent: true, opacity: 0.34 });
+      const geometry = new THREE.PlaneGeometry(7.2, 5.2, 80, 56);
+
+      const position = geometry.attributes.position;
+      for (let i = 0; i < position.count; i += 1) {
+        const x = position.getX(i);
+        const y = position.getY(i);
+        const ridge = Math.sin(x * 1.55) * 0.18 + Math.cos(y * 1.9) * 0.13 + Math.sin((x + y) * 2.1) * 0.08;
+        position.setZ(i, ridge);
+      }
+      geometry.computeVertexNormals();
+
+      const terrain = new THREE.Mesh(geometry, surfaceMaterial);
+      terrain.rotation.x = -Math.PI / 2;
+      terrain.position.y = -0.55;
+      group.add(terrain);
+
+      for (let i = -5; i <= 5; i += 1) {
+        const points = [];
+        for (let x = -3.4; x <= 3.4; x += 0.18) {
+          const z = i * 0.42;
+          const y = -0.38 + Math.sin(x * 1.55) * 0.08 + Math.cos(z * 1.9) * 0.05;
+          points.push(new THREE.Vector3(x, y, z));
+        }
+        group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), lineMaterial));
+      }
+
+      const routeMaterial = new THREE.LineBasicMaterial({ color: 0x0f172a, transparent: true, opacity: 0.58 });
+      const route = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2.9, -0.18, 1.8),
+        new THREE.Vector3(-1.3, -0.08, 0.6),
+        new THREE.Vector3(0.3, 0.02, -0.3),
+        new THREE.Vector3(2.8, -0.12, -1.65),
+      ]);
+      group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(route.getPoints(80)), routeMaterial));
+
+      return group;
+    }
+
+    function resizeCommandScene() {
+      if (!commandSceneState) return;
+      const { canvas, camera, renderer } = commandSceneState;
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      renderer.setSize(rect.width, rect.height, false);
+      camera.aspect = rect.width / rect.height;
+      camera.updateProjectionMatrix();
+    }
+
+    function initCommandScene() {
+      const canvas = document.getElementById('commandScene');
+      const fallback = document.getElementById('sceneFallback');
+      if (!canvas || commandSceneState) return;
+      if (!window.THREE) {
+        fallback?.classList.add('visible');
+        return;
+      }
+      fallback?.classList.remove('visible');
+      const THREE = window.THREE;
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf8fafc);
+
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+      camera.position.set(4.2, 4.4, 5.2);
+      camera.lookAt(0, 0, 0);
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0xdbeafe, 2.2));
+      const keyLight = new THREE.DirectionalLight(0xffffff, 2.6);
+      keyLight.position.set(3, 5, 4);
+      scene.add(keyLight);
+
+      const terrain = createTerrainMesh(THREE);
+      const aircraft = createAircraftMesh(THREE);
+      scene.add(terrain);
+      scene.add(aircraft);
+
+      commandSceneState = { canvas, camera, renderer, scene, terrain, aircraft };
+      resizeCommandScene();
+
+      const animate = () => {
+        if (!commandSceneState) return;
+        commandSceneState.aircraft.rotation.z = -0.18 + Math.sin(Date.now() * 0.0012) * 0.035;
+        commandSceneState.terrain.rotation.y = Math.sin(Date.now() * 0.00018) * 0.035;
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      };
+      animate();
+      window.addEventListener('resize', resizeCommandScene);
+    }
+
+    function renderCommandHome(aircraft, briefs, profile) {
+      const primary = aircraft?.[0];
+      const aircraftName = primary
+        ? (primary.nickname || [primary.make, primary.model].filter(Boolean).join(' ') || primary.tail_number)
+        : 'Primary Aircraft';
+      const aircraftMeta = primary
+        ? [primary.year, primary.make, primary.model].filter(Boolean).join(' ') || 'Aircraft profile ready'
+        : 'Add an aircraft to personalize the web platform.';
+      document.getElementById('commandAircraftName').textContent = aircraftName;
+      document.getElementById('commandAircraftMeta').textContent = aircraftMeta;
+      document.getElementById('commandTailBadge').textContent = primary?.tail_number || 'Aircraft';
+      document.getElementById('commandAltitude').textContent = profile?.home_airport_icao || 'VFR';
+
+      const latestPayload = parseJsonObject(briefs?.[0]?.request_payload, {});
+      const latestRoute = latestPayload?.nasRouteBriefingFields?.route;
+      document.getElementById('commandRoute').textContent = latestRoute || 'Ready';
+      document.getElementById('commandBriefCount').textContent = String(briefs?.length || 0);
+
+      const list = document.getElementById('commandRecentList');
+      const recent = (briefs || []).slice(0, 5);
+      if (recent.length === 0) {
+        renderEmpty(list, 'No recent briefing records yet.');
+      } else {
+        list.innerHTML = recent.map((brief) => {
+          const payload = parseJsonObject(brief.request_payload, {});
+          const route = payload?.nasRouteBriefingFields?.route || 'Route not saved';
+          const status = [brief.status, formatDate(brief.requested_at)].filter(Boolean).join(' - ');
+          return `
+            <div class="command-flight">
+              <strong>${escapeHtml(route)}</strong>
+              <span>${escapeHtml(status || 'Briefing record')}</span>
+            </div>
+          `;
+        }).join('');
+      }
+
+      initCommandScene();
+      requestAnimationFrame(() => resizeCommandScene());
+    }
+
     async function safeQuery(label, query) {
       const result = await query;
       if (result.error) {
@@ -1311,6 +2283,19 @@
       document.getElementById('pilotAddress').value = settings?.pilot_address || '';
     }
 
+    function fillDefaultAircraftOptions(settings, aircraftList) {
+      const select = document.getElementById('defaultAircraft');
+      const selectedId = settings?.default_aircraft_id || '';
+      select.innerHTML = '<option value="">None</option>';
+      for (const aircraft of aircraftList || []) {
+        const option = document.createElement('option');
+        option.value = aircraft.id;
+        option.textContent = `${aircraft.tail_number || 'Aircraft'}${aircraft.make || aircraft.model ? ` - ${[aircraft.make, aircraft.model].filter(Boolean).join(' ')}` : ''}`;
+        select.appendChild(option);
+      }
+      select.value = selectedId;
+    }
+
     function resetAircraftForm() {
       document.getElementById('aircraftFormTitle').textContent = 'Add Aircraft';
       document.getElementById('aircraftId').value = '';
@@ -1344,7 +2329,8 @@
     }
 
     function hydrateOfficialDefaults(settings, aircraftList) {
-      const firstAircraft = aircraftList?.[0];
+      const defaultAircraft = aircraftList?.find((aircraft) => aircraft.id === settings?.default_aircraft_id);
+      const firstAircraft = defaultAircraft || aircraftList?.[0];
       if (firstAircraft) {
         const fuel = parseJsonObject(firstAircraft.fuel, {});
         if (!document.getElementById('aircraftIdentifier').value) {
@@ -1397,6 +2383,7 @@
       const settings = settingsResult.data;
       currentAircraft = aircraft;
       currentBriefs = briefs;
+      renderCommandHome(aircraft, briefs, profile);
 
       document.getElementById('profileName').textContent = profile?.display_name || user.email || 'BeBrief pilot';
       document.getElementById('pilotType').textContent = formatPilotType(profile?.pilot_type);
@@ -1404,6 +2391,7 @@
       document.getElementById('totalHours').textContent = profile?.total_hours == null ? '-' : String(profile.total_hours);
       fillProfileForm(profile);
       fillSettingsForm(settings);
+      fillDefaultAircraftOptions(settings, aircraft);
       hydrateOfficialDefaults(settings, aircraft);
       setOfficialModeFields();
 
@@ -1429,19 +2417,49 @@
       if (aircraft.length === 0) {
         renderEmpty(aircraftList, 'No saved aircraft yet.');
       } else {
-        aircraftList.innerHTML = aircraft.map((item) => {
+        aircraftList.innerHTML = `
+          <div class="aircraft-table-wrap">
+            <table class="aircraft-table">
+              <thead>
+                <tr>
+                  <th style="width:34%">Aircraft</th>
+                  <th style="width:15%">Tail</th>
+                  <th style="width:16%">MTOW</th>
+                  <th style="width:20%">Updated</th>
+                  <th style="width:15%; text-align:right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${aircraft.map((item) => {
           const title = item.nickname || item.tail_number || 'Aircraft';
           const type = [item.year, item.make, item.model].filter(Boolean).join(' ');
-          const subtitle = [
-            type,
-            item.max_takeoff_weight ? `${Math.round(Number(item.max_takeoff_weight))} lb MTOW` : null,
-            item.updated_at ? `Updated ${formatDate(item.updated_at)}` : null,
-          ].filter(Boolean).join(' | ') || 'Aircraft profile';
-          return actionRow(title, subtitle, item.tail_number, `
-            <button class="btn small" type="button" data-aircraft-edit="${escapeHtml(item.id)}">Edit</button>
-            <button class="btn small danger" type="button" data-aircraft-delete="${escapeHtml(item.id)}">Delete</button>
-          `);
-        }).join('');
+          const tail = item.tail_number || '-';
+          const mtow = item.max_takeoff_weight ? `${Math.round(Number(item.max_takeoff_weight)).toLocaleString()} lb` : '-';
+          const updated = item.updated_at ? formatDate(item.updated_at) : '-';
+          return `
+            <tr>
+              <td>
+                <div class="aircraft-primary">
+                  <div class="aircraft-title">${escapeHtml(title)}</div>
+                  <div class="aircraft-subtitle">${escapeHtml(type || 'Aircraft profile')}</div>
+                </div>
+              </td>
+              <td><span class="aircraft-tail">${escapeHtml(tail)}</span></td>
+              <td class="aircraft-cell-muted">${escapeHtml(mtow)}</td>
+              <td class="aircraft-cell-muted">${escapeHtml(updated)}</td>
+              <td>
+                <div class="aircraft-actions">
+                  <button class="btn small" type="button" data-aircraft-edit="${escapeHtml(item.id)}">Edit</button>
+                  <button class="btn small danger" type="button" data-aircraft-delete="${escapeHtml(item.id)}">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
       }
 
       document.getElementById('briefCount').textContent = String(briefs.length);
@@ -1490,6 +2508,10 @@
 
     document.querySelectorAll('[data-view]').forEach((button) => {
       button.addEventListener('click', () => setActiveView(button.dataset.view));
+    });
+
+    document.querySelectorAll('[data-home-view]').forEach((button) => {
+      button.addEventListener('click', () => setActiveView(button.dataset.homeView));
     });
 
     document.getElementById('briefList').addEventListener('click', (event) => {
@@ -1581,11 +2603,12 @@
         const payload = {
           user_id: currentSession.user.id,
           units: document.getElementById('settingsUnits').value,
-          dark_mode: 'true',
+          dark_mode: 'auto',
           time_format: document.getElementById('settingsTimeFormat').value,
           timezone_display: document.getElementById('settingsTimezone').value,
           map_orientation: document.getElementById('settingsMapOrientation').value,
           theme: 'midnight',
+          default_aircraft_id: document.getElementById('defaultAircraft').value || null,
           default_departure_icao: depRaw.trim() ? normalizeAirport(depRaw, 'Default departure') : null,
           default_destination_icao: destRaw.trim() ? normalizeAirport(destRaw, 'Default destination') : null,
           auto_populate_defaults: document.getElementById('autoPopulateDefaults').checked,
@@ -1726,6 +2749,21 @@
         return;
       }
       await refreshSession();
+    });
+
+    googleSignInButton.addEventListener('click', async () => {
+      setMessage(authError, '');
+      setMessage(authSuccess, '');
+      googleSignInButton.disabled = true;
+      const redirectTo = window.location.href.split('#')[0];
+      const { error } = await client.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo },
+      });
+      googleSignInButton.disabled = false;
+      if (error) {
+        setMessage(authError, error.message);
+      }
     });
 
     signUpButton.addEventListener('click', async () => {
