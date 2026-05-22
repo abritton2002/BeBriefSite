@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BeBrief - Preflight Briefing on iOS and Web</title>
-  <meta name="description" content="BeBrief is a synced preflight briefing platform for serious pilots: plan and brief on iOS, manage profile, aircraft, and briefing records on the web.">
+  <title>BeBrief - Preflight Briefing for iOS</title>
+  <meta name="description" content="BeBrief is an iOS preflight briefing app for serious pilots: plan, review hazards, manage aircraft, and keep flight records organized from your phone.">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="BeBrief - Preflight Briefing on iOS and Web">
-  <meta property="og:description" content="One BeBrief profile across iOS and web for briefing readiness, aircraft data, and saved flight review.">
+  <meta property="og:title" content="BeBrief - Preflight Briefing for iOS">
+  <meta property="og:description" content="iOS briefing readiness, aircraft data, hazard review, and saved flight records for pilots.">
   <meta property="og:image" content="assets/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="BeBrief - Preflight Briefing on iOS and Web">
-  <meta name="twitter:description" content="Synced pilot profile, aircraft, briefing records, and readiness review across mobile and web.">
+  <meta name="twitter:title" content="BeBrief - Preflight Briefing for iOS">
+  <meta name="twitter:description" content="iOS briefing readiness, aircraft data, hazard review, and saved flight records for pilots.">
   <meta name="twitter:image" content="assets/twitter-card.png">
 
   <link rel="icon" type="image/png" href="assets/favicon.png">
@@ -226,7 +226,7 @@
 
     .platform-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
       gap: 18px;
     }
     .platform-panel {
@@ -236,11 +236,6 @@
       border: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(16, 24, 35, 0.95), rgba(8, 13, 20, 0.95));
       box-shadow: var(--shadow);
-    }
-    .platform-panel.web {
-      background:
-        linear-gradient(180deg, rgba(7, 12, 18, 0.12), rgba(7, 12, 18, 0.9)),
-        url("assets/webdashmain.png") center top / cover no-repeat;
     }
     .platform-panel.ios {
       background:
@@ -516,7 +511,6 @@
       .readiness-cell:last-child { border-bottom: 0; }
       section { padding: 64px 0; }
       .platform-panel { min-height: 520px; }
-      .platform-panel.web { background-size: auto 100%, 760px auto; }
       .platform-content { padding: 22px; }
       .feature-card img { height: 210px; }
       .sync-flow { grid-template-columns: 1fr; }
@@ -531,10 +525,10 @@
         <img src="assets/bebrief-logo-full-white.png" alt="BeBrief">
       </a>
       <nav class="nav-links" aria-label="Primary navigation">
-        <a href="#platforms">iOS + Web</a>
+        <a href="#platforms">iOS App</a>
         <a href="#briefing">Briefing</a>
-        <a href="#sync">Sync</a>
-        <a href="app.html" class="btn btn-primary">Open Web Platform</a>
+        <a href="#workflow">Workflow</a>
+        <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-primary">Request iOS Access</a>
       </nav>
     </div>
   </header>
@@ -544,10 +538,9 @@
       <div class="container hero-inner">
         <div>
           <p class="hero-tagline">Preflight information, done briefly.</p>
-          <h1>The preflight picture. <span>For iOS and web.</span></h1>
+          <h1>The preflight picture. <span>Built for iOS.</span></h1>
           <div class="hero-actions">
-            <a href="app.html" class="btn btn-primary">Open Web Platform</a>
-            <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-secondary">Request iOS Access</a>
+            <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-primary">Request iOS Access</a>
           </div>
         </div>
 
@@ -576,10 +569,10 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="eyebrow">Two synced surfaces</div>
-            <h2>The phone is for the brief. The web is for the record.</h2>
+            <div class="eyebrow">iOS app</div>
+            <h2>The phone is where the brief happens.</h2>
           </div>
-          <p>Users should not have to rebuild their pilot profile, aircraft, briefing details, or briefing history on each device. BeBrief is designed around one shared flight record.</p>
+          <p>BeBrief is focused on a mobile preflight workflow: route creation, briefing review, hazard inspection, aircraft setup, and saved flight records in one iOS app.</p>
         </div>
 
         <div class="platform-grid">
@@ -592,19 +585,6 @@
                 <li>Advisory GO / CAUTION / NO-GO logic stays clearly labeled as app-generated.</li>
                 <li>Weather, NOTAM, TFR, winds, PIREP, and SIGMET detail remain drill-down inspectable.</li>
                 <li>Route edits can regenerate the active brief instead of forcing duplicate records.</li>
-              </ul>
-            </div>
-          </article>
-
-          <article class="platform-panel web">
-            <div class="platform-content">
-              <div class="platform-label">Web platform</div>
-              <h3>Profile and briefing control</h3>
-              <p>Use the browser when a full keyboard and larger screen make account, aircraft, official fields, saved records, and briefing review faster.</p>
-              <ul class="check-list">
-                <li>Same BeBrief profile and aircraft records as the app.</li>
-                <li>Account, subscription, and briefing connection visibility.</li>
-                <li>Built to keep web and iOS workflows aligned.</li>
               </ul>
             </div>
           </article>
@@ -663,28 +643,28 @@
             <article class="feature-card">
               <img src="assets/hangar.png" alt="BeBrief hangar aircraft management screen">
               <h3>Aircraft hangar</h3>
-              <p>Aircraft records, selected tail number, and pilot-owned setup data stay synced with the web platform.</p>
+              <p>Aircraft records, selected tail number, and pilot-owned setup data stay with the mobile briefing workflow.</p>
             </article>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="sync" class="sync-band">
+    <section id="workflow" class="sync-band">
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="eyebrow">Same account</div>
-            <h2>Update once. Brief anywhere.</h2>
+            <div class="eyebrow">Mobile workflow</div>
+            <h2>Build the route. Review the brief. Keep the record.</h2>
           </div>
-          <p>The web platform and iOS app use the same BeBrief account so profile, aircraft, settings, and briefing records do not drift.</p>
+          <p>The iOS app keeps pilot profile, aircraft, settings, and briefing records close to the preflight flow pilots actually use before departure.</p>
         </div>
 
         <div class="sync-flow">
           <div class="sync-step">
             <span>ACCOUNT</span>
             <strong>Sign in</strong>
-            <p>Email, Google, and supported mobile sign-in connect to the same BeBrief identity.</p>
+            <p>Email, Google, and supported mobile sign-in connect to your BeBrief identity.</p>
           </div>
           <div class="sync-step">
             <span>AIRCRAFT</span>
@@ -704,7 +684,7 @@
           <div class="sync-step">
             <span>RECORD</span>
             <strong>Return later</strong>
-            <p>Saved brief status and profile updates remain available across iOS and web.</p>
+            <p>Saved brief status and profile updates remain available in the iOS app.</p>
           </div>
         </div>
       </div>
@@ -715,7 +695,7 @@
         <div class="limits-main">
           <div class="eyebrow">Pilot control</div>
           <h2>Keep the brief clear. Keep the decision yours.</h2>
-          <p>BeBrief organizes the information pilots review before flight so the workflow is faster to inspect, repeat, and carry across devices.</p>
+          <p>BeBrief organizes the information pilots review before flight so the workflow is faster to inspect, repeat, and carry on the iPhone.</p>
         </div>
         <aside class="limits-side">
           <ul>
@@ -730,12 +710,11 @@
 
     <section class="final-cta">
       <div class="container">
-        <div class="eyebrow">Fly the same profile on every surface</div>
-        <h2>Open the web platform now. Bring the same record to iOS.</h2>
-        <p>Use BeBrief on the web for account, aircraft, and briefing control. Use the iOS app for mobile route planning, readiness review, detail inspection, and preflight workflow.</p>
+        <div class="eyebrow">Join the iOS test path</div>
+        <h2>Bring BeBrief into your mobile preflight flow.</h2>
+        <p>Request iOS access for route planning, readiness review, detail inspection, aircraft setup, and saved briefing records from your phone.</p>
         <div class="hero-actions">
-          <a href="app.html" class="btn btn-primary">Open Web Platform</a>
-          <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-secondary">Request iOS Access</a>
+          <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-primary">Request iOS Access</a>
         </div>
       </div>
     </section>
