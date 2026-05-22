@@ -29,9 +29,7 @@
       --dim: #586474;
       --panel: rgba(255, 255, 255, 0.045);
       --line: rgba(255, 255, 255, 0.12);
-      --cyan: #84f7ef;
-      --green: #b8ff91;
-      --blue: #5ee4ff;
+      --accent: #d8ff78;
       --shadow: 0 42px 130px rgba(0, 0, 0, 0.72);
     }
 
@@ -41,10 +39,7 @@
       margin: 0;
       min-width: 320px;
       color: var(--ink);
-      background:
-        radial-gradient(circle at 30% 24%, rgba(132, 247, 239, 0.11), transparent 26%),
-        radial-gradient(circle at 67% 35%, rgba(184, 255, 145, 0.08), transparent 24%),
-        #030405;
+      background: #000;
       font-family: "Source Sans 3", sans-serif;
       line-height: 1.45;
       letter-spacing: 0;
@@ -101,8 +96,8 @@
       padding: 10px 18px;
       border-radius: 999px;
       color: #08100b;
-      background: linear-gradient(135deg, #f4fff6, #aaffcb 48%, #8df6ff);
-      box-shadow: 0 0 30px rgba(132, 247, 239, 0.2);
+      background: #f3f7ef;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
       font-size: 13px;
       font-weight: 900;
       text-decoration: none;
@@ -151,77 +146,27 @@
       height: 72px;
       transform: translateX(-50%) rotate(-9deg);
       border-radius: 50%;
-      background: radial-gradient(ellipse, rgba(132, 247, 239, 0.16), rgba(0, 0, 0, 0) 68%);
+      background: radial-gradient(ellipse, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0) 68%);
       filter: blur(8px);
     }
     .phone {
       position: relative;
-      width: min(72vw, 322px);
-      aspect-ratio: 1206 / 2622;
-      padding: 10px;
-      border-radius: 48px;
-      background:
-        linear-gradient(145deg, #1e2227, #050607 40%, #151a1d 100%);
-      box-shadow:
-        -16px 38px 110px rgba(0, 0, 0, 0.86),
-        0 0 0 1px rgba(255, 255, 255, 0.1),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-      transform: rotateX(4deg) rotateY(-18deg) rotateZ(-5deg);
-      transform-style: preserve-3d;
+      z-index: 3;
+      width: min(72vw, 410px);
+      filter: drop-shadow(-18px 44px 70px rgba(0, 0, 0, 0.82));
       animation: phone-drift 7s ease-in-out infinite;
     }
-    .phone::before {
-      content: "";
-      position: absolute;
-      z-index: 3;
-      top: 18px;
-      left: 50%;
-      width: 116px;
-      height: 24px;
-      transform: translateX(-50%);
-      border-radius: 999px;
-      background: #050607;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-    }
-    .phone::after {
-      content: "";
-      position: absolute;
-      inset: 10px;
-      z-index: 2;
-      border-radius: 38px;
-      background: linear-gradient(115deg, rgba(255, 255, 255, 0.12), transparent 26%, transparent 76%, rgba(255, 255, 255, 0.06));
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
-    .phone-screen {
+    .phone img {
       width: 100%;
-      height: 100%;
-      overflow: hidden;
-      border-radius: 38px;
-      background: #050607;
-    }
-    .phone-screen img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 38px;
     }
     .side-phone {
       position: absolute;
-      width: 170px;
-      aspect-ratio: 1206 / 2622;
-      padding: 7px;
-      border-radius: 34px;
-      background: #07090b;
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(255, 255, 255, 0.08);
-      opacity: 0.72;
-      overflow: hidden;
+      width: 250px;
+      opacity: 0.58;
+      filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.68));
     }
     .side-phone img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 27px;
     }
     .side-left {
       left: 18px;
@@ -253,7 +198,7 @@
       gap: 9px;
     }
     .laurel {
-      color: var(--green);
+      color: var(--accent);
       font-size: 24px;
       letter-spacing: -0.16em;
     }
@@ -266,15 +211,14 @@
     }
     h1, h2, h3 {
       margin: 0;
-      font-family: "Barlow Condensed", sans-serif;
-      font-weight: 900;
-      line-height: 0.92;
+      font-family: "Source Sans 3", sans-serif;
+      font-weight: 800;
+      line-height: 1;
       letter-spacing: 0;
-      text-transform: uppercase;
     }
     h1 {
       font-size: clamp(62px, 8.5vw, 112px);
-      background: linear-gradient(135deg, #d8ffaf 0%, #8bf8b8 42%, #8df6ff 100%);
+      background: linear-gradient(180deg, #f8fff0 0%, #d7ff7a 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -311,12 +255,12 @@
     .pill-btn.primary {
       border-color: transparent;
       color: #071009;
-      background: linear-gradient(135deg, #d7ff9d, #8df6ff);
-      box-shadow: 0 0 34px rgba(141, 246, 255, 0.18);
+      background: #d8ff78;
+      box-shadow: 0 0 34px rgba(216, 255, 120, 0.14);
     }
     .pill-btn:hover {
       transform: translateY(-1px);
-      border-color: rgba(141, 246, 255, 0.42);
+      border-color: rgba(216, 255, 120, 0.34);
     }
     .ticker {
       width: fit-content;
@@ -341,7 +285,7 @@
     }
     .eyebrow {
       margin: 0 0 10px;
-      color: var(--cyan);
+      color: var(--accent);
       font-family: "IBM Plex Mono", monospace;
       font-size: 12px;
       font-weight: 800;
@@ -374,8 +318,8 @@
     }
     .flow-item:hover {
       transform: translateY(-3px);
-      border-color: rgba(141, 246, 255, 0.28);
-      background: rgba(141, 246, 255, 0.06);
+      border-color: rgba(216, 255, 120, 0.26);
+      background: rgba(255, 255, 255, 0.055);
     }
     .flow-item span {
       color: var(--dim);
@@ -385,7 +329,7 @@
     }
     .flow-item h3 {
       margin-top: 32px;
-      font-size: 36px;
+      font-size: 30px;
     }
     .flow-item p {
       margin: 8px 0 0;
@@ -409,12 +353,7 @@
       gap: 14px;
     }
     .mini-phone {
-      aspect-ratio: 1206 / 2622;
-      padding: 7px;
-      border-radius: 32px;
-      background: linear-gradient(145deg, #181c20, #050607 55%, #20252a);
-      box-shadow: 0 24px 62px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.08);
-      overflow: hidden;
+      filter: drop-shadow(0 26px 48px rgba(0, 0, 0, 0.48));
       transition: transform 220ms ease;
     }
     .screen-card:nth-child(2),
@@ -422,9 +361,6 @@
     .screen-card:hover .mini-phone { transform: translateY(-7px) rotate(-1deg); }
     .mini-phone img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 25px;
     }
     .screen-card strong {
       padding: 0 6px;
@@ -462,7 +398,7 @@
       background: rgba(0, 0, 0, 0.22);
     }
     .control-point span {
-      color: var(--cyan);
+      color: var(--accent);
       font-family: "IBM Plex Mono", monospace;
       font-size: 11px;
       font-weight: 800;
@@ -558,8 +494,8 @@
       h1 { font-size: 58px; }
       .award { gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
       .phone-scene { min-height: 520px; }
-      .phone { width: min(72vw, 250px); border-radius: 40px; }
-      .side-phone { width: 132px; }
+      .phone { width: min(78vw, 300px); }
+      .side-phone { width: 172px; }
       .side-left { left: -44px; top: 114px; }
       .side-right { right: -44px; bottom: 106px; }
       section { padding: 52px 0; }
@@ -607,21 +543,19 @@
         <div class="shell hero-grid">
           <div class="phone-scene" aria-label="BeBrief app preview">
             <svg class="route-line" viewBox="0 0 620 210" role="presentation" aria-hidden="true">
-              <path d="M54 166 C150 62 254 148 358 82 C442 30 510 52 574 26" fill="none" stroke="rgba(132,247,239,0.64)" stroke-width="3" stroke-linecap="round"/>
+              <path d="M54 166 C150 62 254 148 358 82 C442 30 510 52 574 26" fill="none" stroke="rgba(216,255,120,0.34)" stroke-width="3" stroke-linecap="round"/>
               <circle cx="54" cy="166" r="5" fill="#b8ff91"/>
-              <circle cx="574" cy="26" r="5" fill="#84f7ef"/>
+              <circle cx="574" cy="26" r="5" fill="#d8ff78"/>
             </svg>
             <div class="phone-shadow"></div>
             <figure class="side-phone side-left">
-              <img src="assets/airspace.png" alt="BeBrief map view">
+              <img src="assets/remotion-mockups/hero-left.png" alt="BeBrief map view">
             </figure>
             <figure class="phone">
-              <div class="phone-screen">
-                <img src="assets/go-no-go.png" alt="BeBrief advisory risk screen">
-              </div>
+              <img src="assets/remotion-mockups/hero-phone.png" alt="BeBrief advisory risk screen">
             </figure>
             <figure class="side-phone side-right">
-              <img src="assets/performance.png" alt="BeBrief performance view">
+              <img src="assets/remotion-mockups/hero-right.png" alt="BeBrief performance view">
             </figure>
           </div>
 
@@ -686,23 +620,23 @@
           </div>
           <div class="screen-strip">
             <article class="screen-card reveal">
-              <div class="mini-phone"><img src="assets/plan.png" alt="BeBrief plan hub screen"></div>
+              <div class="mini-phone"><img src="assets/remotion-mockups/phone-plan.png" alt="BeBrief plan hub screen"></div>
               <strong>Choose the briefing path.</strong>
             </article>
             <article class="screen-card reveal">
-              <div class="mini-phone"><img src="assets/notams.png" alt="BeBrief briefing sections screen"></div>
+              <div class="mini-phone"><img src="assets/remotion-mockups/phone-brief.png" alt="BeBrief briefing sections screen"></div>
               <strong>Scan route hazards fast.</strong>
             </article>
             <article class="screen-card reveal">
-              <div class="mini-phone"><img src="assets/airspace.png" alt="BeBrief sectional map screen"></div>
+              <div class="mini-phone"><img src="assets/remotion-mockups/phone-map.png" alt="BeBrief sectional map screen"></div>
               <strong>Keep the route in view.</strong>
             </article>
             <article class="screen-card reveal">
-              <div class="mini-phone"><img src="assets/takeoff-landing.png" alt="BeBrief takeoff and landing screen"></div>
+              <div class="mini-phone"><img src="assets/remotion-mockups/phone-performance.png" alt="BeBrief takeoff and landing screen"></div>
               <strong>Bring runway numbers forward.</strong>
             </article>
             <article class="screen-card reveal">
-              <div class="mini-phone"><img src="assets/official-plan.png" alt="BeBrief filed plan screen"></div>
+              <div class="mini-phone"><img src="assets/remotion-mockups/phone-status.png" alt="BeBrief filed plan screen"></div>
               <strong>Return to filed plan status.</strong>
             </article>
           </div>
