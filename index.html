@@ -120,23 +120,9 @@
 
     .phone-scene {
       position: relative;
-      min-height: 650px;
+      min-height: 620px;
       display: grid;
       place-items: center;
-      perspective: 1300px;
-    }
-    .route-line {
-      position: absolute;
-      inset: auto 0 36px 0;
-      width: 100%;
-      height: 210px;
-      opacity: 0.46;
-      pointer-events: none;
-    }
-    .route-line path {
-      stroke-dasharray: 760;
-      stroke-dashoffset: 760;
-      animation: draw-route 3.8s ease forwards 500ms;
     }
     .phone-shadow {
       position: absolute;
@@ -152,33 +138,12 @@
     .phone {
       position: relative;
       z-index: 3;
-      width: min(72vw, 410px);
-      filter: drop-shadow(-18px 44px 70px rgba(0, 0, 0, 0.82));
-      animation: phone-drift 7s ease-in-out infinite;
+      width: min(72vw, 390px);
+      filter: drop-shadow(0 36px 90px rgba(0, 0, 0, 0.76));
     }
     .phone img {
       width: 100%;
     }
-    .side-phone {
-      position: absolute;
-      width: 250px;
-      opacity: 0.58;
-      filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.68));
-    }
-    .side-phone img {
-      width: 100%;
-    }
-    .side-left {
-      left: 18px;
-      top: 110px;
-      transform: rotateY(-24deg) rotateZ(-10deg);
-    }
-    .side-right {
-      right: 6px;
-      bottom: 92px;
-      transform: rotateY(18deg) rotateZ(9deg);
-    }
-
     .hero-copy { max-width: 540px; }
     .award {
       display: flex;
@@ -198,7 +163,7 @@
       gap: 9px;
     }
     .laurel {
-      color: var(--accent);
+      color: #f2f2f2;
       font-size: 24px;
       letter-spacing: -0.16em;
     }
@@ -218,10 +183,7 @@
     }
     h1 {
       font-size: clamp(62px, 8.5vw, 112px);
-      background: linear-gradient(180deg, #f8fff0 0%, #d7ff7a 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #f2f2f0;
     }
     .hero-copy p {
       max-width: 500px;
@@ -254,13 +216,13 @@
     }
     .pill-btn.primary {
       border-color: transparent;
-      color: #071009;
-      background: #d8ff78;
-      box-shadow: 0 0 34px rgba(216, 255, 120, 0.14);
+      color: #050505;
+      background: #f2f2ee;
+      box-shadow: 0 0 34px rgba(255, 255, 255, 0.08);
     }
     .pill-btn:hover {
       transform: translateY(-1px);
-      border-color: rgba(216, 255, 120, 0.34);
+      border-color: rgba(255, 255, 255, 0.28);
     }
     .ticker {
       width: fit-content;
@@ -285,7 +247,7 @@
     }
     .eyebrow {
       margin: 0 0 10px;
-      color: var(--accent);
+      color: #f2f2f0;
       font-family: "IBM Plex Mono", monospace;
       font-size: 12px;
       font-weight: 800;
@@ -318,7 +280,7 @@
     }
     .flow-item:hover {
       transform: translateY(-3px);
-      border-color: rgba(216, 255, 120, 0.26);
+      border-color: rgba(255, 255, 255, 0.18);
       background: rgba(255, 255, 255, 0.055);
     }
     .flow-item span {
@@ -398,7 +360,7 @@
       background: rgba(0, 0, 0, 0.22);
     }
     .control-point span {
-      color: var(--accent);
+      color: #f2f2f0;
       font-family: "IBM Plex Mono", monospace;
       font-size: 11px;
       font-weight: 800;
@@ -456,13 +418,6 @@
       transform: translateY(0);
     }
 
-    @keyframes phone-drift {
-      0%, 100% { translate: 0 0; }
-      50% { translate: 0 -12px; }
-    }
-    @keyframes draw-route {
-      to { stroke-dashoffset: 0; }
-    }
     @keyframes ticker-rise {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -495,9 +450,6 @@
       .award { gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
       .phone-scene { min-height: 520px; }
       .phone { width: min(78vw, 300px); }
-      .side-phone { width: 172px; }
-      .side-left { left: -44px; top: 114px; }
-      .side-right { right: -44px; bottom: 106px; }
       section { padding: 52px 0; }
       .flow,
       .screen-strip {
@@ -542,20 +494,9 @@
       <section class="hero">
         <div class="shell hero-grid">
           <div class="phone-scene" aria-label="BeBrief app preview">
-            <svg class="route-line" viewBox="0 0 620 210" role="presentation" aria-hidden="true">
-              <path d="M54 166 C150 62 254 148 358 82 C442 30 510 52 574 26" fill="none" stroke="rgba(216,255,120,0.34)" stroke-width="3" stroke-linecap="round"/>
-              <circle cx="54" cy="166" r="5" fill="#b8ff91"/>
-              <circle cx="574" cy="26" r="5" fill="#d8ff78"/>
-            </svg>
             <div class="phone-shadow"></div>
-            <figure class="side-phone side-left">
-              <img src="assets/remotion-mockups/hero-left.png" alt="BeBrief map view">
-            </figure>
             <figure class="phone">
-              <img src="assets/remotion-mockups/hero-phone.png" alt="BeBrief advisory risk screen">
-            </figure>
-            <figure class="side-phone side-right">
-              <img src="assets/remotion-mockups/hero-right.png" alt="BeBrief performance view">
+              <img src="assets/remotion-mockups/hero-straight.png" alt="BeBrief advisory risk screen">
             </figure>
           </div>
 
