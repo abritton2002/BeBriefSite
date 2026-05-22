@@ -8,35 +8,33 @@
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="BeBrief - Preflight Briefing for iOS">
-  <meta property="og:description" content="Preflight clarity for pilots: plan, brief, inspect risk, and keep flight records on iOS.">
+  <meta property="og:description" content="Route planning, briefing review, risk context, aircraft readiness, and saved flight records from your phone.">
   <meta property="og:image" content="assets/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="BeBrief - Preflight Briefing for iOS">
-  <meta name="twitter:description" content="Preflight clarity for pilots: plan, brief, inspect risk, and keep flight records on iOS.">
+  <meta name="twitter:description" content="Route planning, briefing review, risk context, aircraft readiness, and saved flight records from your phone.">
   <meta name="twitter:image" content="assets/twitter-card.png">
 
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=IBM+Plex+Mono:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #05080a;
-      --panel: #0a1015;
-      --panel-2: #101821;
-      --ink: #f8fbff;
-      --muted: #9eb0c4;
-      --dim: #5f7186;
-      --line: rgba(149, 173, 198, 0.22);
-      --line-strong: rgba(34, 211, 238, 0.42);
+      --bg: #05070a;
+      --panel: #0b1117;
+      --panel-2: #101923;
+      --ink: #f7fbff;
+      --muted: #a8b8c8;
+      --dim: #617385;
+      --line: rgba(154, 177, 202, 0.22);
       --cyan: #22d3ee;
-      --green: #40ef89;
+      --green: #43f08b;
       --amber: #facc15;
       --red: #fb7185;
-      --navy: #071018;
-      --shadow: 0 30px 90px rgba(0, 0, 0, 0.46);
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.52);
     }
 
     * { box-sizing: border-box; }
@@ -46,40 +44,41 @@
       min-width: 320px;
       color: var(--ink);
       background:
-        radial-gradient(circle at 78% 6%, rgba(34, 211, 238, 0.16), transparent 30%),
-        linear-gradient(180deg, #05080a 0%, #071018 44%, #05080a 100%);
+        radial-gradient(circle at 70% 12%, rgba(34, 211, 238, 0.16), transparent 28%),
+        radial-gradient(circle at 24% 88%, rgba(67, 240, 139, 0.08), transparent 24%),
+        var(--bg);
       font-family: "Source Sans 3", sans-serif;
-      line-height: 1.5;
+      line-height: 1.45;
       letter-spacing: 0;
       overflow-x: hidden;
     }
 
     a { color: inherit; }
     img { display: block; max-width: 100%; }
-    .container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    .container { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
 
     .site-header {
       position: sticky;
       top: 0;
-      z-index: 50;
-      border-bottom: 1px solid rgba(149, 173, 198, 0.14);
-      background: rgba(5, 8, 10, 0.96);
+      z-index: 30;
+      border-bottom: 1px solid rgba(154, 177, 202, 0.14);
+      background: rgba(5, 7, 10, 0.96);
     }
     .nav {
-      min-height: 72px;
+      min-height: 68px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
+      gap: 18px;
     }
-    .logo img { width: 154px; height: auto; }
+    .logo img { width: 146px; height: auto; }
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 22px;
+      gap: 20px;
     }
     .nav-links a:not(.btn) {
-      color: #dbe8f5;
+      color: #dce8f4;
       font-size: 14px;
       font-weight: 800;
       text-decoration: none;
@@ -91,69 +90,53 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
-      padding: 13px 19px;
+      min-height: 46px;
+      padding: 12px 18px;
       border: 1px solid var(--line);
-      border-radius: 7px;
+      border-radius: 6px;
+      background: rgba(16, 25, 35, 0.78);
       color: var(--ink);
-      background: rgba(16, 24, 33, 0.72);
       font-size: 13px;
       font-weight: 900;
       letter-spacing: 0.08em;
       text-decoration: none;
       text-transform: uppercase;
       overflow: hidden;
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      transition: transform 160ms ease, border-color 160ms ease;
     }
-    .btn:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .btn:hover { transform: translateY(-1px); border-color: rgba(34, 211, 238, 0.48); }
     .btn-primary {
-      color: #031016;
-      background: var(--cyan);
       border-color: var(--cyan);
+      background: var(--cyan);
+      color: #031015;
       box-shadow: 0 0 34px rgba(34, 211, 238, 0.22);
     }
     .btn-primary::after {
       content: "";
       position: absolute;
-      inset: -40% auto -40% -65%;
-      width: 42%;
+      inset: -40% auto -40% -60%;
+      width: 40%;
       transform: skewX(-18deg);
-      background: rgba(255, 255, 255, 0.28);
-      animation: cta-sweep 9s ease-in-out infinite;
+      background: rgba(255, 255, 255, 0.3);
+      animation: shine 8s ease-in-out infinite;
     }
 
     .hero {
       position: relative;
-      min-height: calc(100vh - 72px);
+      min-height: calc(100vh - 68px);
       display: grid;
       align-items: center;
-      padding: 72px 0 58px;
+      padding: 54px 0 46px;
       border-bottom: 1px solid var(--line);
       overflow: hidden;
-    }
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 8% -12% auto auto;
-      width: 54vw;
-      height: 54vw;
-      max-width: 760px;
-      max-height: 760px;
-      border: 1px solid rgba(34, 211, 238, 0.14);
-      border-radius: 999px;
-      background:
-        repeating-conic-gradient(from 210deg, rgba(34, 211, 238, 0.16) 0deg 3deg, transparent 3deg 16deg),
-        radial-gradient(circle, rgba(34, 211, 238, 0.08), transparent 58%);
-      animation: radar-spin 24s linear infinite;
-      pointer-events: none;
     }
     .hero-grid {
       position: relative;
       z-index: 1;
       display: grid;
-      grid-template-columns: minmax(320px, 0.84fr) minmax(420px, 1fr);
+      grid-template-columns: minmax(330px, 0.86fr) minmax(460px, 1fr);
+      gap: clamp(34px, 6vw, 82px);
       align-items: center;
-      gap: clamp(34px, 6vw, 86px);
     }
     .eyebrow {
       margin: 0 0 14px;
@@ -168,151 +151,134 @@
       margin: 0;
       font-family: "Barlow Condensed", sans-serif;
       font-weight: 900;
-      letter-spacing: 0;
       line-height: 0.92;
+      letter-spacing: 0;
       text-transform: uppercase;
     }
     h1 {
-      max-width: 720px;
-      font-size: clamp(58px, 8.5vw, 118px);
+      max-width: 690px;
+      font-size: clamp(60px, 8vw, 112px);
     }
     .hero-copy {
-      max-width: 650px;
-      margin: 24px 0 0;
-      color: #c6d5e5;
+      max-width: 610px;
+      margin: 22px 0 0;
+      color: #c9d8e7;
       font-size: clamp(20px, 2vw, 25px);
-      line-height: 1.22;
+      line-height: 1.2;
     }
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 13px;
       margin-top: 30px;
     }
-    .micro-panel {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 34px;
-      max-width: 620px;
+    .proof-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 28px;
     }
-    .micro-panel div {
+    .proof-pill {
       border: 1px solid var(--line);
-      background: rgba(10, 16, 21, 0.74);
-      padding: 13px;
-    }
-    .micro-panel span {
-      display: block;
-      color: var(--dim);
+      background: rgba(11, 17, 23, 0.76);
+      padding: 8px 10px;
+      color: #d6e2ee;
       font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
+      font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
     }
-    .micro-panel strong {
-      display: block;
-      margin-top: 5px;
-      color: var(--ink);
-      font-size: 17px;
-      line-height: 1.05;
-    }
 
-    .hero-visual {
+    .hero-product {
       position: relative;
-      min-height: 720px;
+      min-height: 680px;
       display: grid;
       place-items: center;
-      perspective: 1200px;
     }
-    .flight-path {
+    .runway {
       position: absolute;
-      inset: 6% 0 auto 8%;
-      width: 88%;
-      height: 52%;
-      opacity: 0.58;
+      inset: auto 0 36px 0;
+      height: 160px;
+      opacity: 0.72;
       pointer-events: none;
     }
-    .flight-path path {
-      stroke-dasharray: 780;
-      stroke-dashoffset: 780;
-      animation: route-draw 4.8s ease forwards 600ms;
+    .runway path {
+      stroke-dasharray: 920;
+      stroke-dashoffset: 920;
+      animation: draw-route 3.4s ease forwards 450ms;
     }
-    .phone-cluster {
+    .phone-stage {
       position: relative;
-      width: min(100%, 620px);
-      height: 720px;
+      width: min(100%, 610px);
+      height: 680px;
     }
-    .phone {
+    .device {
       position: absolute;
       overflow: hidden;
       border: 10px solid #05070a;
       border-radius: 42px;
       background: #05070a;
       box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.13),
-        0 36px 90px rgba(0, 0, 0, 0.52);
-      transform: translate3d(var(--x, 0), var(--y, 0), 0) rotate(var(--r, 0deg));
-      animation: float-phone 7s ease-in-out infinite;
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 32px 82px rgba(0, 0, 0, 0.52);
+      animation: device-float 6.5s ease-in-out infinite;
     }
-    .phone img {
+    .device img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: 31px;
     }
-    .phone::before {
+    .device::before {
       content: "";
       position: absolute;
+      z-index: 2;
       left: 50%;
       top: 8px;
-      z-index: 2;
       width: 104px;
       height: 20px;
       transform: translateX(-50%);
       border-radius: 999px;
       background: #05070a;
     }
-    .phone-main {
-      z-index: 3;
+    .device-main {
+      z-index: 4;
       left: 50%;
-      top: 24px;
-      width: 304px;
-      height: 662px;
-      --x: -50%;
-      --r: 0deg;
+      top: 18px;
+      width: 306px;
+      height: 666px;
+      transform: translateX(-50%);
     }
-    .phone-left {
-      z-index: 1;
-      left: 8px;
-      top: 92px;
+    .device-peek {
+      z-index: 2;
+      top: 96px;
       width: 232px;
       height: 506px;
-      --r: -7deg;
-      animation-delay: -1.4s;
+      opacity: 0.94;
     }
-    .phone-right {
-      z-index: 2;
-      right: 10px;
-      top: 120px;
-      width: 242px;
-      height: 526px;
-      --r: 7deg;
-      animation-delay: -2.2s;
+    .device-left {
+      left: 0;
+      transform: rotate(-7deg);
+      animation-delay: -1.6s;
     }
-    .status-chip {
+    .device-right {
+      right: 0;
+      transform: rotate(7deg);
+      animation-delay: -2.4s;
+    }
+    .floating-card {
       position: absolute;
-      z-index: 4;
-      display: grid;
-      gap: 4px;
-      min-width: 180px;
+      z-index: 5;
+      min-width: 190px;
+      max-width: 230px;
       padding: 13px 14px;
       border: 1px solid rgba(34, 211, 238, 0.32);
-      background: rgba(5, 8, 10, 0.96);
+      background: rgba(5, 7, 10, 0.97);
       box-shadow: var(--shadow);
-      animation: chip-in 700ms ease both, chip-bob 5s ease-in-out infinite 900ms;
+      animation: card-pop 650ms ease both, card-drift 5s ease-in-out infinite 900ms;
     }
-    .status-chip span {
+    .floating-card span {
+      display: block;
       color: var(--cyan);
       font-family: "IBM Plex Mono", monospace;
       font-size: 10px;
@@ -320,311 +286,232 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-    .status-chip strong { font-size: 16px; line-height: 1.05; }
-    .status-chip small { color: var(--muted); font-size: 12px; }
-    .chip-risk { right: 4px; top: 58px; }
-    .chip-weather { left: 8px; bottom: 82px; animation-delay: 300ms, 1200ms; }
-
-    section { padding: 94px 0; }
-    .section-head {
-      display: grid;
-      grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.58fr);
-      gap: 48px;
-      align-items: end;
-      margin-bottom: 34px;
+    .floating-card strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 16px;
+      line-height: 1.06;
     }
-    h2 { font-size: clamp(44px, 6vw, 82px); }
-    .section-head p,
-    .section-copy {
+    .floating-card small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .risk-card { right: 4px; top: 44px; }
+    .wind-card { left: 8px; bottom: 70px; animation-delay: 180ms, 1080ms; }
+
+    section { padding: 72px 0; }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 28px;
+      margin-bottom: 26px;
+    }
+    h2 { max-width: 690px; font-size: clamp(42px, 5.5vw, 76px); }
+    .section-head p {
+      max-width: 420px;
       margin: 0;
       color: var(--muted);
-      font-size: 19px;
-      line-height: 1.38;
+      font-size: 18px;
     }
 
-    .flow-section {
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(7, 16, 24, 0.86), rgba(5, 8, 10, 0.9));
-    }
     .flow-grid {
       display: grid;
-      grid-template-columns: minmax(320px, 0.86fr) minmax(360px, 0.72fr);
-      gap: 54px;
-      align-items: center;
-    }
-    .flow-tabs {
-      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
     }
-    .flow-tab {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 60px 1fr;
-      gap: 16px;
-      align-items: start;
-      padding: 18px;
+    .flow-card {
+      position: relative;
+      min-height: 210px;
       border: 1px solid var(--line);
-      color: var(--ink);
-      background: rgba(16, 24, 33, 0.54);
-      text-align: left;
-      cursor: pointer;
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      background: rgba(11, 17, 23, 0.8);
+      padding: 18px;
+      overflow: hidden;
     }
-    .flow-tab:hover,
-    .flow-tab.active {
-      transform: translateX(6px);
-      border-color: var(--line-strong);
-      background: rgba(34, 211, 238, 0.09);
+    .flow-card::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 0;
+      height: 3px;
+      background: var(--cyan);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 220ms ease;
     }
-    .flow-tab span {
+    .flow-card:hover::after { transform: scaleX(1); }
+    .flow-card span {
       color: var(--cyan);
       font-family: "IBM Plex Mono", monospace;
       font-size: 12px;
       font-weight: 800;
     }
-    .flow-tab strong {
-      display: block;
-      margin-bottom: 4px;
-      font-family: "Barlow Condensed", sans-serif;
-      font-size: 31px;
-      font-weight: 900;
-      line-height: 0.96;
-      text-transform: uppercase;
+    .flow-card h3 {
+      margin-top: 38px;
+      font-size: 42px;
     }
-    .flow-tab small {
+    .flow-card p {
+      margin: 10px 0 0;
       color: var(--muted);
-      font-size: 15px;
-      line-height: 1.25;
-    }
-    .flow-stage {
-      position: sticky;
-      top: 104px;
-      display: grid;
-      justify-items: center;
-    }
-    .flow-phone {
-      position: relative;
-      width: min(100%, 366px);
-      aspect-ratio: 1206 / 2622;
-      overflow: hidden;
-      border: 11px solid #05070a;
-      border-radius: 48px;
-      background: #05070a;
-      box-shadow: var(--shadow), 0 0 0 1px rgba(255, 255, 255, 0.12);
-    }
-    .flow-phone::before {
-      content: "";
-      position: absolute;
-      z-index: 3;
-      left: 50%;
-      top: 9px;
-      width: 112px;
-      height: 22px;
-      transform: translateX(-50%);
-      border-radius: 999px;
-      background: #05070a;
-    }
-    .flow-shot {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 36px;
-      opacity: 0;
-      transform: scale(1.025);
-      transition: opacity 360ms ease, transform 520ms ease;
-    }
-    .flow-shot.active {
-      opacity: 1;
-      transform: scale(1);
+      font-size: 16px;
     }
 
-    .feature-grid {
-      display: grid;
-      gap: 26px;
+    .screens {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(7, 16, 24, 0.84), rgba(5, 7, 10, 0.92));
     }
-    .feature-row {
+    .screen-wall {
       display: grid;
-      grid-template-columns: minmax(280px, 0.7fr) minmax(320px, 1fr);
-      gap: clamp(28px, 5vw, 72px);
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .spotlight {
+      display: grid;
+      grid-template-columns: minmax(230px, 0.72fr) 1fr;
+      gap: 28px;
       align-items: center;
-      padding: 32px;
+      min-height: 620px;
       border: 1px solid var(--line);
-      background: rgba(10, 16, 21, 0.72);
-      overflow: hidden;
+      background: rgba(11, 17, 23, 0.8);
+      padding: 26px;
     }
-    .feature-row:nth-child(even) {
-      grid-template-columns: minmax(320px, 1fr) minmax(280px, 0.7fr);
-    }
-    .feature-row:nth-child(even) .feature-copy { order: 2; }
-    .feature-row:nth-child(even) .feature-visual { order: 1; }
-    .feature-copy h3 {
-      max-width: 520px;
-      font-size: clamp(38px, 5vw, 64px);
-    }
-    .feature-copy p {
-      max-width: 560px;
+    .spotlight-copy h3 { font-size: clamp(42px, 5vw, 66px); }
+    .spotlight-copy p {
       margin: 16px 0 0;
       color: var(--muted);
       font-size: 19px;
     }
-    .feature-list {
-      display: grid;
-      gap: 8px;
-      margin: 22px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-    .feature-list li {
-      display: grid;
-      grid-template-columns: 16px 1fr;
-      gap: 9px;
-      color: #d8e4ef;
-      font-size: 15px;
-    }
-    .feature-list li::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      margin-top: 9px;
-      background: var(--green);
-    }
-    .feature-visual {
-      min-height: 610px;
-      display: grid;
-      place-items: center;
-      position: relative;
-    }
-    .feature-visual::before {
-      content: "";
-      position: absolute;
-      inset: 12% 10%;
-      border: 1px solid rgba(34, 211, 238, 0.12);
-      background:
-        linear-gradient(90deg, rgba(34, 211, 238, 0.06) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(34, 211, 238, 0.06) 1px, transparent 1px);
-      background-size: 34px 34px;
-      transform: rotate(-2deg);
-    }
-    .device-frame {
-      position: relative;
-      z-index: 1;
-      width: min(100%, 316px);
+    .phone-frame {
+      justify-self: center;
+      width: min(100%, 304px);
       aspect-ratio: 1206 / 2622;
       overflow: hidden;
       border: 10px solid #05070a;
-      border-radius: 44px;
+      border-radius: 42px;
       background: #05070a;
-      box-shadow: 0 28px 76px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.12);
-      transform: translateY(18px);
-      opacity: 0;
-      transition: transform 700ms ease, opacity 700ms ease;
+      box-shadow: 0 28px 72px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(255, 255, 255, 0.12);
     }
-    .feature-row.revealed .device-frame {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    .device-frame::before {
-      content: "";
-      position: absolute;
-      z-index: 3;
-      left: 50%;
-      top: 8px;
-      width: 106px;
-      height: 21px;
-      transform: translateX(-50%);
-      border-radius: 999px;
-      background: #05070a;
-    }
-    .device-frame img {
+    .phone-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 33px;
+      border-radius: 31px;
+    }
+    .screen-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .screen-tile {
+      border: 1px solid var(--line);
+      background: rgba(16, 25, 35, 0.68);
+      padding: 14px;
+      cursor: pointer;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+    .screen-tile:hover,
+    .screen-tile.active {
+      transform: translateY(-2px);
+      border-color: rgba(34, 211, 238, 0.48);
+      background: rgba(34, 211, 238, 0.08);
+    }
+    .screen-thumb {
+      height: 210px;
+      overflow: hidden;
+      border: 1px solid rgba(154, 177, 202, 0.13);
+      background: #05070a;
+    }
+    .screen-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+    .screen-tile strong {
+      display: block;
+      margin-top: 11px;
+      font-size: 17px;
+    }
+    .screen-tile small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
-    .trust-band {
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      background: #071018;
-    }
-    .trust-grid {
+    .safety-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+      align-items: stretch;
     }
-    .trust-item {
+    .safety-panel {
       border: 1px solid var(--line);
-      background: rgba(16, 24, 33, 0.68);
-      padding: 22px;
+      background: rgba(11, 17, 23, 0.76);
+      padding: 24px;
     }
-    .trust-item span {
+    .safety-panel h3 { font-size: 45px; }
+    .safety-panel p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .safety-list {
+      display: grid;
+      gap: 10px;
+    }
+    .safety-item {
+      border: 1px solid var(--line);
+      background: rgba(16, 25, 35, 0.68);
+      padding: 18px;
+    }
+    .safety-item span {
       color: var(--cyan);
       font-family: "IBM Plex Mono", monospace;
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-    .trust-item strong {
+    .safety-item strong {
       display: block;
-      margin: 10px 0 8px;
-      font-size: 22px;
-      line-height: 1.05;
-    }
-    .trust-item p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
+      margin-top: 6px;
+      font-size: 20px;
     }
 
     .final-cta {
-      position: relative;
-      padding: 110px 0 96px;
-      overflow: hidden;
+      padding: 76px 0 86px;
+      text-align: center;
     }
-    .final-cta::before {
-      content: "";
-      position: absolute;
-      inset: 18% -10% auto auto;
-      width: 58vw;
-      height: 58vw;
-      max-width: 720px;
-      max-height: 720px;
-      border-radius: 999px;
-      border: 1px solid rgba(64, 239, 137, 0.12);
-      background: radial-gradient(circle, rgba(64, 239, 137, 0.1), transparent 60%);
-    }
-    .cta-inner {
-      position: relative;
-      z-index: 1;
-      max-width: 780px;
-    }
-    .cta-inner p {
-      max-width: 660px;
-      margin: 20px 0 0;
+    .final-cta h2 { margin: 0 auto; }
+    .final-cta p {
+      max-width: 620px;
+      margin: 18px auto 0;
       color: var(--muted);
-      font-size: 21px;
+      font-size: 20px;
     }
+    .final-cta .hero-actions { justify-content: center; }
 
     footer {
       border-top: 1px solid var(--line);
-      padding: 34px 0;
-      background: #05080a;
+      padding: 32px 0;
+      background: #05070a;
     }
     .footer-inner {
       display: flex;
       justify-content: space-between;
       gap: 18px;
-      align-items: center;
       color: var(--dim);
       font-size: 14px;
     }
     .footer-links {
       display: flex;
-      flex-wrap: wrap;
       gap: 18px;
+      flex-wrap: wrap;
     }
     .footer-links a {
       color: var(--muted);
@@ -635,100 +522,92 @@
 
     .reveal {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 700ms ease, transform 700ms ease;
+      transform: translateY(18px);
+      transition: opacity 620ms ease, transform 620ms ease;
     }
-    .reveal.revealed,
-    .feature-row.revealed {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
 
-    @keyframes cta-sweep {
-      0%, 76% { left: -65%; }
-      88%, 100% { left: 122%; }
+    @keyframes shine {
+      0%, 76% { left: -60%; }
+      90%, 100% { left: 130%; }
     }
-    @keyframes radar-spin {
-      to { transform: rotate(360deg); }
-    }
-    @keyframes route-draw {
+    @keyframes draw-route {
       to { stroke-dashoffset: 0; }
     }
-    @keyframes float-phone {
-      0%, 100% { transform: translate3d(var(--x, 0), var(--y, 0), 0) rotate(var(--r, 0deg)); }
-      50% { transform: translate3d(var(--x, 0), calc(var(--y, 0) - 12px), 0) rotate(var(--r, 0deg)); }
+    @keyframes device-float {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -10px; }
     }
-    @keyframes chip-in {
-      from { opacity: 0; transform: translateY(12px); }
+    @keyframes card-pop {
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes chip-bob {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+    @keyframes card-drift {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -7px; }
     }
 
     @media (max-width: 980px) {
       .hero-grid,
-      .flow-grid,
-      .section-head,
-      .feature-row,
-      .feature-row:nth-child(even) {
+      .screen-wall,
+      .spotlight,
+      .safety-grid {
         grid-template-columns: 1fr;
       }
-      .hero { padding-top: 54px; }
-      .hero-visual { min-height: 640px; }
-      .phone-cluster { height: 640px; }
-      .phone-main { width: 276px; height: 600px; }
-      .phone-left,
-      .phone-right { opacity: 0.68; }
-      .flow-stage { position: relative; top: auto; }
-      .feature-row:nth-child(even) .feature-copy,
-      .feature-row:nth-child(even) .feature-visual { order: initial; }
-      .feature-visual { min-height: 560px; }
-      .trust-grid { grid-template-columns: 1fr; }
+      .hero { min-height: auto; }
+      .hero-product { min-height: 610px; }
+      .phone-stage { height: 610px; }
+      .device-main { width: 276px; height: 600px; }
+      .device-peek { width: 208px; height: 454px; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 14px; max-width: 650px; }
+      .flow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .spotlight { min-height: auto; }
     }
 
     @media (max-width: 720px) {
-      .container { width: min(100% - 28px, 1180px); }
-      .nav { min-height: 68px; padding: 12px 0; align-items: flex-start; }
+      .container { width: min(100% - 28px, 1160px); }
+      .nav { align-items: flex-start; padding: 12px 0; }
       .logo img { width: 124px; }
       .nav-links { margin-left: auto; }
       .nav-links a:not(.btn) { display: none; }
       .nav-links .btn { min-height: 40px; padding: 10px 12px; font-size: 11px; }
-      .hero { min-height: auto; padding: 42px 0 48px; }
+      .hero { padding: 42px 0 34px; }
       h1 { font-size: 56px; }
       .hero-copy { font-size: 19px; }
-      .micro-panel { grid-template-columns: 1fr; }
-      .hero-visual { min-height: 560px; margin-top: 20px; }
-      .phone-cluster { height: 560px; }
-      .phone-main {
-        width: min(76vw, 252px);
+      .hero-product { min-height: 520px; }
+      .phone-stage { height: 520px; }
+      .device-main {
+        top: 0;
+        width: min(76vw, 246px);
         height: auto;
         aspect-ratio: 1206 / 2622;
-        top: 12px;
       }
-      .phone-left {
+      .device-left {
+        left: -70px;
+        top: 106px;
+        width: 178px;
+        height: 388px;
+      }
+      .device-right {
+        right: -72px;
+        top: 118px;
         width: 184px;
         height: 400px;
-        left: -58px;
-        top: 118px;
       }
-      .phone-right {
-        width: 190px;
-        height: 414px;
-        right: -64px;
-        top: 130px;
+      .floating-card { min-width: 148px; max-width: 168px; padding: 10px; }
+      .risk-card { right: -4px; top: 10px; }
+      .wind-card { left: -4px; bottom: 46px; }
+      section { padding: 58px 0; }
+      .flow-grid,
+      .screen-list {
+        grid-template-columns: 1fr;
       }
-      .status-chip { min-width: 150px; padding: 11px; }
-      .chip-risk { right: -4px; top: 16px; }
-      .chip-weather { left: -4px; bottom: 48px; }
-      section { padding: 68px 0; }
-      .flow-tab { grid-template-columns: 42px 1fr; padding: 15px; }
-      .flow-phone { width: min(78vw, 320px); }
-      .feature-row { padding: 18px; }
-      .feature-visual { min-height: 500px; }
-      .device-frame { width: min(78vw, 300px); }
-      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .flow-card { min-height: 150px; }
+      .flow-card h3 { margin-top: 22px; }
+      .spotlight { padding: 18px; }
+      .screen-thumb { height: 250px; }
+      .footer-inner { flex-direction: column; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -751,262 +630,175 @@
       </a>
       <nav class="nav-links" aria-label="Primary navigation">
         <a href="#flow">Flow</a>
-        <a href="#features">Screens</a>
-        <a href="#trust">Pilot Control</a>
+        <a href="#screens">Screens</a>
+        <a href="#safety">Pilot Control</a>
         <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-primary">Request iOS Access</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="hero" id="overview">
+    <section class="hero">
       <div class="container hero-grid">
-        <div class="hero-copy-wrap reveal">
+        <div class="reveal">
           <p class="eyebrow">BeBrief for iOS</p>
-          <h1>Preflight clarity before you leave the ground.</h1>
-          <p class="hero-copy">Build the route, inspect the hazards, review aircraft readiness, and keep the flight record in one mobile workflow.</p>
+          <h1>Preflight clarity in one mobile brief.</h1>
+          <p class="hero-copy">Plan a route, review weather and hazards, check performance, and keep the flight record close before you leave the ground.</p>
           <div class="hero-actions">
             <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-primary">Request iOS Access</a>
-            <a href="#flow" class="btn">See the Flow</a>
+            <a href="#screens" class="btn">View Screens</a>
           </div>
-          <div class="micro-panel" aria-label="BeBrief preflight workflow">
-            <div>
-              <span>01 Route</span>
-              <strong>Plan the mission</strong>
-            </div>
-            <div>
-              <span>02 Brief</span>
-              <strong>Inspect sources</strong>
-            </div>
-            <div>
-              <span>03 Decide</span>
-              <strong>Act with context</strong>
-            </div>
+          <div class="proof-strip" aria-label="BeBrief core workflow">
+            <div class="proof-pill">Route</div>
+            <div class="proof-pill">Brief</div>
+            <div class="proof-pill">Risk</div>
+            <div class="proof-pill">Performance</div>
           </div>
         </div>
 
-        <div class="hero-visual" aria-label="BeBrief app screenshots">
-          <svg class="flight-path" viewBox="0 0 680 360" role="presentation" aria-hidden="true">
-            <path d="M46 275 C148 174 226 220 314 132 C412 34 508 86 630 38" fill="none" stroke="rgba(34,211,238,0.62)" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="46" cy="275" r="6" fill="#40ef89"/>
-            <circle cx="630" cy="38" r="6" fill="#22d3ee"/>
+        <div class="hero-product" aria-label="BeBrief iOS app preview">
+          <svg class="runway" viewBox="0 0 660 160" role="presentation" aria-hidden="true">
+            <path d="M38 122 C180 40 276 146 412 58 C496 4 574 36 624 20" fill="none" stroke="rgba(34,211,238,0.62)" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="38" cy="122" r="6" fill="#43f08b"/>
+            <circle cx="624" cy="20" r="6" fill="#22d3ee"/>
           </svg>
-          <div class="phone-cluster" data-parallax>
-            <figure class="phone phone-left">
-              <img src="assets/route-map.png" alt="BeBrief route map on iPhone">
+          <div class="phone-stage">
+            <figure class="device device-peek device-left">
+              <img src="assets/route-map.png" alt="BeBrief route map screen">
             </figure>
-            <figure class="phone phone-main">
-              <img src="assets/go-no-go.png" alt="BeBrief no-go advisory brief on iPhone">
+            <figure class="device device-main">
+              <img src="assets/go-no-go.png" alt="BeBrief no-go advisory brief screen">
             </figure>
-            <figure class="phone phone-right">
-              <img src="assets/performance.png" alt="BeBrief performance brief on iPhone">
+            <figure class="device device-peek device-right">
+              <img src="assets/performance.png" alt="BeBrief performance brief screen">
             </figure>
-            <div class="status-chip chip-risk">
-              <span>Route Risk</span>
-              <strong>TFR affects planned route</strong>
-              <small>Open source detail before departure</small>
+            <div class="floating-card risk-card">
+              <span>Risk</span>
+              <strong>TFR affects route</strong>
+              <small>Open source detail</small>
             </div>
-            <div class="status-chip chip-weather">
-              <span>Performance</span>
-              <strong>Runway margin visible</strong>
-              <small>Takeoff, landing, W&B in context</small>
+            <div class="floating-card wind-card">
+              <span>Runway</span>
+              <strong>Margin visible</strong>
+              <small>Takeoff + landing</small>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="flow-section" id="flow">
-      <div class="container flow-grid">
-        <div class="flow-copy reveal">
-          <p class="eyebrow">Your briefing flow</p>
-          <h2>Plan. Brief. Evaluate. Fly.</h2>
-          <p class="section-copy">The product story is simple: every screen exists to help a pilot move from route intent to source review to a clearer preflight decision.</p>
-          <div class="flow-tabs" role="tablist" aria-label="BeBrief workflow screens">
-            <button class="flow-tab active" type="button" data-shot="plan" role="tab" aria-selected="true">
-              <span>01</span>
-              <div>
-                <strong>Plan</strong>
-                <small>Start from saved briefs, advisory review, official filing, or filed plan retrieval.</small>
-              </div>
-            </button>
-            <button class="flow-tab" type="button" data-shot="brief" role="tab" aria-selected="false">
-              <span>02</span>
-              <div>
-                <strong>Brief</strong>
-                <small>Weather, NOTAMs, alerts, PIREPs, SIGMETs, and winds stay separated for review.</small>
-              </div>
-            </button>
-            <button class="flow-tab" type="button" data-shot="risk" role="tab" aria-selected="false">
-              <span>03</span>
-              <div>
-                <strong>Risk</strong>
-                <small>App-generated GO, CAUTION, and NO-GO summaries point back to the source detail.</small>
-              </div>
-            </button>
-            <button class="flow-tab" type="button" data-shot="fly" role="tab" aria-selected="false">
-              <span>04</span>
-              <div>
-                <strong>Fly</strong>
-                <small>Performance, runway margins, fuel, and aircraft state remain attached to the brief.</small>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <div class="flow-stage">
-          <div class="flow-phone" aria-live="polite">
-            <img class="flow-shot active" data-shot-image="plan" src="assets/plan.png" alt="BeBrief plan hub screen">
-            <img class="flow-shot" data-shot-image="brief" src="assets/notams.png" alt="BeBrief briefing sections screen">
-            <img class="flow-shot" data-shot-image="risk" src="assets/go-no-go.png" alt="BeBrief risk decision screen">
-            <img class="flow-shot" data-shot-image="fly" src="assets/takeoff-landing.png" alt="BeBrief takeoff and landing performance screen">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="features">
+    <section id="flow">
       <div class="container">
         <div class="section-head reveal">
           <div>
-            <p class="eyebrow">Readable product screens</p>
-            <h2>Every screenshot has a job.</h2>
+            <p class="eyebrow">How it works</p>
+            <h2>Four steps, no scavenger hunt.</h2>
           </div>
-          <p>No washed-out backdrops, no random wall of app photos. Each iPhone frame explains one part of the pilot workflow.</p>
+          <p>A landing page should make the app understandable fast. BeBrief is now shown as a tight pilot workflow instead of a long screenshot wall.</p>
         </div>
-
-        <div class="feature-grid">
-          <article class="feature-row reveal">
-            <div class="feature-copy">
-              <p class="eyebrow">Route setup</p>
-              <h3>Build the advisory brief from real flight inputs.</h3>
-              <p>Departure, destination, waypoints, timing, and speed all sit together before the brief is generated.</p>
-              <ul class="feature-list">
-                <li>Mission details stay visible before the request.</li>
-                <li>Route edits can lead into a refreshed brief.</li>
-                <li>Inputs stay tuned for pilots instead of generic trip planning.</li>
-              </ul>
-            </div>
-            <div class="feature-visual">
-              <div class="device-frame">
-                <img src="assets/advisory-setup.png" alt="BeBrief advisory setup screen">
-              </div>
-            </div>
+        <div class="flow-grid">
+          <article class="flow-card reveal">
+            <span>01</span>
+            <h3>Plan</h3>
+            <p>Start from saved briefs, advisory review, official filing, or filed plan retrieval.</p>
           </article>
-
-          <article class="feature-row reveal">
-            <div class="feature-copy">
-              <p class="eyebrow">Source review</p>
-              <h3>Weather and hazard categories are easy to scan.</h3>
-              <p>Briefing sections separate weather, NOTAMs, alerts, SIGMETs, PIREPs, and winds so pilots can inspect the right source quickly.</p>
-              <ul class="feature-list">
-                <li>Critical and caution counts are visible before drill-in.</li>
-                <li>Each category keeps source detail discoverable.</li>
-                <li>The route remains attached to the brief context.</li>
-              </ul>
-            </div>
-            <div class="feature-visual">
-              <div class="device-frame">
-                <img src="assets/notams.png" alt="BeBrief briefing category screen">
-              </div>
-            </div>
+          <article class="flow-card reveal">
+            <span>02</span>
+            <h3>Brief</h3>
+            <p>Weather, NOTAMs, alerts, SIGMETs, PIREPs, and winds stay separated.</p>
           </article>
-
-          <article class="feature-row reveal">
-            <div class="feature-copy">
-              <p class="eyebrow">Route context</p>
-              <h3>Map review shows the flight path and surrounding airspace.</h3>
-              <p>Route overlays, weather layers, TFR context, and chart views make the planned path easier to understand before the pilot opens individual details.</p>
-              <ul class="feature-list">
-                <li>Route-loaded map views keep orientation fast.</li>
-                <li>Sectional context supports visual inspection.</li>
-                <li>Hazard review does not bury the route itself.</li>
-              </ul>
-            </div>
-            <div class="feature-visual">
-              <div class="device-frame">
-                <img src="assets/airspace.png" alt="BeBrief sectional route map screen">
-              </div>
-            </div>
+          <article class="flow-card reveal">
+            <span>03</span>
+            <h3>Decide</h3>
+            <p>GO, CAUTION, and NO-GO summaries point back to source details.</p>
           </article>
-
-          <article class="feature-row reveal">
-            <div class="feature-copy">
-              <p class="eyebrow">Aircraft readiness</p>
-              <h3>Performance numbers stay attached to the trip.</h3>
-              <p>Takeoff, landing, fuel, W&B, runway margins, and V-speeds are shown in the same preflight flow as the advisory brief.</p>
-              <ul class="feature-list">
-                <li>Runway margin is readable at a glance.</li>
-                <li>Fuel and W&B are tied to a selected aircraft.</li>
-                <li>Performance is presented as part of the decision, not a separate chore.</li>
-              </ul>
-            </div>
-            <div class="feature-visual">
-              <div class="device-frame">
-                <img src="assets/performance.png" alt="BeBrief aircraft performance screen">
-              </div>
-            </div>
-          </article>
-
-          <article class="feature-row reveal">
-            <div class="feature-copy">
-              <p class="eyebrow">Flight record</p>
-              <h3>Filed plans and aircraft records are still reachable.</h3>
-              <p>BeBrief keeps filed plan status and aircraft setup near the preflight workflow so pilots can return to the record when needed.</p>
-              <ul class="feature-list">
-                <li>Filed plan status and lifecycle actions are visible.</li>
-                <li>Aircraft hangar data stays connected to the active tail.</li>
-                <li>Records support the workflow without becoming the landing page headline.</li>
-              </ul>
-            </div>
-            <div class="feature-visual">
-              <div class="device-frame">
-                <img src="assets/official-plan.png" alt="BeBrief filed plan screen">
-              </div>
-            </div>
+          <article class="flow-card reveal">
+            <span>04</span>
+            <h3>Fly</h3>
+            <p>Performance, fuel, runway margins, and aircraft state stay with the trip.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="trust-band" id="trust">
+    <section class="screens" id="screens">
       <div class="container">
         <div class="section-head reveal">
           <div>
-            <p class="eyebrow">Pilot control</p>
-            <h2>Clear support, not replacement judgment.</h2>
+            <p class="eyebrow">Product screens</p>
+            <h2>Readable screenshots. Clear purpose.</h2>
           </div>
-          <p>BeBrief organizes preflight information so it is faster to inspect, repeat, and carry from the hangar to the airplane.</p>
+          <p>Tap a screen to change the featured iPhone. The product stays visible, framed, and easy to understand.</p>
         </div>
-        <div class="trust-grid">
-          <div class="trust-item reveal">
+        <div class="screen-wall">
+          <div class="spotlight reveal">
+            <div class="phone-frame">
+              <img id="featured-screen" src="assets/go-no-go.png" alt="BeBrief selected product screen">
+            </div>
+            <div class="spotlight-copy">
+              <p class="eyebrow" id="featured-kicker">Risk summary</p>
+              <h3 id="featured-title">The decision screen leads with what matters.</h3>
+              <p id="featured-copy">Route-level status, blocking issues, cautions, and source links keep the pilot oriented without hiding the details.</p>
+            </div>
+          </div>
+
+          <div class="screen-list">
+            <button class="screen-tile active reveal" type="button" data-src="assets/go-no-go.png" data-kicker="Risk summary" data-title="The decision screen leads with what matters." data-copy="Route-level status, blocking issues, cautions, and source links keep the pilot oriented without hiding the details.">
+              <div class="screen-thumb"><img src="assets/go-no-go.png" alt="BeBrief no-go summary thumbnail"></div>
+              <strong>No-go summary</strong>
+              <small>Blocking issues and cautions.</small>
+            </button>
+            <button class="screen-tile reveal" type="button" data-src="assets/notams.png" data-kicker="Briefing sections" data-title="Hazards are split into reviewable categories." data-copy="Weather, NOTAMs, TFRs, SIGMETs, PIREPs, and winds stay organized so pilots can drill into the right source fast.">
+              <div class="screen-thumb"><img src="assets/notams.png" alt="BeBrief briefing categories thumbnail"></div>
+              <strong>Briefing sections</strong>
+              <small>Weather, NOTAMs, winds, and alerts.</small>
+            </button>
+            <button class="screen-tile reveal" type="button" data-src="assets/airspace.png" data-kicker="Map review" data-title="The route remains visible in context." data-copy="Sectional and route-loaded map views help pilots understand where the planned path sits relative to weather and airspace.">
+              <div class="screen-thumb"><img src="assets/airspace.png" alt="BeBrief sectional route map thumbnail"></div>
+              <strong>Route map</strong>
+              <small>Map and airspace context.</small>
+            </button>
+            <button class="screen-tile reveal" type="button" data-src="assets/takeoff-landing.png" data-kicker="Performance" data-title="Runway numbers are part of the brief." data-copy="Takeoff, landing, margin, and V-speeds are presented near the trip instead of living in a separate disconnected tool.">
+              <div class="screen-thumb"><img src="assets/takeoff-landing.png" alt="BeBrief takeoff and landing thumbnail"></div>
+              <strong>Runway numbers</strong>
+              <small>Takeoff, landing, and V-speeds.</small>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="safety">
+      <div class="container safety-grid">
+        <div class="safety-panel reveal">
+          <p class="eyebrow">Pilot control</p>
+          <h3>Decision support, not replacement judgment.</h3>
+          <p>BeBrief organizes preflight information so the pilot can inspect it faster, repeat the process, and keep the important context nearby.</p>
+        </div>
+        <div class="safety-list">
+          <div class="safety-item reveal">
             <span>Official vs advisory</span>
-            <strong>Status stays labeled</strong>
-            <p>Official briefing status is separated from app-generated advisory summaries.</p>
+            <strong>App-generated status remains labeled.</strong>
           </div>
-          <div class="trust-item reveal">
-            <span>Data freshness</span>
-            <strong>Review what changed</strong>
-            <p>Fresh, stale, missing, and cached data states should remain visible in the workflow.</p>
+          <div class="safety-item reveal">
+            <span>Source review</span>
+            <strong>Weather and hazard categories stay drill-down inspectable.</strong>
           </div>
-          <div class="trust-item reveal">
+          <div class="safety-item reveal">
             <span>Aircraft setup</span>
-            <strong>Tail-specific values matter</strong>
-            <p>Aircraft templates require pilot customization against exact aircraft documents.</p>
+            <strong>Templates require tail-specific pilot customization.</strong>
           </div>
         </div>
       </div>
     </section>
 
     <section class="final-cta" id="access">
-      <div class="container">
-        <div class="cta-inner reveal">
-          <p class="eyebrow">Join the iOS test path</p>
-          <h2>Bring BeBrief into your mobile preflight flow.</h2>
-          <p>Request iOS access for route planning, briefing review, risk inspection, aircraft readiness, and saved flight records from your phone.</p>
-          <div class="hero-actions">
-            <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-primary">Request iOS Access</a>
-          </div>
+      <div class="container reveal">
+        <p class="eyebrow">Join the iOS test path</p>
+        <h2>Bring BeBrief into your preflight flow.</h2>
+        <p>Request iOS access for route planning, briefing review, risk inspection, aircraft readiness, and saved flight records from your phone.</p>
+        <div class="hero-actions">
+          <a href="mailto:FlyBeBrief@gmail.com?subject=BeBrief%20iOS%20Access" class="btn btn-primary">Request iOS Access</a>
         </div>
       </div>
     </section>
@@ -1024,44 +816,31 @@
   </footer>
 
   <script>
-    const flowTabs = document.querySelectorAll("[data-shot]");
-    const flowImages = document.querySelectorAll("[data-shot-image]");
+    const tiles = document.querySelectorAll(".screen-tile");
+    const featured = document.getElementById("featured-screen");
+    const kicker = document.getElementById("featured-kicker");
+    const title = document.getElementById("featured-title");
+    const copy = document.getElementById("featured-copy");
 
-    flowTabs.forEach((tab) => {
-      tab.addEventListener("click", () => {
-        const shot = tab.dataset.shot;
-        flowTabs.forEach((item) => {
-          const active = item === tab;
-          item.classList.toggle("active", active);
-          item.setAttribute("aria-selected", String(active));
-        });
-        flowImages.forEach((image) => {
-          image.classList.toggle("active", image.dataset.shotImage === shot);
-        });
+    tiles.forEach((tile) => {
+      tile.addEventListener("click", () => {
+        tiles.forEach((item) => item.classList.remove("active"));
+        tile.classList.add("active");
+        featured.src = tile.dataset.src;
+        featured.alt = tile.querySelector("img").alt.replace("thumbnail", "screen");
+        kicker.textContent = tile.dataset.kicker;
+        title.textContent = tile.dataset.title;
+        copy.textContent = tile.dataset.copy;
       });
     });
 
-    const revealItems = document.querySelectorAll(".reveal, .feature-row");
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("revealed");
-        }
+        if (entry.isIntersecting) entry.target.classList.add("in");
       });
-    }, { threshold: 0.18 });
+    }, { threshold: 0.16 });
 
-    revealItems.forEach((item) => observer.observe(item));
-
-    const parallaxTarget = document.querySelector("[data-parallax]");
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (parallaxTarget && !reducedMotion) {
-      window.addEventListener("pointermove", (event) => {
-        const x = (event.clientX / window.innerWidth - 0.5) * 14;
-        const y = (event.clientY / window.innerHeight - 0.5) * 10;
-        parallaxTarget.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      });
-    }
+    document.querySelectorAll(".reveal").forEach((item) => observer.observe(item));
   </script>
 </body>
 </html>
