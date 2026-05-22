@@ -230,7 +230,6 @@
       gap: 18px;
     }
     .platform-panel {
-      min-height: 540px;
       position: relative;
       overflow: hidden;
       border: 1px solid var(--line);
@@ -238,17 +237,24 @@
       box-shadow: var(--shadow);
     }
     .platform-panel.ios {
-      background:
-        linear-gradient(180deg, rgba(7, 12, 18, 0.42), rgba(7, 12, 18, 0.94)),
-        url("assets/plan.png") center 20px / auto 520px no-repeat;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.74fr) minmax(320px, 1fr);
+      gap: 34px;
+      align-items: center;
+      padding: 34px;
     }
     .platform-content {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding: 28px;
-      background: linear-gradient(180deg, transparent, rgba(5, 8, 12, 0.96) 22%);
+      padding: 0;
+    }
+    .platform-shot {
+      display: grid;
+      justify-items: center;
+    }
+    .platform-shot img {
+      width: min(100%, 420px);
+      height: auto;
+      border: 1px solid rgba(149, 173, 198, 0.22);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
     }
     .platform-label {
       display: inline-flex;
@@ -344,13 +350,15 @@
       padding: 22px;
     }
     .feature-card img {
-      height: 230px;
-      width: 100%;
-      object-fit: contain;
-      object-position: center top;
+      width: min(100%, 360px);
+      height: auto;
+      max-height: 640px;
       margin-bottom: 16px;
-      background: #05070a;
+      margin-left: auto;
+      margin-right: auto;
+      background: transparent;
       border: 1px solid rgba(149, 173, 198, 0.12);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
     }
     .feature-card h3 {
       font-size: 32px;
@@ -482,6 +490,7 @@
       .hero { padding-top: 260px; min-height: auto; }
       .section-head,
       .ops-grid,
+      .platform-panel.ios,
       .limits {
         grid-template-columns: 1fr;
       }
@@ -510,9 +519,8 @@
       .readiness-cell { border-right: 0; border-bottom: 1px solid var(--line); }
       .readiness-cell:last-child { border-bottom: 0; }
       section { padding: 64px 0; }
-      .platform-panel { min-height: 520px; }
-      .platform-content { padding: 22px; }
-      .feature-card img { height: 210px; }
+      .platform-panel.ios { padding: 18px; }
+      .feature-card { padding: 16px; }
       .sync-flow { grid-template-columns: 1fr; }
       .footer-inner { flex-direction: column; align-items: flex-start; }
     }
@@ -577,6 +585,9 @@
 
         <div class="platform-grid">
           <article class="platform-panel ios">
+            <div class="platform-shot">
+              <img src="assets/plan.png" alt="BeBrief iOS plan hub screen">
+            </div>
             <div class="platform-content">
               <div class="platform-label">iOS app</div>
               <h3>Mobile preflight cockpit</h3>
