@@ -300,6 +300,28 @@
       color: var(--muted);
       font-size: 15px;
     }
+    .workflow-gallery {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+      align-items: start;
+    }
+    .workflow-shot {
+      display: grid;
+      gap: 10px;
+    }
+    .workflow-shot img {
+      width: 100%;
+      border-radius: 28px;
+      filter: drop-shadow(0 24px 44px rgba(0, 0, 0, 0.5));
+    }
+    .workflow-shot strong {
+      padding: 0 6px;
+      color: #dfe8f2;
+      font-size: 15px;
+      line-height: 1.15;
+    }
 
     .screens {
       border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -374,6 +396,29 @@
       margin-top: 5px;
       font-size: 19px;
     }
+    .control-gallery {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 4px;
+      align-items: start;
+    }
+    .control-shot {
+      display: grid;
+      gap: 10px;
+    }
+    .control-shot img {
+      width: 100%;
+      border-radius: 28px;
+      filter: drop-shadow(0 24px 44px rgba(0, 0, 0, 0.5));
+    }
+    .control-shot strong {
+      padding: 0 6px;
+      color: #dfe8f2;
+      font-size: 15px;
+      line-height: 1.15;
+    }
 
     .final {
       padding: 70px 0 84px;
@@ -434,6 +479,8 @@
       .phone-scene { min-height: 610px; }
       .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .screen-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .workflow-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .control-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .section-head { display: block; }
       .section-head p { margin-top: 12px; max-width: 640px; }
     }
@@ -454,13 +501,19 @@
       .phone { width: min(78vw, 300px); }
       section { padding: 52px 0; }
       .flow,
-      .screen-strip {
+      .workflow-gallery,
+      .screen-strip,
+      .control-gallery {
         grid-template-columns: 1fr;
       }
       .screen-card:nth-child(2),
       .screen-card:nth-child(4) { margin-top: 0; }
       .mini-phone { width: min(72vw, 280px); margin: 0 auto; }
       .screen-card strong { text-align: center; }
+      .workflow-shot { width: min(72vw, 280px); margin: 0 auto; }
+      .workflow-shot strong { text-align: center; }
+      .control-shot { width: min(72vw, 280px); margin: 0 auto; }
+      .control-shot strong { text-align: center; }
       .footer-inner { flex-direction: column; }
     }
 
@@ -504,10 +557,10 @@
 
           <div class="hero-copy reveal">
             <div class="award" aria-label="BeBrief app status">
-              <div class="award-badge"><span class="laurel">&lt;&lt;</span> iPhone briefing app</div>
+              <div class="award-badge">iPhone briefing app</div>
               <div><span class="stars">5-star</span> Pilot workflow</div>
             </div>
-            <h1>Brief. File. Track.</h1>
+            <h1>Preflight. Done Briefly</h1>
             <p>BeBrief gives pilots route-level risk review, raw source inspection, aircraft readiness, Flight Service filing, and filed-plan lifecycle tracking in one iPhone workflow.</p>
             <div class="hero-actions">
               <a class="pill-btn primary" href="https://apps.apple.com/app/id6757646393">View on App Store</a>
@@ -547,6 +600,28 @@
               <span>04</span>
               <h3>Track</h3>
               <p>Return to proposed, active, overdue, cancelled, or closed filed-plan status from the app.</p>
+            </article>
+          </div>
+          <div class="workflow-gallery" aria-label="BeBrief route, source, map, aircraft, and pilot profile screens">
+            <article class="workflow-shot reveal">
+              <img src="assets/app-screens/source-review.png" alt="BeBrief source review cards screen">
+              <strong>Inspect source cards from the active brief.</strong>
+            </article>
+            <article class="workflow-shot reveal">
+              <img src="assets/app-screens/tfr-alerts.png" alt="BeBrief TFR and alerts detail screen">
+              <strong>Open TFR and alert detail when it matters.</strong>
+            </article>
+            <article class="workflow-shot reveal">
+              <img src="assets/app-screens/route-map.png" alt="BeBrief route map screen">
+              <strong>Keep map context with the route.</strong>
+            </article>
+            <article class="workflow-shot reveal">
+              <img src="assets/app-screens/hangar.png" alt="BeBrief aircraft hangar screen">
+              <strong>Keep aircraft readiness close to the brief.</strong>
+            </article>
+            <article class="workflow-shot reveal">
+              <img src="assets/app-screens/pilot-profile.png" alt="BeBrief pilot profile setup screen">
+              <strong>Keep pilot profile details ready for filing.</strong>
             </article>
           </div>
         </div>
@@ -606,6 +681,24 @@
               <span>Readiness context</span>
               <strong>Keep pilot profile, aircraft profile, route, and filed-plan state in one focused preflight app.</strong>
             </div>
+          </div>
+          <div class="control-gallery" aria-label="BeBrief credentialed Flight Service workflow screens">
+            <article class="control-shot reveal">
+              <img src="assets/app-screens/flight-service-auth.png" alt="BeBrief Flight Service authorization linking screen">
+              <strong>Link Flight Service when you are ready to file.</strong>
+            </article>
+            <article class="control-shot reveal">
+              <img src="assets/app-screens/official-file.png" alt="BeBrief official brief and filing screen">
+              <strong>Review official filing details before sending.</strong>
+            </article>
+            <article class="control-shot reveal">
+              <img src="assets/app-screens/flight-plan-lifecycle.png" alt="BeBrief filed flight-plan lifecycle screen">
+              <strong>Manage lifecycle actions from the filed plan.</strong>
+            </article>
+            <article class="control-shot reveal">
+              <img src="assets/app-screens/filed-plans.png" alt="BeBrief filed plans status list screen">
+              <strong>Keep filed-plan status close after filing.</strong>
+            </article>
           </div>
         </div>
       </section>
